@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"http://localhost:3000\" -UseBasicParsing -TimeoutSec 60; \"HOME: $\\($r.StatusCode\\)  LENGTH: $\\($r.Content.Length\\)\" } catch { \"ERROR: $\\($_.Exception.Message\\)\" })",
+      "Bash(sleep 9; cat \"/c/Users/sebas/AppData/Local/Temp/claude/c--Users-sebas-OneDrive-Desktop-NAKMA-REALTY-RESTAURADO-COMPLETO-HERO/05e5a38f-06d6-41b4-94a1-6b8d3d316973/tasks/b4g07zq5h.output\")",
+      "Read(//c/Users/sebas/AppData/Local/Temp/claude/c--Users-sebas-OneDrive-Desktop-NAKMA-REALTY-RESTAURADO-COMPLETO-HERO/05e5a38f-06d6-41b4-94a1-6b8d3d316973/tasks/**)",
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"https://defensive-guild-ratings-wallpapers.trycloudflare.com/listings\" -UseBasicParsing -TimeoutSec 30; \"PUBLIC /listings: $\\($r.StatusCode\\)  LENGTH: $\\($r.Content.Length\\)\" } catch { \"PUBLIC ERROR: $\\($_.Exception.Message\\)\" })",
+      "PowerShell(npm run build 2>&1)",
+      "PowerShell(npx vercel --prod --yes 2>&1)",
+      "PowerShell(npx vercel whoami 2>&1)",
+      "PowerShell(npx vercel teams ls 2>&1)",
+      "PowerShell(\"---\")",
+      "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1)",
+      "PowerShell(npx vercel link --yes --project nakma-realty --scope nakmarealty-5086s-projects 2>&1)",
+      "PowerShell(npx vercel inspect https://nakma-realty-hmu82hmsy-nakmarealty-5086s-projects.vercel.app --logs --scope nakmarealty-5086s-projects 2>&1)",
+      "PowerShell(npm install @supabase/supabase-js 2>&1)",
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"http://localhost:3000\" -UseBasicParsing -TimeoutSec 60; \"HOME: $\\($r.StatusCode\\)\" } catch { \"ERROR: $\\($_.Exception.Message\\)\" })",
+      "PowerShell(npm run dev)",
+      "WebFetch(domain:unsplash.com)",
+      "PowerShell(npm install leaflet @types/leaflet 2>&1)",
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"https://nakma-realty.vercel.app\" -UseBasicParsing -TimeoutSec 30; \"HOME: $\\($r.StatusCode\\)\" } catch { \"ERROR: $\\($_.Exception.Message\\)\" })",
+      "mcp__claude_ai_Supabase__list_projects",
+      "mcp__claude_ai_Supabase__list_tables",
+      "mcp__claude_ai_Supabase__execute_sql",
+      "mcp__claude_ai_Supabase__apply_migration",
+      "PowerShell(git init -b main)",
+      "PowerShell(git config user.name \"Sebas Alvarado\")",
+      "PowerShell(git config user.email \"alpinepartsmarketing@gmail.com\")",
+      "PowerShell(git add -A)"
+    ]
+  }
+}

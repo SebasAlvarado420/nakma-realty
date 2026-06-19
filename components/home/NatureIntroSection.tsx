@@ -1,0 +1,166 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { BLUR_DATA_URL } from "@/lib/constants";
+
+const NATURE_IMAGES = [
+  {
+    src: "https://images.unsplash.com/photo-1518182170546-07661fd94144?auto=format&fit=crop&w=1400&q=80",
+    label: "Cloud Forest · Monteverde",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1593693397690-362cb9666fc2?auto=format&fit=crop&w=1400&q=80",
+    label: "Pacific Coast · Guanacaste",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=1400&q=80",
+    label: "Tropical Canopy · Osa Peninsula",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1400&q=80",
+    label: "Architectural Retreat · San José",
+  },
+];
+
+export default function NatureIntroSection() {
+  const [current, setCurrent] = useState(0);
+  const [fading, setFading] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setFading(true);
+      setTimeout(() => {
+        setCurrent((prev) => (prev + 1) % NATURE_IMAGES.length);
+        setFading(false);
+      }, 600);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, []);
+
+  const img = NATURE_IMAGES[current];
+
+  return (
+    <section className="relative bg-[var(--nakma-bg)] px-4 py-20 lg:py-32 lg:px-10">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-16 lg:grid-cols-2 lg:gap-20 lg:items-center">
+
+          {/* ── Left: Image carousel ───────────────────── */}
+          <div className="relative">
+            <div className="relative h-[480px] overflow-hidden rounded-[32px] shadow-[0_40px_100px_rgba(22,17,13,0.18)] lg:h-[600px]">
+              <Image
+                key={img.src}
+                src={img.src}
+                alt={img.label}
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                placeholder="blur"
+                blurDataURL={BLUR_DATA_URL}
+                className="object-cover"
+                style={{
+                  opacity: fading ? 0 : 1,
+                  transition: "opacity 0.6s ease",
+                }}
+              />
+              {/* Bottom label */}
+              <div className="absolute inset-x-0 bottom-0 rounded-b-[32px] bg-gradient-to-t from-black/50 to-transparent px-7 pb-7 pt-16">
+                <p
+                  className="nakma-body text-[10px] uppercase tracking-[0.40em] text-white/75"
+                  style={{ opacity: fading ? 0 : 1, transition: "opacity 0.5s ease" }}
+                >
+                  {img.label}
+                </p>
+              </div>
+            </div>
+
+            {/* Dot navigation */}
+            <div className="mt-5 flex items-center gap-2 justify-end pr-2">
+              {NATURE_IMAGES.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setFading(true);
+                    setTimeout(() => { setCurrent(i); setFading(false); }, 400);
+                  }}
+                  className="transition-all duration-300"
+                  style={{
+                    width: i === current ? "24px" : "6px",
+                    height: "6px",
+                    borderRadius: "9999px",
+                    background: i === current ? "var(--nakma-dark)" : "rgba(22,17,13,0.22)",
+                  }}
+                  aria-label={`Go to image ${i + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* ── Right: Brand story ──────────────────────── */}
+          <div className="flex flex-col justify-center">
+            <p className="nakma-body text-[10px] uppercase tracking-[0.46em] text-[var(--nakma-olive)]">
+              About NAKMA
+            </p>
+
+            <h2 className="nakma-display mt-5 text-[36px] leading-[1.08] tracking-[-0.03em] text-[var(--nakma-dark)] md:text-[44px] lg:text-[52px]">
+              More than a destination.{" "}
+              <span className="text-[var(--nakma-earth)]">A way of life.</span>
+            </h2>
+
+            <div className="mt-8 space-y-5 text-[15px] leading-[1.85] text-[var(--nakma-dark)]/68 nakma-body">
+              <p>
+                NAKMA Realty was created for those who see Costa Rica as more than a
+                destination. We connect people with properties that carry a sense of
+                place: homes surrounded by nature, land with long-term potential, and
+                spaces designed for a more intentional way of living.
+              </p>
+              <p>
+                Every property we represent has been selected with care — not just for
+                its value, but for its relationship with its surroundings. We believe
+                that the right home should feel like it belongs where it stands.
+              </p>
+            </div>
+
+            {/* Value pillars */}
+            <div className="mt-10 grid grid-cols-2 gap-4">
+              {[
+                { label: "Curated Properties", desc: "Handpicked for quality & setting" },
+                { label: "Local Market Insight", desc: "Deep knowledge of Costa Rica" },
+                { label: "Nature-Driven Living", desc: "Properties rooted in landscape" },
+                { label: "Personalized Guidance", desc: "Every client, guided with care" },
+              ].map(({ label, desc }) => (
+                <div
+                  key={label}
+                  className="rounded-[20px] border border-[var(--nakma-dark)]/8 bg-white/60 p-5"
+                >
+                  <p className="nakma-display text-[13px] font-semibold text-[var(--nakma-dark)]">
+                    {label}
+                  </p>
+                  <p className="nakma-body mt-1.5 text-[12px] leading-relaxed text-[var(--nakma-dark)]/55">
+                    {desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-10 flex flex-wrap gap-4">
+              <Link
+                href="/about-us"
+                className="nakma-body inline-flex h-[50px] items-center rounded-full bg-[var(--nakma-dark)] px-7 text-[11px] uppercase tracking-[0.28em] text-white transition-opacity hover:opacity-88"
+              >
+                Our Story
+              </Link>
+              <Link
+                href="/listings"
+                className="nakma-body inline-flex h-[50px] items-center rounded-full border border-[var(--nakma-dark)]/30 px-7 text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-dark)] transition-colors hover:bg-[var(--nakma-dark)] hover:text-white"
+              >
+                Explore Listings
+              </Link>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
+}

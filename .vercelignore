@@ -1,0 +1,5 @@
+# Oversized source video (304 MB) — exceeds Vercel's 100 MB per-file limit.
+# The hero reuses /videos/nakma-hero.mp4 instead. Host this on a CDN
+# (Cloudflare Stream / R2) and reference by URL if you want it back.
+public/videos/videohero.MP4
+public/videos/videohero.mp4
