@@ -125,6 +125,18 @@ export async function deletePropertyApi(id: string): Promise<void> {
   }
 }
 
+// Update ONLY the code column. Used by the re-sequencing step after a delete.
+// (We can't reuse updatePropertyApi here — propertyToRow re-applies column
+// defaults, which would wipe featured/gallery/etc. on a code-only change.)
+export async function updatePropertyCode(id: string, code: string): Promise<void> {
+  if (!supabase) return;
+  const { error } = await supabase.from(TABLE).update({ code }).eq("id", id);
+  if (error) {
+    console.error("updatePropertyCode:", error.message);
+    throw new Error(error.message);
+  }
+}
+
 // Bulk insert (used by the "import demo listings" action).
 export async function seedProperties(list: Partial<Property>[]): Promise<void> {
   if (!supabase) return;

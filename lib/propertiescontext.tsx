@@ -14,6 +14,7 @@ import {
   fetchProperties,
   createProperty,
   updatePropertyApi,
+  updatePropertyCode,
   deletePropertyApi,
   seedProperties,
 } from "@/lib/properties-api";
@@ -148,12 +149,33 @@ export function PropertiesProvider({ children }: { children: React.ReactNode }) 
     [refresh]
   );
 
+  // After a delete, compact the NK codes so they stay contiguous with no gaps
+  // (delete NK02 from NK01/NK02/NK03 → remaining become NK01/NK02). When the
+  // table is emptied, the counter naturally resets to NK01 for the next add.
+  const resequenceCodes = useCallback(async () => {
+    if (!supabaseEnabled) return;
+    const data = await fetchProperties();
+    const codeNum = (code: string) => {
+      const m = /^NK(\d+)$/i.exec((code ?? "").trim());
+      return m ? parseInt(m[1], 10) : Number.MAX_SAFE_INTEGER;
+    };
+    const sorted = [...data].sort((a, b) => codeNum(a.code) - codeNum(b.code));
+    const updates = sorted
+      .map((p, i) => {
+        const want = `NK${String(i + 1).padStart(2, "0")}`;
+        return p.code === want ? null : updatePropertyCode(p.id, want);
+      })
+      .filter(Boolean) as Promise<void>[];
+    if (updates.length) await Promise.all(updates);
+  }, []);
+
   const deleteProperty = useCallback(
     async (id: string) => {
       await deletePropertyApi(id);
+      await resequenceCodes();
       await refresh();
     },
-    [refresh]
+    [refresh, resequenceCodes]
   );
 
   const importDemoListings = useCallback(async () => {
