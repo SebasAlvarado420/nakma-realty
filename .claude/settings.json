@@ -26,7 +26,23 @@
       "PowerShell(git init -b main)",
       "PowerShell(git config user.name \"Sebas Alvarado\")",
       "PowerShell(git config user.email \"alpinepartsmarketing@gmail.com\")",
-      "PowerShell(git add -A)"
+      "PowerShell(git add -A)",
+      "PowerShell(gh repo create nakma-realty --private --source=. --remote=origin --push 2>&1)",
+      "PowerShell(Get-Process node -ErrorAction SilentlyContinue)",
+      "PowerShell(Stop-Process -Force -ErrorAction SilentlyContinue)",
+      "PowerShell(git -C \"c:\\\\Users\\\\sebas\\\\OneDrive\\\\Desktop\\\\NAKMA_REALTY_RESTAURADO_COMPLETO_HERO\" status --short)",
+      "PowerShell(npx vercel whoami --scope nakmarealty-5086s-projects 2>&1)",
+      "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy.log\")",
+      "mcp__claude_ai_Vercel__search_vercel_documentation",
+      "PowerShell(git -C \"c:\\\\Users\\\\sebas\\\\OneDrive\\\\Desktop\\\\NAKMA_REALTY_RESTAURADO_COMPLETO_HERO\" remote -v)",
+      "PowerShell(git -C \"c:\\\\Users\\\\sebas\\\\OneDrive\\\\Desktop\\\\NAKMA_REALTY_RESTAURADO_COMPLETO_HERO\" config user.name)",
+      "PowerShell(git -C \"c:\\\\Users\\\\sebas\\\\OneDrive\\\\Desktop\\\\NAKMA_REALTY_RESTAURADO_COMPLETO_HERO\" config user.email)",
+      "PowerShell(git -C \"c:\\\\Users\\\\sebas\\\\OneDrive\\\\Desktop\\\\NAKMA_REALTY_RESTAURADO_COMPLETO_HERO\" log -1 --format=\"%an <%ae>\")",
+      "PowerShell(git -C $repo config user.email \"135292348+SebasAlvarado420@users.noreply.github.com\")",
+      "PowerShell(git -C $repo config user.name \"SebasAlvarado420\")",
+      "PowerShell(git -C $repo add -A)",
+      "PowerShell(git -C $repo log -1 --format=\"%an <%ae>\")",
+      "PowerShell($repo = \"c:\\\\Users\\\\sebas\\\\OneDrive\\\\Desktop\\\\NAKMA_REALTY_RESTAURADO_COMPLETO_HERO\")"
     ]
   }
 }

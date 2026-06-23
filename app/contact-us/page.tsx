@@ -1,4 +1,5 @@
 import ContactForm from "@/components/contact/ContactForm";
+import { SITE } from "@/lib/site";
 
 export const metadata = {
   title: "Contact Us · NAKMA Realty",
@@ -42,15 +43,22 @@ export default function ContactUsPage() {
                 <div className="mt-6 space-y-5">
                   <div>
                     <p className="nakma-body text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-dark)]/48">Email</p>
-                    <a href="mailto:info@nakma.cr" className="nakma-body mt-1.5 block text-[15px] text-[var(--nakma-dark)] hover:text-[var(--nakma-olive)]">
-                      info@nakma.cr
+                    <a href={`mailto:${SITE.email}`} className="nakma-body mt-1.5 block text-[15px] text-[var(--nakma-dark)] hover:text-[var(--nakma-olive)]">
+                      {SITE.email}
                     </a>
                   </div>
                   <div>
                     <p className="nakma-body text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-dark)]/48">WhatsApp</p>
-                    <a href="https://wa.me/50600000000" target="_blank" rel="noreferrer" className="nakma-body mt-1.5 block text-[15px] text-[var(--nakma-dark)] hover:text-[var(--nakma-olive)]">
-                      +506 0000-0000
+                    <a href={SITE.whatsappUrl} target="_blank" rel="noreferrer" className="nakma-body mt-1.5 block text-[15px] text-[var(--nakma-dark)] hover:text-[var(--nakma-olive)]">
+                      {SITE.whatsappDisplay}
                     </a>
+                  </div>
+                  <div>
+                    <p className="nakma-body text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-dark)]/48">Social</p>
+                    <div className="mt-1.5 flex gap-3 text-[14px]">
+                      <a href={SITE.instagram} target="_blank" rel="noreferrer" className="nakma-body text-[var(--nakma-dark)] hover:text-[var(--nakma-olive)]">Instagram</a>
+                      <a href={SITE.facebook} target="_blank" rel="noreferrer" className="nakma-body text-[var(--nakma-dark)] hover:text-[var(--nakma-olive)]">Facebook</a>
+                    </div>
                   </div>
                   <div>
                     <p className="nakma-body text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-dark)]/48">Location</p>
@@ -81,7 +89,7 @@ export default function ContactUsPage() {
                   We work with a select portfolio of properties. If you believe yours fits our standards, we'd love to hear from you.
                 </p>
                 <a
-                  href="mailto:listings@nakma.cr"
+                  href={`mailto:${SITE.email}`}
                   className="nakma-body mt-5 inline-flex h-[44px] items-center rounded-full border border-[var(--nakma-dark)]/22 px-5 text-[11px] uppercase tracking-[0.26em] text-[var(--nakma-dark)] transition hover:bg-[var(--nakma-dark)] hover:text-white"
                 >
                   Contact for Listing

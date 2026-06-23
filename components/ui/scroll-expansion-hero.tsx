@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode, useEffect, useRef, useState, useCallback } from 'react';
+import BrandName from '@/components/ui/BrandName';
 
 interface ScrollExpandMediaProps {
   mediaType?: 'video' | 'image';
@@ -351,7 +352,7 @@ export default function ScrollExpandMedia({
               textShadow: "0 6px 44px rgba(0,0,0,0.5)",
             }}
           >
-            NAKMA
+            <BrandName />
           </h2>
           <p
             className="nakma-body relative mt-6 uppercase"

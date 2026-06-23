@@ -84,10 +84,15 @@ const jsonLd = {
   description:
     "Natural, refined real estate rooted in Costa Rica — curated homes, land, and investment opportunities.",
   url: SITE_URL,
-  email: "info@nakma.cr",
+  email: "info@nakmarealty.com",
+  telephone: "+506 8606-0252",
   areaServed: { "@type": "Country", name: "Costa Rica" },
   address: { "@type": "PostalAddress", addressCountry: "CR" },
   knowsLanguage: ["en", "es"],
+  sameAs: [
+    "https://www.instagram.com/nakma.realty",
+    "https://www.facebook.com/share/1BMPUF416f/",
+  ],
 };
 
 export default function RootLayout({

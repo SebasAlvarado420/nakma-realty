@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { SITE } from "@/lib/site";
 
 const INTERESTS = [
   "Residential Property",
@@ -73,7 +74,7 @@ export default function ContactForm() {
       .filter(Boolean)
       .join("\n");
 
-    const mailto = `mailto:info@nakma.cr?subject=${encodeURIComponent(
+    const mailto = `mailto:${SITE.email}?subject=${encodeURIComponent(
       `Property inquiry — ${form.name}`
     )}&body=${encodeURIComponent(body)}`;
 

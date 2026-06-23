@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useLang } from "@/lib/i18n";
+import { SITE } from "@/lib/site";
+import BrandName from "@/components/ui/BrandName";
 
 const NAV = [
   { href: "/", key: "nav.home" },
@@ -12,9 +14,9 @@ const NAV = [
 ];
 
 const SOCIAL = [
-  { href: "#", label: "Instagram" },
-  { href: "#", label: "Facebook" },
-  { href: "#", label: "WhatsApp" },
+  { href: SITE.instagram, label: "Instagram" },
+  { href: SITE.facebook, label: "Facebook" },
+  { href: SITE.whatsappUrl, label: "WhatsApp" },
 ];
 
 export default function Footer() {
@@ -27,8 +29,8 @@ export default function Footer() {
         <div className="grid gap-12 md:grid-cols-[1.6fr_1fr_1fr_1fr]">
           {/* Brand column */}
           <div>
-            <Link href="/" className="nakma-brand text-[26px] tracking-[0.28em] text-[var(--nakma-bg)]">
-              NAKMA
+            <Link href="/" aria-label="NAKMA — Home">
+              <BrandName className="nakma-brand text-[26px] tracking-[0.26em] text-[var(--nakma-bg)]" />
             </Link>
             <p className="nakma-body mt-5 max-w-xs text-[13px] leading-[1.85] text-white/45">
               {t("footer.tagline")}
@@ -82,11 +84,11 @@ export default function Footer() {
               {t("footer.contact")}
             </h3>
             <div className="mt-5 space-y-3">
-              <a href="mailto:info@nakma.cr" className="nakma-body block text-[14px] text-white/55 transition-colors hover:text-white">
-                info@nakma.cr
+              <a href={`mailto:${SITE.email}`} className="nakma-body block text-[14px] text-white/55 transition-colors hover:text-white">
+                {SITE.email}
               </a>
-              <a href="https://wa.me/50600000000" className="nakma-body block text-[14px] text-white/55 transition-colors hover:text-white">
-                +506 0000-0000
+              <a href={SITE.whatsappUrl} target="_blank" rel="noreferrer" className="nakma-body block text-[14px] text-white/55 transition-colors hover:text-white">
+                {SITE.whatsappDisplay}
               </a>
               <p className="nakma-body text-[14px] text-white/38">Costa Rica</p>
             </div>

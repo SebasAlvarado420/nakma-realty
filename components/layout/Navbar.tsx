@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useLang } from "@/lib/i18n";
+import BrandName from "@/components/ui/BrandName";
 
 const navLinks = [
   { href: "/", key: "nav.home" },
@@ -66,10 +67,14 @@ export default function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className="nakma-brand text-[21px] tracking-[0.24em] transition-colors duration-500"
+            className="flex flex-col leading-none transition-colors duration-500"
             style={{ color: logoColor }}
+            aria-label="NAKMA Real Estate — Home"
           >
-            NAKMA
+            <BrandName className="nakma-brand text-[22px] tracking-[0.22em]" />
+            <span className="nakma-body mt-0.5 text-[7px] uppercase tracking-[0.5em] opacity-75">
+              Real Estate
+            </span>
           </Link>
 
           {/* Desktop nav */}
@@ -166,9 +171,7 @@ export default function Navbar() {
         }`}
       >
         <div className="flex h-[72px] items-center justify-between px-5">
-          <span className="nakma-brand text-[21px] tracking-[0.24em] text-[var(--nakma-dark)]">
-            NAKMA
-          </span>
+          <BrandName className="nakma-brand text-[21px] tracking-[0.22em] text-[var(--nakma-dark)]" />
           <button
             type="button"
             aria-label="Close menu"

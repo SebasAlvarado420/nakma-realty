@@ -1,11 +1,12 @@
 "use client";
 
-const PHONE = "50600000000"; // +506 0000-0000 — replace with the real number
+import { SITE } from "@/lib/site";
+
 const MESSAGE =
   "Hi NAKMA Realty, I'm interested in learning more about properties in Costa Rica.";
 
 export default function WhatsAppButton() {
-  const href = `https://wa.me/${PHONE}?text=${encodeURIComponent(MESSAGE)}`;
+  const href = `${SITE.whatsappUrl}?text=${encodeURIComponent(MESSAGE)}`;
 
   return (
     <a
