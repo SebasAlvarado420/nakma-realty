@@ -42,7 +42,25 @@
       "PowerShell(git -C $repo config user.name \"SebasAlvarado420\")",
       "PowerShell(git -C $repo add -A)",
       "PowerShell(git -C $repo log -1 --format=\"%an <%ae>\")",
-      "PowerShell($repo = \"c:\\\\Users\\\\sebas\\\\OneDrive\\\\Desktop\\\\NAKMA_REALTY_RESTAURADO_COMPLETO_HERO\")"
+      "PowerShell($repo = \"c:\\\\Users\\\\sebas\\\\OneDrive\\\\Desktop\\\\NAKMA_REALTY_RESTAURADO_COMPLETO_HERO\")",
+      "PowerShell(git -C \"c:\\\\Users\\\\sebas\\\\OneDrive\\\\Desktop\\\\NAKMA_REALTY_RESTAURADO_COMPLETO_HERO\" push origin main 2>&1)",
+      "PowerShell(npx vercel ls nakma-realty --scope nakmarealty-5086s-projects 2>&1)",
+      "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy2.log\")",
+      "PowerShell(git -C $repo config user.email \"sebassalvaradoo@gmail.com\")",
+      "PowerShell(git -C $repo config user.name \"Sebas Alvarado\")",
+      "PowerShell(git -C $repo commit --amend --reset-author --no-edit)",
+      "PowerShell(git -C $repo log -1 --format=\"%an <%ae>  %H\")",
+      "PowerShell(git -C $repo push --force origin main 2>&1)",
+      "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy3.log\")",
+      "PowerShell(gh repo edit SebasAlvarado420/nakma-realty --visibility public --accept-visibility-change-consequences 2>&1)",
+      "PowerShell(gh repo view SebasAlvarado420/nakma-realty --json visibility 2>&1)",
+      "PowerShell(git -C $repo commit --allow-empty -m \"Trigger deploy after making repo public\" 2>&1)",
+      "PowerShell(git -C $repo push origin main 2>&1)",
+      "mcp__claude_ai_Vercel__get_deployment",
+      "PowerShell(npx vercel inspect nakma-realty-3prkm77xm-nakmarealty-5086s-projects.vercel.app --scope nakmarealty-5086s-projects 2>&1)",
+      "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy4.log\")",
+      "mcp__claude_ai_Supabase__restore_project",
+      "PowerShell(git -C $repo commit -m \"Admin: never hang on loading if Supabase is unreachable \\(catch + 8s timeout\\)\" 2>&1)"
     ]
   }
 }

@@ -16,9 +16,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       setSession(null);
       return;
     }
-    supabase.auth.getSession().then(({ data }) => setSession(data.session));
+    // Never hang on a loading screen: if Supabase is unreachable (e.g. the free
+    // project is paused) getSession() can reject or stall — fall back to the
+    // login screen instead of spinning forever.
+    supabase.auth
+      .getSession()
+      .then(({ data }) => setSession(data.session))
+      .catch(() => setSession(null));
+    const safety = setTimeout(
+      () => setSession((s) => (s === undefined ? null : s)),
+      8000
+    );
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
-    return () => sub.subscription.unsubscribe();
+    return () => {
+      clearTimeout(safety);
+      sub.subscription.unsubscribe();
+    };
   }, []);
 
   async function login(e: React.FormEvent) {
