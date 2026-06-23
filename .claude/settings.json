@@ -60,7 +60,11 @@
       "PowerShell(npx vercel inspect nakma-realty-3prkm77xm-nakmarealty-5086s-projects.vercel.app --scope nakmarealty-5086s-projects 2>&1)",
       "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy4.log\")",
       "mcp__claude_ai_Supabase__restore_project",
-      "PowerShell(git -C $repo commit -m \"Admin: never hang on loading if Supabase is unreachable \\(catch + 8s timeout\\)\" 2>&1)"
+      "PowerShell(git -C $repo commit -m \"Admin: never hang on loading if Supabase is unreachable \\(catch + 8s timeout\\)\" 2>&1)",
+      "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy5.log\")",
+      "mcp__claude_ai_Supabase__get_project",
+      "PowerShell(git -C $repo commit -m \"Add daily Supabase keepalive workflow to prevent free-tier pausing\" 2>&1)",
+      "PowerShell(gh workflow run \"supabase-keepalive.yml\" --repo SebasAlvarado420/nakma-realty 2>&1)"
     ]
   }
 }

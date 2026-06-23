@@ -1,0 +1,29 @@
+name: Supabase Keepalive
+
+# Keeps the free-tier Supabase project from pausing (it pauses after ~1 week of
+# inactivity, which made the admin dashboard hang on "LOADING…"). A tiny daily
+# read against the REST API counts as activity. The anon key is public by design
+# (writes are protected by Row Level Security), so it is safe to inline here.
+
+on:
+  schedule:
+    - cron: "0 12 * * *" # every day at 12:00 UTC (~06:00 Costa Rica)
+  workflow_dispatch: {} # allows manual run from the Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST
+        env:
+          SUPABASE_URL: https://hiqmowapbdaspcxgoduv.supabase.co
+          SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpcW1vd2FwYmRhc3BjeGdvZHV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0NTI3NjEsImV4cCI6MjA5NjAyODc2MX0.0Li8kgIjsofQrrSpexu3v2Z-De8gFHrGbyyNmofiyt8
+        run: |
+          code=$(curl -sS -o /dev/null -w "%{http_code}" \
+            "$SUPABASE_URL/rest/v1/properties?select=id&limit=1" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY")
+          echo "Supabase responded with HTTP $code"
+          if [ "$code" -ge 500 ] || [ "$code" -eq 000 ]; then
+            echo "Supabase appears down (HTTP $code)"; exit 1
+          fi
