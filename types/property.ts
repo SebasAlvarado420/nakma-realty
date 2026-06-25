@@ -2,7 +2,8 @@ export type PropertyFeatures = {
   internal: string[];
   external: string[];
   community: string[];
-  lifestyle: string[];
+  /** Deprecated — no longer collected or shown. Kept optional for legacy data. */
+  lifestyle?: string[];
 };
 
 export type PropertyLocation = {
@@ -63,4 +64,7 @@ export type Property = {
   geo?: PropertyLocation;
   /** Id of the selling agent (references a team member). */
   agentId?: string;
+  /** Archived listings keep their NK code but are hidden from the public site
+   *  and can be re-published at any time from the admin "Archived" section. */
+  archived?: boolean;
 };

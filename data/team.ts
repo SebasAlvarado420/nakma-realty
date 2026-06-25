@@ -21,9 +21,9 @@ export const teamMembers: TeamMember[] = [
     image:
       "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80",
     languages: ["Spanish", "English"],
-    email: "sergio@nakmarealty.com",
-    phone: "+506 2222-0001",
-    whatsapp: "+506 8888-0001",
+    email: "srodriguez@nakmarealty.com",
+    phone: "+506 8606-0252",
+    whatsapp: "+506 8606-0252",
     office: "NAKMA Realty",
   },
   {
@@ -34,9 +34,9 @@ export const teamMembers: TeamMember[] = [
     image:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
     languages: ["Spanish", "English"],
-    email: "josemario@nakmarealty.com",
-    phone: "+506 2222-0002",
-    whatsapp: "+506 8888-0002",
+    email: "info@nakmarealty.com",
+    phone: "+506 8606-0252",
+    whatsapp: "+506 8606-0252",
     office: "NAKMA Realty",
   },
   {
@@ -47,9 +47,9 @@ export const teamMembers: TeamMember[] = [
     image:
       "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=600&q=80",
     languages: ["Spanish", "English"],
-    email: "jenny@nakmarealty.com",
-    phone: "+506 2222-0004",
-    whatsapp: "+506 8888-0004",
+    email: "jchaverri@nakmarealty.com",
+    phone: "+506 8606-0252",
+    whatsapp: "+506 8606-0252",
     office: "NAKMA Realty",
   },
   {
@@ -60,9 +60,9 @@ export const teamMembers: TeamMember[] = [
     image:
       "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=600&q=80",
     languages: ["Spanish", "English"],
-    email: "marcel@nakmarealty.com",
-    phone: "+506 2222-0003",
-    whatsapp: "+506 8888-0003",
+    email: "mtorres@nakmarealty.com",
+    phone: "+506 8606-0252",
+    whatsapp: "+506 8606-0252",
     office: "NAKMA Realty",
   },
 ];

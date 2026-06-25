@@ -5,17 +5,35 @@ import { useState } from "react";
 import { useProperties } from "@/lib/propertiescontext";
 
 export default function PropertiesTable() {
-  const { properties, usingFallback, loading, deleteProperty, importDemoListings } =
-    useProperties();
+  const {
+    properties,
+    archivedProperties,
+    usingFallback,
+    loading,
+    deleteProperty,
+    archiveProperty,
+    importDemoListings,
+  } = useProperties();
   const [busy, setBusy] = useState<string | null>(null);
 
   async function onDelete(id: string, title: string) {
-    if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return;
+    if (!window.confirm(`Permanently delete "${title}"? This cannot be undone.\n\nTip: use Archive instead to hide it but keep its NK code and restore it later.`)) return;
     setBusy(id);
     try {
       await deleteProperty(id);
     } catch (e) {
       window.alert(e instanceof Error ? e.message : "Could not delete.");
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function onArchive(id: string) {
+    setBusy(id);
+    try {
+      await archiveProperty(id);
+    } catch (e) {
+      window.alert(e instanceof Error ? e.message : "Could not archive.");
     } finally {
       setBusy(null);
     }
@@ -34,6 +52,18 @@ export default function PropertiesTable() {
 
   return (
     <div className="space-y-5">
+      <div className="flex items-center justify-between">
+        <p className="text-[13px] text-[#5d7268]">
+          {properties.length} active {properties.length === 1 ? "property" : "properties"}
+        </p>
+        <Link
+          href="/admin/archived"
+          className="text-[13px] font-medium text-[#8b6d3b] hover:underline"
+        >
+          Archived ({archivedProperties.length}) →
+        </Link>
+      </div>
+
       {usingFallback && (
         <div className="flex flex-col gap-4 rounded-[24px] border border-[#e3d9c4] bg-[#fbf6ea] p-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -97,11 +127,19 @@ export default function PropertiesTable() {
                           </Link>
                           <button
                             type="button"
+                            onClick={() => onArchive(property.id)}
+                            disabled={busy === property.id}
+                            className="font-medium text-[#8b6d3b] hover:underline disabled:opacity-40"
+                          >
+                            {busy === property.id ? "…" : "Archive"}
+                          </button>
+                          <button
+                            type="button"
                             onClick={() => onDelete(property.id, property.title)}
                             disabled={busy === property.id}
                             className="font-medium text-red-600 hover:underline disabled:opacity-40"
                           >
-                            {busy === property.id ? "Deleting…" : "Delete"}
+                            Delete
                           </button>
                         </>
                       )}

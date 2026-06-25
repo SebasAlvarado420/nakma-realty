@@ -8,8 +8,10 @@ import PropertyForm from "@/components/admin/PropertyForm";
 export default function EditPropertyPage() {
   const params = useParams();
   const id = typeof params.id === "string" ? params.id : "";
-  const { properties, loading } = useProperties();
-  const property = properties.find((p) => p.id === id);
+  const { properties, archivedProperties, loading } = useProperties();
+  const property =
+    properties.find((p) => p.id === id) ??
+    archivedProperties.find((p) => p.id === id);
 
   return (
     <section className="min-h-screen bg-[#f7f2e8] px-6 pt-32 pb-20 md:px-10">

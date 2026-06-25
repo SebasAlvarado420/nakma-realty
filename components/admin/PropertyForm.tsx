@@ -34,7 +34,6 @@ type FormState = {
   constructionSize: string;
   bedrooms: string;
   bathrooms: string;
-  yearBuilt: string;
   hoa: string;
   address: string;
   lat: string;
@@ -47,16 +46,15 @@ type FormState = {
   featInternal: string;
   featExternal: string;
   featCommunity: string;
-  featLifestyle: string;
 };
 
 const emptyForm: FormState = {
   title: "", slug: "", location: "", province: "", agentId: "",
   listingType: "sale", price: "", rentPrice: "", featured: "No", exclusive: "No",
   landSize: "", constructionSize: "", bedrooms: "", bathrooms: "",
-  yearBuilt: "", hoa: "", address: "", lat: "", lng: "",
+  hoa: "", address: "", lat: "", lng: "",
   image: "", gallery: "", video: "", highlights: "", description: "",
-  featInternal: "", featExternal: "", featCommunity: "", featLifestyle: "",
+  featInternal: "", featExternal: "", featCommunity: "",
 };
 
 const inputCls =
@@ -70,6 +68,16 @@ function lines(v: string) {
 const stripUnit = (v?: string) => (v ?? "").replace(/\s*m²\s*$/i, "").trim();
 const stripDollar = (v?: string) => (v ?? "").replace(/^\$/, "").trim();
 
+// Group a numeric string with thousands separators as the user types
+// (e.g. "1000000" → "1,000,000"). Keeps a single optional decimal part.
+function withCommas(raw: string) {
+  const cleaned = (raw ?? "").replace(/[^0-9.]/g, "");
+  if (!cleaned) return "";
+  const [intPart, ...rest] = cleaned.split(".");
+  const grouped = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return rest.length ? `${grouped}.${rest.join("")}` : grouped;
+}
+
 function fromProperty(p: Property): FormState {
   return {
     title: p.title ?? "",
@@ -78,7 +86,7 @@ function fromProperty(p: Property): FormState {
     province: p.province ?? "",
     agentId: p.agentId ?? "",
     listingType: p.listingType ?? "sale",
-    price: stripDollar(p.price),
+    price: withCommas(stripDollar(p.price)),
     rentPrice: p.rentPrice ?? "",
     featured: p.featured ? "Yes" : "No",
     exclusive: p.exclusive ? "Yes" : "No",
@@ -86,7 +94,6 @@ function fromProperty(p: Property): FormState {
     constructionSize: stripUnit(p.constructionSize),
     bedrooms: p.bedrooms ? String(p.bedrooms) : "",
     bathrooms: p.bathrooms ? String(p.bathrooms) : "",
-    yearBuilt: p.yearBuilt ?? "",
     hoa: p.hoa ?? "",
     address: p.geo?.address ?? "",
     lat: p.geo ? String(p.geo.lat) : "",
@@ -99,7 +106,6 @@ function fromProperty(p: Property): FormState {
     featInternal: (p.features?.internal ?? []).join("\n"),
     featExternal: (p.features?.external ?? []).join("\n"),
     featCommunity: (p.features?.community ?? []).join("\n"),
-    featLifestyle: (p.features?.lifestyle ?? []).join("\n"),
   };
 }
 
@@ -124,18 +130,20 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
 
 export default function PropertyForm({ existing }: { existing?: Property }) {
   const router = useRouter();
-  const { properties, addProperty, updateProperty } = useProperties();
+  const { properties, archivedProperties, addProperty, updateProperty } = useProperties();
   const isEdit = Boolean(existing);
   const [form, setForm] = useState<FormState>(existing ? fromProperty(existing) : emptyForm);
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
 
-  // Auto code: in create mode, fill the first free NK slot (so deleting frees it up).
+  // Auto code: take the lowest free NK slot. Archived listings keep their code,
+  // so we count them as "used" too — a new property never reuses an archived
+  // property's unique code.
   const code = useMemo(() => {
     if (existing) return existing.code;
     const used = new Set(
-      properties
+      [...properties, ...archivedProperties]
         .map((p) => {
           const m = /^NK(\d+)$/i.exec((p.code ?? "").trim());
           return m ? parseInt(m[1], 10) : -1;
@@ -145,7 +153,7 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
     let n = 1;
     while (used.has(n)) n++;
     return `NK${String(n).padStart(2, "0")}`;
-  }, [properties, existing]);
+  }, [properties, archivedProperties, existing]);
 
   const galleryUrls = lines(form.gallery);
 
@@ -153,7 +161,11 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    // Live thousands separators for the money fields.
+    const next = name === "price" || name === "landSize" || name === "constructionSize"
+      ? withCommas(value)
+      : value;
+    setForm((prev) => ({ ...prev, [name]: next }));
   }
 
   async function handleMainImage(e: React.ChangeEvent<HTMLInputElement>) {
@@ -209,12 +221,11 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
       internal: lines(form.featInternal),
       external: lines(form.featExternal),
       community: lines(form.featCommunity),
-      lifestyle: lines(form.featLifestyle),
     };
     const hasFeatures =
-      features.internal.length + features.external.length + features.community.length + features.lifestyle.length > 0;
+      features.internal.length + features.external.length + features.community.length > 0;
     const hasGeo = form.address.trim() || form.lat.trim() || form.lng.trim();
-    const priceDigits = form.price.replace(/[^0-9.]/g, "");
+    const price = withCommas(form.price);
 
     const data = {
       title: form.title.trim(),
@@ -222,7 +233,7 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
       province: form.province,
       agentId: form.agentId || undefined,
       listingType: (form.listingType === "rent" ? "rent" : "sale") as "sale" | "rent",
-      price: priceDigits ? `$${priceDigits}` : "",
+      price: price ? `$${price}` : "",
       rentPrice: form.rentPrice.trim() || undefined,
       featured: form.featured === "Yes",
       exclusive: form.exclusive === "Yes",
@@ -230,7 +241,6 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
       constructionSize: form.constructionSize.trim() ? `${form.constructionSize.trim()} m²` : "",
       bedrooms: Number(form.bedrooms || 0),
       bathrooms: Number(form.bathrooms || 0),
-      yearBuilt: form.yearBuilt.trim() || undefined,
       hoa: form.hoa.trim() || undefined,
       image: form.image || galleryUrls[0] || DEFAULT_IMG,
       gallery: galleryUrls,
@@ -339,7 +349,7 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
               <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[13px] text-[#5d7268]">m²</span>
             </div>
           </Field>
-          <Field label="Construction Size">
+          <Field label="Construction Size" hint="Leave empty for lots / land with no construction.">
             <div className="relative">
               <input name="constructionSize" value={form.constructionSize} onChange={handleChange} inputMode="numeric" className={`${inputCls} pr-12`} placeholder="420" />
               <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[13px] text-[#5d7268]">m²</span>
@@ -350,9 +360,6 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
           </Field>
           <Field label="Bathrooms" hint="Decimals allowed (e.g. 2.5 = half bath).">
             <input name="bathrooms" value={form.bathrooms} onChange={handleChange} type="number" min="0" step="0.5" className={inputCls} placeholder="2.5" />
-          </Field>
-          <Field label="Year Built">
-            <input name="yearBuilt" value={form.yearBuilt} onChange={handleChange} className={inputCls} placeholder="2022" />
           </Field>
           <Field label="HOA / Fee">
             <input name="hoa" value={form.hoa} onChange={handleChange} className={inputCls} placeholder="$300/mo" />
@@ -419,12 +426,11 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
       </Card>
 
       <Card title="Features">
-        <p className="-mt-2 mb-5 text-[13px] text-[#5d7268]">One feature per line in each column.</p>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <p className="-mt-2 mb-5 text-[13px] text-[#5d7268]">All optional — one feature per line in each column.</p>
+        <div className="grid gap-5 sm:grid-cols-3">
           <Field label="Internal"><textarea name="featInternal" value={form.featInternal} onChange={handleChange} className={areaCls} placeholder={"A/C\nHigh ceilings\n…"} /></Field>
           <Field label="External"><textarea name="featExternal" value={form.featExternal} onChange={handleChange} className={areaCls} placeholder={"Private pool\nGardens\n…"} /></Field>
           <Field label="Community"><textarea name="featCommunity" value={form.featCommunity} onChange={handleChange} className={areaCls} placeholder={"Gated\n24/7 security\n…"} /></Field>
-          <Field label="Lifestyle"><textarea name="featLifestyle" value={form.featLifestyle} onChange={handleChange} className={areaCls} placeholder={"Beach lifestyle\nNature\n…"} /></Field>
         </div>
       </Card>
 

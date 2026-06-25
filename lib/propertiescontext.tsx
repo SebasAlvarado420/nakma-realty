@@ -14,7 +14,7 @@ import {
   fetchProperties,
   createProperty,
   updatePropertyApi,
-  updatePropertyCode,
+  setArchived,
   deletePropertyApi,
   seedProperties,
 } from "@/lib/properties-api";
@@ -48,12 +48,19 @@ type CreatePropertyInput = {
 };
 
 type PropertiesContextType = {
+  /** Active (non-archived) listings — what the public site and the main admin
+   *  table show. */
   properties: Property[];
+  /** Archived listings — shown only in the admin "Archived" section. They keep
+   *  their NK code and can be restored at any time. */
+  archivedProperties: Property[];
   loading: boolean;
   usingFallback: boolean;
   addProperty: (input: CreatePropertyInput) => Promise<void>;
   updateProperty: (id: string, patch: Partial<Property>) => Promise<void>;
   deleteProperty: (id: string) => Promise<void>;
+  archiveProperty: (id: string) => Promise<void>;
+  restoreProperty: (id: string) => Promise<void>;
   importDemoListings: () => Promise<void>;
   refresh: () => Promise<void>;
 };
@@ -149,33 +156,31 @@ export function PropertiesProvider({ children }: { children: React.ReactNode }) 
     [refresh]
   );
 
-  // After a delete, compact the NK codes so they stay contiguous with no gaps
-  // (delete NK02 from NK01/NK02/NK03 → remaining become NK01/NK02). When the
-  // table is emptied, the counter naturally resets to NK01 for the next add.
-  const resequenceCodes = useCallback(async () => {
-    if (!supabaseEnabled) return;
-    const data = await fetchProperties();
-    const codeNum = (code: string) => {
-      const m = /^NK(\d+)$/i.exec((code ?? "").trim());
-      return m ? parseInt(m[1], 10) : Number.MAX_SAFE_INTEGER;
-    };
-    const sorted = [...data].sort((a, b) => codeNum(a.code) - codeNum(b.code));
-    const updates = sorted
-      .map((p, i) => {
-        const want = `NK${String(i + 1).padStart(2, "0")}`;
-        return p.code === want ? null : updatePropertyCode(p.id, want);
-      })
-      .filter(Boolean) as Promise<void>[];
-    if (updates.length) await Promise.all(updates);
-  }, []);
-
+  // The NK code is a unique, permanent identifier for each property: it never
+  // gets renumbered. Archiving keeps the code with the listing; a fresh add
+  // takes the lowest free NK slot (see PropertyForm).
   const deleteProperty = useCallback(
     async (id: string) => {
       await deletePropertyApi(id);
-      await resequenceCodes();
       await refresh();
     },
-    [refresh, resequenceCodes]
+    [refresh]
+  );
+
+  const archiveProperty = useCallback(
+    async (id: string) => {
+      await setArchived(id, true);
+      await refresh();
+    },
+    [refresh]
+  );
+
+  const restoreProperty = useCallback(
+    async (id: string) => {
+      await setArchived(id, false);
+      await refresh();
+    },
+    [refresh]
   );
 
   const importDemoListings = useCallback(async () => {
@@ -184,24 +189,39 @@ export function PropertiesProvider({ children }: { children: React.ReactNode }) 
     await refresh();
   }, [refresh]);
 
+  const activeProperties = useMemo(
+    () => properties.filter((p) => !p.archived),
+    [properties]
+  );
+  const archivedProperties = useMemo(
+    () => properties.filter((p) => p.archived),
+    [properties]
+  );
+
   const value = useMemo(
     () => ({
-      properties,
+      properties: activeProperties,
+      archivedProperties,
       loading,
       usingFallback,
       addProperty,
       updateProperty,
       deleteProperty,
+      archiveProperty,
+      restoreProperty,
       importDemoListings,
       refresh,
     }),
     [
-      properties,
+      activeProperties,
+      archivedProperties,
       loading,
       usingFallback,
       addProperty,
       updateProperty,
       deleteProperty,
+      archiveProperty,
+      restoreProperty,
       importDemoListings,
       refresh,
     ]

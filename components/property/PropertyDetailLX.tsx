@@ -9,7 +9,6 @@ import {
   Bath,
   Ruler,
   Home,
-  CalendarDays,
   Building2,
   Bookmark,
   Share2,
@@ -27,6 +26,7 @@ import type { Property, PropertyFeatures } from "@/types/property";
 import type { TeamMember } from "@/data/team";
 import { BLUR_DATA_URL } from "@/lib/constants";
 import PropertyCard from "@/components/property/PropertyCard";
+import BrokerContactModal from "@/components/property/BrokerContactModal";
 
 const PropertyMiniMap = dynamic(
   () => import("@/components/listings/PropertiesMap"),
@@ -61,12 +61,6 @@ const DEFAULT_FEATURES: PropertyFeatures = {
     "24/7 security",
     "Gated community",
     "Close to amenities",
-  ],
-  lifestyle: [
-    "Indoor-outdoor living",
-    "Nature & wildlife",
-    "Pura Vida lifestyle",
-    "Investment potential",
   ],
 };
 
@@ -115,6 +109,7 @@ export default function PropertyDetailLX({
   const [showFullDesc, setShowFullDesc] = useState(false);
   const [paused, setPaused] = useState(false);
   const [lightbox, setLightbox] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
 
   // Auto-rotate the main photo (pauses on hover / when the lightbox is open).
   useEffect(() => {
@@ -183,12 +178,13 @@ export default function PropertyDetailLX({
               height={40}
               className="h-10 w-10 rounded-full object-cover"
             />
-            <Link
-              href="/contact-us"
+            <button
+              type="button"
+              onClick={() => setContactOpen(true)}
               className="nakma-body inline-flex h-[42px] items-center rounded-md bg-[var(--nakma-olive)] px-6 text-[12px] uppercase tracking-[0.18em] text-white transition hover:opacity-90"
             >
               Contact
-            </Link>
+            </button>
           </div>
         </div>
       </div>
@@ -295,21 +291,24 @@ export default function PropertyDetailLX({
         <div className="mx-auto flex max-w-7xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="nakma-body text-[14px] text-[var(--nakma-dark)]/75">
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-              <span className="inline-flex items-center gap-2">
-                <Bed className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.bedrooms} beds
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <Bath className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.bathrooms} baths
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <Ruler className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.constructionSize} construction
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <Home className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.landSize} property
-              </span>
-              {property.yearBuilt && (
+              {property.bedrooms > 0 && (
                 <span className="inline-flex items-center gap-2">
-                  <CalendarDays className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.yearBuilt} year built
+                  <Bed className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.bedrooms} beds
+                </span>
+              )}
+              {property.bathrooms > 0 && (
+                <span className="inline-flex items-center gap-2">
+                  <Bath className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.bathrooms} baths
+                </span>
+              )}
+              {property.constructionSize && (
+                <span className="inline-flex items-center gap-2">
+                  <Ruler className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.constructionSize} construction
+                </span>
+              )}
+              {property.landSize && (
+                <span className="inline-flex items-center gap-2">
+                  <Home className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.landSize} property
                 </span>
               )}
               {property.hoa && (
@@ -404,11 +403,10 @@ export default function PropertyDetailLX({
         {/* Features */}
         <section className="mt-14 border-t border-[var(--nakma-dark)]/8 pt-10">
           <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">Features</h2>
-          <div className="mt-7 grid grid-cols-1 gap-x-8 gap-y-9 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-7 grid grid-cols-1 gap-x-8 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
             <FeatureColumn title="Internal" items={features.internal} />
             <FeatureColumn title="External" items={features.external} />
             <FeatureColumn title="Community" items={features.community} />
-            <FeatureColumn title="Lifestyle" items={features.lifestyle} />
           </div>
         </section>
 
@@ -518,6 +516,13 @@ export default function PropertyDetailLX({
                   </p>
                 )}
               </div>
+              <button
+                type="button"
+                onClick={() => setContactOpen(true)}
+                className="nakma-body mt-6 inline-flex h-[44px] items-center rounded-md bg-[var(--nakma-olive)] px-7 text-[12px] uppercase tracking-[0.18em] text-white transition hover:opacity-90"
+              >
+                Contact {agent.name.split(" ")[0]}
+              </button>
             </div>
           </div>
         </section>
@@ -600,6 +605,15 @@ export default function PropertyDetailLX({
             {active + 1} / {images.length}
           </p>
         </div>
+      )}
+
+      {/* ── Broker contact pop-up ─────────────────────────────── */}
+      {contactOpen && (
+        <BrokerContactModal
+          agent={agent}
+          property={property}
+          onClose={() => setContactOpen(false)}
+        />
       )}
     </div>
   );

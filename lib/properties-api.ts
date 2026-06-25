@@ -36,6 +36,7 @@ export function rowToProperty(r: any): Property {
     communityInfo: r.community_info ?? undefined,
     geo: r.geo ?? undefined,
     agentId: r.agent_id ?? undefined,
+    archived: !!r.archived,
   };
 }
 
@@ -68,6 +69,7 @@ export function propertyToRow(p: Partial<Property>) {
     community_info: p.communityInfo ?? null,
     geo: p.geo ?? null,
     agent_id: p.agentId ?? null,
+    archived: p.archived ?? false,
   };
 }
 
@@ -125,14 +127,14 @@ export async function deletePropertyApi(id: string): Promise<void> {
   }
 }
 
-// Update ONLY the code column. Used by the re-sequencing step after a delete.
-// (We can't reuse updatePropertyApi here — propertyToRow re-applies column
-// defaults, which would wipe featured/gallery/etc. on a code-only change.)
-export async function updatePropertyCode(id: string, code: string): Promise<void> {
+// Archive / restore a listing — flips ONLY the `archived` flag so the NK code
+// and every other field stay intact. (We can't reuse updatePropertyApi here:
+// propertyToRow re-applies column defaults and would wipe featured/gallery/etc.)
+export async function setArchived(id: string, archived: boolean): Promise<void> {
   if (!supabase) return;
-  const { error } = await supabase.from(TABLE).update({ code }).eq("id", id);
+  const { error } = await supabase.from(TABLE).update({ archived }).eq("id", id);
   if (error) {
-    console.error("updatePropertyCode:", error.message);
+    console.error("setArchived:", error.message);
     throw new Error(error.message);
   }
 }
