@@ -63,8 +63,8 @@ Public can **read**; only authenticated (logged-in admin) can **write**. Columns
 - Full schema lives in `supabase/schema.sql`.
 
 ### How data flows
-- `lib/propertiescontext.tsx` (`PropertiesProvider`) loads properties from Supabase on mount. **If the DB is empty**, it falls back to the demo seed in `data/properties.ts` (so the site is never blank).
-- The DB currently holds **14 demo properties (NK01–NK14)**. To start the real catalog: delete the demos in `/admin/properties` → the auto code restarts at **NK01**.
+- `lib/propertiescontext.tsx` (`PropertiesProvider`) loads properties from Supabase on mount. **Supabase is the single source of truth — there is NO demo seed / fallback.** An empty DB = an empty portfolio (home carousels hide themselves, `/listings` shows an empty state). Every listing is added manually through the admin panel.
+- The catalog starts empty; the first property added through the admin gets code **NK01** (lowest free NK slot, counting archived).
 
 ---
 

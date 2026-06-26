@@ -139,16 +139,6 @@ export async function setArchived(id: string, archived: boolean): Promise<void> 
   }
 }
 
-// Bulk insert (used by the "import demo listings" action).
-export async function seedProperties(list: Partial<Property>[]): Promise<void> {
-  if (!supabase) return;
-  const { error } = await supabase.from(TABLE).insert(list.map(propertyToRow));
-  if (error) {
-    console.error("seedProperties:", error.message);
-    throw new Error(error.message);
-  }
-}
-
 // Upload a file to the public media bucket; returns its public URL.
 export async function uploadMedia(file: File): Promise<string> {
   if (!supabase) throw new Error("Storage unavailable");

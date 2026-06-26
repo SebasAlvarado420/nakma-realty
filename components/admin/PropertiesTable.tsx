@@ -5,15 +5,8 @@ import { useState } from "react";
 import { useProperties } from "@/lib/propertiescontext";
 
 export default function PropertiesTable() {
-  const {
-    properties,
-    archivedProperties,
-    usingFallback,
-    loading,
-    deleteProperty,
-    archiveProperty,
-    importDemoListings,
-  } = useProperties();
+  const { properties, archivedProperties, loading, deleteProperty, archiveProperty } =
+    useProperties();
   const [busy, setBusy] = useState<string | null>(null);
 
   async function onDelete(id: string, title: string) {
@@ -39,17 +32,6 @@ export default function PropertiesTable() {
     }
   }
 
-  async function onImport() {
-    setBusy("import");
-    try {
-      await importDemoListings();
-    } catch (e) {
-      window.alert(e instanceof Error ? e.message : "Could not import.");
-    } finally {
-      setBusy(null);
-    }
-  }
-
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
@@ -63,28 +45,6 @@ export default function PropertiesTable() {
           Archived ({archivedProperties.length}) →
         </Link>
       </div>
-
-      {usingFallback && (
-        <div className="flex flex-col gap-4 rounded-[24px] border border-[#e3d9c4] bg-[#fbf6ea] p-6 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="font-semibold text-[#163126]">
-              You&apos;re viewing demo listings.
-            </p>
-            <p className="mt-1 text-sm text-[#5d7268]">
-              Your database is empty. Import the 8 demo properties to start editing them,
-              or add your own with “Add New Property”.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={onImport}
-            disabled={busy === "import"}
-            className="shrink-0 rounded-2xl bg-[#163126] px-6 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-white transition hover:opacity-90 disabled:opacity-50"
-          >
-            {busy === "import" ? "Importing…" : "Import demo listings"}
-          </button>
-        </div>
-      )}
 
       <div className="overflow-hidden rounded-[28px] bg-white shadow-xl">
         <div className="overflow-x-auto">
@@ -117,32 +77,28 @@ export default function PropertiesTable() {
                       >
                         View
                       </Link>
-                      {!usingFallback && (
-                        <>
-                          <Link
-                            href={`/admin/properties/${property.id}/edit`}
-                            className="font-medium text-[#163126] hover:underline"
-                          >
-                            Edit
-                          </Link>
-                          <button
-                            type="button"
-                            onClick={() => onArchive(property.id)}
-                            disabled={busy === property.id}
-                            className="font-medium text-[#8b6d3b] hover:underline disabled:opacity-40"
-                          >
-                            {busy === property.id ? "…" : "Archive"}
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => onDelete(property.id, property.title)}
-                            disabled={busy === property.id}
-                            className="font-medium text-red-600 hover:underline disabled:opacity-40"
-                          >
-                            Delete
-                          </button>
-                        </>
-                      )}
+                      <Link
+                        href={`/admin/properties/${property.id}/edit`}
+                        className="font-medium text-[#163126] hover:underline"
+                      >
+                        Edit
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => onArchive(property.id)}
+                        disabled={busy === property.id}
+                        className="font-medium text-[#8b6d3b] hover:underline disabled:opacity-40"
+                      >
+                        {busy === property.id ? "…" : "Archive"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onDelete(property.id, property.title)}
+                        disabled={busy === property.id}
+                        className="font-medium text-red-600 hover:underline disabled:opacity-40"
+                      >
+                        Delete
+                      </button>
                     </div>
                   </td>
                 </tr>

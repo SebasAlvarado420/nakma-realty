@@ -8,15 +8,13 @@ import {
   useMemo,
   useState,
 } from "react";
-import { initialProperties } from "@/data/properties";
-import { supabase, supabaseEnabled } from "@/lib/supabase";
+import { supabaseEnabled } from "@/lib/supabase";
 import {
   fetchProperties,
   createProperty,
   updatePropertyApi,
   setArchived,
   deletePropertyApi,
-  seedProperties,
 } from "@/lib/properties-api";
 import type { Property, PropertyLocation, PropertyFeatures } from "@/types/property";
 
@@ -31,7 +29,6 @@ type CreatePropertyInput = {
   bathrooms: number;
   landSize: string;
   constructionSize: string;
-  yearBuilt?: string;
   hoa?: string;
   image: string;
   featured: boolean;
@@ -55,13 +52,11 @@ type PropertiesContextType = {
    *  their NK code and can be restored at any time. */
   archivedProperties: Property[];
   loading: boolean;
-  usingFallback: boolean;
   addProperty: (input: CreatePropertyInput) => Promise<void>;
   updateProperty: (id: string, patch: Partial<Property>) => Promise<void>;
   deleteProperty: (id: string) => Promise<void>;
   archiveProperty: (id: string) => Promise<void>;
   restoreProperty: (id: string) => Promise<void>;
-  importDemoListings: () => Promise<void>;
   refresh: () => Promise<void>;
 };
 
@@ -79,30 +74,22 @@ function slugify(value: string) {
 }
 
 export function PropertiesProvider({ children }: { children: React.ReactNode }) {
-  const [properties, setProperties] = useState<Property[]>(initialProperties);
+  // Single source of truth: Supabase. There is NO demo seed / fallback — an
+  // empty database means an empty portfolio. Every listing is added manually
+  // through the admin panel.
+  const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
-  const [usingFallback, setUsingFallback] = useState(!supabaseEnabled);
 
   const refresh = useCallback(async () => {
     if (!supabaseEnabled) {
-      setProperties(initialProperties);
-      setUsingFallback(true);
+      setProperties([]);
       setLoading(false);
       return;
     }
     try {
-      const data = await fetchProperties();
-      if (data.length > 0) {
-        setProperties(data);
-        setUsingFallback(false);
-      } else {
-        // DB is empty — show the demo seed so the site is never blank.
-        setProperties(initialProperties);
-        setUsingFallback(true);
-      }
+      setProperties(await fetchProperties());
     } catch {
-      setProperties(initialProperties);
-      setUsingFallback(true);
+      setProperties([]);
     } finally {
       setLoading(false);
     }
@@ -126,7 +113,6 @@ export function PropertiesProvider({ children }: { children: React.ReactNode }) 
         bathrooms: Number(input.bathrooms) || 0,
         landSize: input.landSize.trim(),
         constructionSize: input.constructionSize.trim(),
-        yearBuilt: input.yearBuilt?.trim() || undefined,
         hoa: input.hoa?.trim() || undefined,
         image:
           input.image.trim() ||
@@ -183,12 +169,6 @@ export function PropertiesProvider({ children }: { children: React.ReactNode }) 
     [refresh]
   );
 
-  const importDemoListings = useCallback(async () => {
-    // propertyToRow ignores `id`, so Supabase generates fresh uuids.
-    await seedProperties(initialProperties);
-    await refresh();
-  }, [refresh]);
-
   const activeProperties = useMemo(
     () => properties.filter((p) => !p.archived),
     [properties]
@@ -203,26 +183,22 @@ export function PropertiesProvider({ children }: { children: React.ReactNode }) 
       properties: activeProperties,
       archivedProperties,
       loading,
-      usingFallback,
       addProperty,
       updateProperty,
       deleteProperty,
       archiveProperty,
       restoreProperty,
-      importDemoListings,
       refresh,
     }),
     [
       activeProperties,
       archivedProperties,
       loading,
-      usingFallback,
       addProperty,
       updateProperty,
       deleteProperty,
       archiveProperty,
       restoreProperty,
-      importDemoListings,
       refresh,
     ]
   );
