@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { X, MessageCircle, Mail, Phone, MapPin, Send } from "lucide-react";
+import { X, Mail, Phone, MapPin, Send } from "lucide-react";
+import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 import type { TeamMember } from "@/data/team";
 import type { Property } from "@/types/property";
 
@@ -101,16 +102,6 @@ export default function BrokerContactModal({
           </div>
 
           <div className="mt-7 space-y-3 border-t border-white/12 pt-6">
-            {agent.whatsapp && (
-              <a
-                href={`https://wa.me/${waNumber}?text=${waText}`}
-                target="_blank"
-                rel="noreferrer"
-                className="nakma-body flex h-[46px] items-center justify-center gap-2.5 rounded-full bg-[#25D366] text-[13px] font-medium text-white transition hover:opacity-90"
-              >
-                <MessageCircle className="h-4 w-4" /> WhatsApp {agent.name.split(" ")[0]}
-              </a>
-            )}
             {agent.email && (
               <a
                 href={`mailto:${agent.email}`}
@@ -131,6 +122,16 @@ export default function BrokerContactModal({
               <p className="nakma-body flex items-center gap-2.5 text-[13.5px] text-white/65">
                 <MapPin className="h-4 w-4 text-[var(--nakma-sand)]" /> {agent.office}
               </p>
+            )}
+            {agent.whatsapp && (
+              <a
+                href={`https://wa.me/${waNumber}?text=${waText}`}
+                target="_blank"
+                rel="noreferrer"
+                className="nakma-body mt-1 flex h-[48px] items-center justify-center gap-2.5 rounded-xl bg-[#1FA855] text-[13px] font-semibold tracking-wide text-white shadow-md transition hover:bg-[#1c994d]"
+              >
+                <WhatsAppIcon className="h-[18px] w-[18px]" /> WhatsApp {agent.name.split(" ")[0]}
+              </a>
             )}
           </div>
 

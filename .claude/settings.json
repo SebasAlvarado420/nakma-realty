@@ -67,7 +67,8 @@
       "PowerShell(gh workflow run \"supabase-keepalive.yml\" --repo SebasAlvarado420/nakma-realty 2>&1)",
       "PowerShell(git -C $repo commit -m \"Admin: re-sequence NK codes after delete \\(no gaps, reset when empty\\)\" 2>&1)",
       "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy6.log\")",
-      "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy7.log\")"
+      "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy7.log\")",
+      "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy8.log\")"
     ]
   }
 }

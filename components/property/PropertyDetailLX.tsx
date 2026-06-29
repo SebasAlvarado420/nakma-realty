@@ -16,17 +16,17 @@ import {
   MapPin,
   Mail,
   Phone,
-  MessageCircle,
   Check,
   ZoomIn,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import type { Property, PropertyFeatures } from "@/types/property";
+import type { Property } from "@/types/property";
 import type { TeamMember } from "@/data/team";
 import { BLUR_DATA_URL } from "@/lib/constants";
 import PropertyCard from "@/components/property/PropertyCard";
 import BrokerContactModal from "@/components/property/BrokerContactModal";
+import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 
 const PropertyMiniMap = dynamic(
   () => import("@/components/listings/PropertiesMap"),
@@ -39,30 +39,6 @@ const PropertyMiniMap = dynamic(
 );
 
 const SAVED_KEY = "nakma-saved";
-
-const DEFAULT_FEATURES: PropertyFeatures = {
-  internal: [
-    "Contemporary design",
-    "Floor-to-ceiling windows",
-    "High ceilings",
-    "Natural light",
-    "Open-concept living",
-    "Fully equipped kitchen",
-  ],
-  external: [
-    "Private pool",
-    "Landscaped tropical gardens",
-    "Covered terrace",
-    "Outdoor dining area",
-    "Off-street parking",
-  ],
-  community: [
-    "Controlled access",
-    "24/7 security",
-    "Gated community",
-    "Close to amenities",
-  ],
-};
 
 function digits(s?: string) {
   return (s ?? "").replace(/[^0-9]/g, "");
@@ -150,7 +126,15 @@ export default function PropertyDetailLX({
     setActive((a) => (a + dir + images.length) % images.length);
   }
 
-  const features = property.features ?? DEFAULT_FEATURES;
+  // Features are fully optional and admin-driven — only show the categories
+  // that actually have entries, and centre whatever's left.
+  const featureGroups = [
+    { title: "Internal", items: property.features?.internal ?? [] },
+    { title: "External", items: property.features?.external ?? [] },
+    { title: "Community", items: property.features?.community ?? [] },
+  ].filter((g) => g.items.length > 0);
+  const hasDescription = Boolean(property.description && property.description.trim());
+  const descIsLong = (property.description ?? "").length > 320;
   const mapsUrl = property.geo
     ? `https://www.google.com/maps?q=${property.geo.lat},${property.geo.lng}`
     : `https://www.google.com/maps?q=${encodeURIComponent(property.location)}`;
@@ -303,12 +287,12 @@ export default function PropertyDetailLX({
               )}
               {property.constructionSize && (
                 <span className="inline-flex items-center gap-2">
-                  <Ruler className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.constructionSize} construction
+                  <Home className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.constructionSize} construction
                 </span>
               )}
               {property.landSize && (
                 <span className="inline-flex items-center gap-2">
-                  <Home className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.landSize} property
+                  <Ruler className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.landSize} property
                 </span>
               )}
               {property.hoa && (
@@ -370,45 +354,42 @@ export default function PropertyDetailLX({
           </section>
         )}
 
-        {/* Description */}
-        <section className="mt-14 border-t border-[var(--nakma-dark)]/8 pt-10">
-          <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">Description</h2>
-          <div
-            className={`nakma-body mt-5 space-y-4 text-[15px] leading-[1.85] text-[var(--nakma-dark)]/72 ${
-              showFullDesc ? "" : "line-clamp-[7]"
-            }`}
-          >
-            {property.description && <p>{property.description}</p>}
-            <p>
-              This property reflects the tropical richness and quiet luxury that defines
-              NAKMA. Thoughtful architecture, premium finishes, and a deep respect for the
-              surrounding landscape come together to create a home that feels grounded,
-              elegant, and distinctly Costa Rican.
-            </p>
-            <p>
-              Every detail has been considered — from the orientation that captures the
-              light and breeze, to the materials that age gracefully in the tropical
-              climate. It is a place designed for an intentional, connected way of living.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => setShowFullDesc((s) => !s)}
-            className="nakma-body mt-4 text-[13px] uppercase tracking-[0.18em] text-[var(--nakma-olive)] underline-offset-4 hover:underline"
-          >
-            {showFullDesc ? "Show less" : "Show more description"}
-          </button>
-        </section>
+        {/* Description — admin-written only, no filler text. */}
+        {hasDescription && (
+          <section className="mt-14 border-t border-[var(--nakma-dark)]/8 pt-10">
+            <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">Description</h2>
+            <div
+              className={`nakma-body mt-5 whitespace-pre-line text-[15px] leading-[1.85] text-[var(--nakma-dark)]/72 ${
+                showFullDesc || !descIsLong ? "" : "line-clamp-[7]"
+              }`}
+            >
+              {property.description}
+            </div>
+            {descIsLong && (
+              <button
+                type="button"
+                onClick={() => setShowFullDesc((s) => !s)}
+                className="nakma-body mt-4 text-[13px] uppercase tracking-[0.18em] text-[var(--nakma-olive)] underline-offset-4 hover:underline"
+              >
+                {showFullDesc ? "Show less" : "Show more description"}
+              </button>
+            )}
+          </section>
+        )}
 
-        {/* Features */}
-        <section className="mt-14 border-t border-[var(--nakma-dark)]/8 pt-10">
-          <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">Features</h2>
-          <div className="mt-7 grid grid-cols-1 gap-x-8 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
-            <FeatureColumn title="Internal" items={features.internal} />
-            <FeatureColumn title="External" items={features.external} />
-            <FeatureColumn title="Community" items={features.community} />
-          </div>
-        </section>
+        {/* Features — only the categories that have entries, centred. */}
+        {featureGroups.length > 0 && (
+          <section className="mt-14 border-t border-[var(--nakma-dark)]/8 pt-10">
+            <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">Features</h2>
+            <div className="mt-7 flex flex-wrap justify-center gap-x-16 gap-y-9 text-left">
+              {featureGroups.map((g) => (
+                <div key={g.title} className="w-full sm:w-[230px]">
+                  <FeatureColumn title={g.title} items={g.items} />
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Community */}
         {property.communityInfo && (
@@ -505,9 +486,9 @@ export default function PropertyDetailLX({
                     href={`https://wa.me/${waNumber}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="nakma-body inline-flex items-center gap-2.5 text-[14px] text-[var(--nakma-dark)]/75 transition hover:text-[var(--nakma-olive)]"
+                    className="nakma-body inline-flex w-fit items-center gap-2 rounded-full bg-[#1FA855] px-4 py-2 text-[13px] font-medium text-white shadow-sm transition hover:bg-[#1c994d]"
                   >
-                    <MessageCircle className="h-4 w-4 text-[var(--nakma-dark)]/40" /> {agent.whatsapp}
+                    <WhatsAppIcon className="h-4 w-4" /> WhatsApp
                   </a>
                 )}
                 {agent.office && (

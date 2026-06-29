@@ -24,7 +24,7 @@ export const teamMembers: TeamMember[] = [
     email: "srodriguez@nakmarealty.com",
     phone: "+506 8606-0252",
     whatsapp: "+506 8606-0252",
-    office: "NAKMA Realty",
+    office: "Costa Rica",
   },
   {
     id: "2",
@@ -37,7 +37,7 @@ export const teamMembers: TeamMember[] = [
     email: "info@nakmarealty.com",
     phone: "+506 8606-0252",
     whatsapp: "+506 8606-0252",
-    office: "NAKMA Realty",
+    office: "Costa Rica",
   },
   {
     id: "4",
@@ -50,7 +50,7 @@ export const teamMembers: TeamMember[] = [
     email: "jchaverri@nakmarealty.com",
     phone: "+506 8606-0252",
     whatsapp: "+506 8606-0252",
-    office: "NAKMA Realty",
+    office: "Costa Rica",
   },
   {
     id: "3",
@@ -63,7 +63,7 @@ export const teamMembers: TeamMember[] = [
     email: "mtorres@nakmarealty.com",
     phone: "+506 8606-0252",
     whatsapp: "+506 8606-0252",
-    office: "NAKMA Realty",
+    office: "Costa Rica",
   },
 ];
 
