@@ -65,22 +65,30 @@ export default function PropertyHoverCard({ property }: { property: Property }) 
         </p>
 
         <div className="nakma-body mt-3 flex flex-wrap items-center gap-x-3.5 gap-y-1 text-[12px] text-[var(--nakma-dark)]/70">
-          <span className="inline-flex items-center gap-1.5">
-            <Bed className="h-[14px] w-[14px] text-[var(--nakma-dark)]/40" />
-            {property.bedrooms}
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <Bath className="h-[14px] w-[14px] text-[var(--nakma-dark)]/40" />
-            {property.bathrooms}
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <Ruler className="h-[14px] w-[14px] text-[var(--nakma-dark)]/40" />
-            {property.constructionSize}
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <Home className="h-[14px] w-[14px] text-[var(--nakma-dark)]/40" />
-            {property.landSize}
-          </span>
+          {property.bedrooms > 0 && (
+            <span className="inline-flex items-center gap-1.5">
+              <Bed className="h-[14px] w-[14px] text-[var(--nakma-dark)]/40" />
+              {property.bedrooms}
+            </span>
+          )}
+          {property.bathrooms > 0 && (
+            <span className="inline-flex items-center gap-1.5">
+              <Bath className="h-[14px] w-[14px] text-[var(--nakma-dark)]/40" />
+              {property.bathrooms}
+            </span>
+          )}
+          {property.constructionSize && (
+            <span className="inline-flex items-center gap-1.5">
+              <Home className="h-[14px] w-[14px] text-[var(--nakma-dark)]/40" />
+              {property.constructionSize}
+            </span>
+          )}
+          {property.landSize && (
+            <span className="inline-flex items-center gap-1.5">
+              <Ruler className="h-[14px] w-[14px] text-[var(--nakma-dark)]/40" />
+              {property.landSize}
+            </span>
+          )}
         </div>
 
         <div className="mt-3 flex items-center justify-between">

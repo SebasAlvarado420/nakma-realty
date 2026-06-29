@@ -10,7 +10,7 @@ export default function BrandName({ className = "" }: { className?: string }) {
         N
         <span
           className="pointer-events-none absolute left-1/2 -translate-x-1/2 select-none"
-          style={{ top: "-0.40em", fontSize: "0.58em", lineHeight: 1 }}
+          style={{ top: "-0.17em", fontSize: "0.46em", lineHeight: 1 }}
         >
           {BRAND_MARK}
         </span>

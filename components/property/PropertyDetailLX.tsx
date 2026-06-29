@@ -381,7 +381,7 @@ export default function PropertyDetailLX({
         {featureGroups.length > 0 && (
           <section className="mt-14 border-t border-[var(--nakma-dark)]/8 pt-10">
             <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">Features</h2>
-            <div className="mt-7 flex flex-wrap justify-center gap-x-16 gap-y-9 text-left">
+            <div className="mt-7 flex flex-wrap justify-start gap-x-16 gap-y-9 text-left">
               {featureGroups.map((g) => (
                 <div key={g.title} className="w-full sm:w-[230px]">
                   <FeatureColumn title={g.title} items={g.items} />

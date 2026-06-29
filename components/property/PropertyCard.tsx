@@ -113,22 +113,30 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         </p>
 
         <div className="nakma-body mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[12.5px] text-[var(--nakma-dark)]/70">
-          <span className="inline-flex items-center gap-1.5">
-            <Bed className="h-[15px] w-[15px] text-[var(--nakma-dark)]/40" />
-            {property.bedrooms}
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <Bath className="h-[15px] w-[15px] text-[var(--nakma-dark)]/40" />
-            {property.bathrooms}
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <Ruler className="h-[15px] w-[15px] text-[var(--nakma-dark)]/40" />
-            {property.constructionSize}
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <Home className="h-[15px] w-[15px] text-[var(--nakma-dark)]/40" />
-            {property.landSize}
-          </span>
+          {property.bedrooms > 0 && (
+            <span className="inline-flex items-center gap-1.5">
+              <Bed className="h-[15px] w-[15px] text-[var(--nakma-dark)]/40" />
+              {property.bedrooms}
+            </span>
+          )}
+          {property.bathrooms > 0 && (
+            <span className="inline-flex items-center gap-1.5">
+              <Bath className="h-[15px] w-[15px] text-[var(--nakma-dark)]/40" />
+              {property.bathrooms}
+            </span>
+          )}
+          {property.constructionSize && (
+            <span className="inline-flex items-center gap-1.5">
+              <Home className="h-[15px] w-[15px] text-[var(--nakma-dark)]/40" />
+              {property.constructionSize}
+            </span>
+          )}
+          {property.landSize && (
+            <span className="inline-flex items-center gap-1.5">
+              <Ruler className="h-[15px] w-[15px] text-[var(--nakma-dark)]/40" />
+              {property.landSize}
+            </span>
+          )}
         </div>
 
         <p className="nakma-display mt-3.5 text-[19px] font-semibold tracking-[-0.01em] text-[var(--nakma-dark)]">
