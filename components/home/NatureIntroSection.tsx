@@ -7,20 +7,20 @@ import { BLUR_DATA_URL } from "@/lib/constants";
 
 const NATURE_IMAGES = [
   {
-    src: "https://images.unsplash.com/photo-1518182170546-07661fd94144?auto=format&fit=crop&w=1400&q=80",
+    src: "https://images.pexels.com/photos/15365639/pexels-photo-15365639.jpeg?auto=compress&cs=tinysrgb&w=1400",
     label: "Cloud Forest · Monteverde",
   },
   {
-    src: "https://images.unsplash.com/photo-1593693397690-362cb9666fc2?auto=format&fit=crop&w=1400&q=80",
+    src: "https://images.pexels.com/photos/36827348/pexels-photo-36827348.jpeg?auto=compress&cs=tinysrgb&w=1400",
     label: "Pacific Coast · Guanacaste",
   },
   {
-    src: "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=1400&q=80",
-    label: "Tropical Canopy · Osa Peninsula",
+    src: "https://images.pexels.com/photos/29943338/pexels-photo-29943338.jpeg?auto=compress&cs=tinysrgb&w=1400",
+    label: "Volcanic Highlands · Central Valley",
   },
   {
-    src: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1400&q=80",
-    label: "Architectural Retreat · San José",
+    src: "https://images.pexels.com/photos/11181988/pexels-photo-11181988.jpeg?auto=compress&cs=tinysrgb&w=1400",
+    label: "Central Pacific · Manuel Antonio",
   },
 ];
 

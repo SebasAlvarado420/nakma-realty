@@ -80,6 +80,26 @@ export default function HomePageClient() {
       {/* 7. Brand story */}
       <NatureIntroSection />
 
+      {/* 7b. One more pass of the portfolio — carousel before the close */}
+      <ListingsCarousel
+        eyebrow={lang === "es" ? "Explora la colección" : "Browse the collection"}
+        title={
+          lang === "es" ? (
+            <>
+              Más hogares por{" "}
+              <span className="italic text-[var(--nakma-earth)]">descubrir</span>.
+            </>
+          ) : (
+            <>
+              More homes to{" "}
+              <span className="italic text-[var(--nakma-earth)]">discover</span>.
+            </>
+          )
+        }
+        properties={properties}
+        viewAllLabel={t("featured.viewAll")}
+      />
+
       {/* 8. Final CTA */}
       <CTASection />
     </>

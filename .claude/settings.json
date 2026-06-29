@@ -72,7 +72,8 @@
       "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy9.log\")",
       "WebSearch",
       "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy10.log\")",
-      "WebFetch(domain:www.pexels.com)"
+      "WebFetch(domain:www.pexels.com)",
+      "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy11.log\")"
     ]
   }
 }
