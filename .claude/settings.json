@@ -84,7 +84,13 @@
       "Bash(curl -s -o /dev/null -w \"HTTP %{http_code} -> %{redirect_url}\\\\n\" -I \"https://www.nakmarealty.com\")",
       "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" \"https://nakmarealty.com\")",
       "Bash(openssl s_client -servername nakmarealty.com -connect nakmarealty.com:443)",
-      "Bash(openssl x509 *)"
+      "Bash(openssl x509 *)",
+      "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy13.log\")",
+      "Bash(grep -E 'Compiled successfully|Failed|error|Error|Aliased|readyState|sitemap|robots' 'C:\\\\Users\\\\sebas\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-sebas-OneDrive-Desktop-NAKMA-REALTY-RESTAURADO-COMPLETO-HERO\\\\05e5a38f-06d6-41b4-94a1-6b8d3d316973\\\\tasks\\\\bvo2pmm62.output')",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code} | %{time_total}s | %{size_download} bytes\\\\n\" \"https://nakmarealty.com\")",
+      "Bash(curl -s \"https://nakmarealty.com/robots.txt\")",
+      "Bash(curl -s \"https://nakmarealty.com/sitemap.xml\")",
+      "Bash(curl -s \"https://nakmarealty.com\")"
     ]
   }
 }
