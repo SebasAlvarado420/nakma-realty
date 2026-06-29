@@ -41,5 +41,36 @@ export default function PropertyPage() {
   );
   const related = [...sameProvince, ...others].slice(0, 3);
 
-  return <PropertyDetailLX property={property} agent={agent} related={related} />;
+  // Per-listing structured data — richer search results for each property.
+  const priceNumber = Number((property.price || "").replace(/[^0-9.]/g, "")) || undefined;
+  const listingLd = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    name: property.title,
+    url: `https://nakmarealty.com/listings/${property.slug}`,
+    image: property.gallery?.length ? property.gallery : [property.image],
+    description: property.description || `${property.title} — ${property.location}, Costa Rica.`,
+    ...(priceNumber
+      ? { offers: { "@type": "Offer", price: priceNumber, priceCurrency: "USD", availability: "https://schema.org/InStock" } }
+      : {}),
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: property.location || property.province,
+      addressRegion: property.province,
+      addressCountry: "CR",
+    },
+    ...(property.geo
+      ? { geo: { "@type": "GeoCoordinates", latitude: property.geo.lat, longitude: property.geo.lng } }
+      : {}),
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(listingLd) }}
+      />
+      <PropertyDetailLX property={property} agent={agent} related={related} />
+    </>
+  );
 }

@@ -101,46 +101,23 @@ function useInView(threshold = 0.15) {
 }
 
 function ParallaxScene({ scene, index }: { scene: typeof SCENES[0]; index: number }) {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<HTMLDivElement>(null);
   const { ref: contentRef, inView } = useInView(0.12);
   const isLeft = scene.align === "left";
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    const img = imgRef.current;
-    if (!section || !img) return;
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const rect = section.getBoundingClientRect();
-        const vh = window.innerHeight;
-        const progress = (vh - rect.top) / (vh + rect.height);
-        const clamped = Math.max(0, Math.min(1, progress));
-        img.style.transform = `translateY(${(clamped - 0.5) * 100}px)`;
-        ticking = false;
-      });
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
-    <div ref={sectionRef} className="relative h-screen min-h-[700px] overflow-hidden">
-      {/* Parallax image */}
-      <div ref={imgRef} className="absolute inset-[-60px] will-change-transform">
+    <div className="relative h-screen min-h-[700px] overflow-hidden">
+      {/* Full-bleed image with a slow Ken Burns drift (CSS only — no scroll JS) */}
+      <div className="absolute inset-0">
         <Image
           src={scene.img}
-          alt={scene.eyebrow}
+          alt={`${scene.headline.replace(/\n/g, " ")} — Costa Rica real estate`}
           fill
           sizes="100vw"
+          quality={90}
           priority={index === 0}
           placeholder="blur"
           blurDataURL={BLUR_DATA_URL}
-          className="object-cover animate-[nakma-kenburns_20s_ease-in-out_infinite_alternate]"
+          className="object-cover animate-[nakma-kenburns_24s_ease-in-out_infinite_alternate]"
         />
       </div>
 

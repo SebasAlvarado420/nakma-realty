@@ -15,6 +15,7 @@ const DICT: Record<Lang, Record<string, string>> = {
 
     "hero.title": "Natural, refined real estate rooted in Costa Rica.",
     "hero.scroll": "Scroll to explore",
+    "hero.cta": "Explore Listings",
 
     "featured.eyebrow": "Featured Homes",
     "featured.viewAll": "View All Listings",
@@ -57,6 +58,7 @@ const DICT: Record<Lang, Record<string, string>> = {
 
     "hero.title": "Bienes raíces naturales y refinados, con raíces en Costa Rica.",
     "hero.scroll": "Desliza para explorar",
+    "hero.cta": "Ver Propiedades",
 
     "featured.eyebrow": "Propiedades Destacadas",
     "featured.viewAll": "Ver Todas",

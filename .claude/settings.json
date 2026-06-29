@@ -73,7 +73,18 @@
       "WebSearch",
       "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy10.log\")",
       "WebFetch(domain:www.pexels.com)",
-      "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy11.log\")"
+      "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy11.log\")",
+      "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy12.log\")",
+      "PowerShell(npx vercel domains add nakmarealty.com nakma-realty --scope nakmarealty-5086s-projects 2>&1)",
+      "PowerShell(npx vercel domains add www.nakmarealty.com nakma-realty --scope nakmarealty-5086s-projects 2>&1)",
+      "PowerShell(npx vercel domains inspect nakmarealty.com --scope nakmarealty-5086s-projects 2>&1)",
+      "Bash(nslookup -type=A nakmarealty.com 8.8.8.8)",
+      "Bash(nslookup nakmarealty.com 8.8.8.8)",
+      "Bash(nslookup -type=CNAME www.nakmarealty.com 8.8.8.8)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code} -> %{redirect_url}\\\\n\" -I \"https://www.nakmarealty.com\")",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" \"https://nakmarealty.com\")",
+      "Bash(openssl s_client -servername nakmarealty.com -connect nakmarealty.com:443)",
+      "Bash(openssl x509 *)"
     ]
   }
 }

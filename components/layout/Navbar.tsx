@@ -20,21 +20,29 @@ export default function Navbar() {
   const { lang, setLang, t } = useLang();
 
   const [scrolled, setScrolled] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Only re-render when crossing the threshold (not on every scroll frame),
+  // rAF-throttled — keeps scrolling smooth.
   useEffect(() => {
+    let raf = 0;
     const onScroll = () => {
-      setScrolled(window.scrollY > 40);
-      setScrollY(window.scrollY);
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        const next = window.scrollY > 40;
+        setScrolled((prev) => (prev === next ? prev : next));
+        raf = 0;
+      });
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 
-  // The further you scroll, the more translucent the (frosted) navbar becomes.
-  const navOpacity = Math.min(0.92, Math.max(0.62, 0.92 - scrollY / 2200));
+  const navOpacity = 0.9;
 
   useEffect(() => {
     setMobileOpen(false);
@@ -143,17 +151,17 @@ export default function Navbar() {
               onClick={() => setMobileOpen(true)}
               className="flex h-10 w-10 items-center justify-center md:hidden"
             >
-              <div className="flex flex-col gap-[5px]">
+              <div className="flex flex-col items-center gap-[5px]">
                 <span
-                  className="block h-[1.5px] w-5 transition-colors duration-500"
+                  className="block h-[1.5px] w-[22px] transition-colors duration-500"
                   style={{ background: burgerColor }}
                 />
                 <span
-                  className="block h-[1.5px] w-5 transition-colors duration-500"
+                  className="block h-[1.5px] w-[22px] transition-colors duration-500"
                   style={{ background: burgerColor }}
                 />
                 <span
-                  className="block h-[1.5px] w-3.5 transition-colors duration-500"
+                  className="block h-[1.5px] w-[22px] transition-colors duration-500"
                   style={{ background: burgerColor }}
                 />
               </div>

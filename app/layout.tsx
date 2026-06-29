@@ -62,36 +62,77 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
+    alternateLocale: ["es_CR"],
     url: SITE_URL,
     siteName: "NAKMA Realty",
     title: "NAKMA Realty — Luxury Real Estate in Costa Rica",
     description:
       "Natural, refined real estate rooted in Costa Rica. Explore curated homes, land, and investment opportunities along the coast, valley, and rainforest.",
+    images: [
+      {
+        url: "https://images.pexels.com/photos/17302366/pexels-photo-17302366.jpeg?auto=compress&cs=tinysrgb&w=1200&h=630&fit=crop",
+        width: 1200,
+        height: 630,
+        alt: "Costa Rica's Pacific coast — NAKMA Realty",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "NAKMA Realty — Luxury Real Estate in Costa Rica",
     description: "Natural, refined real estate rooted in Costa Rica.",
+    images: [
+      "https://images.pexels.com/photos/17302366/pexels-photo-17302366.jpeg?auto=compress&cs=tinysrgb&w=1200&h=630&fit=crop",
+    ],
   },
 };
 
 // Structured data — helps search engines understand this is a Costa Rica
-// real-estate agency, enabling richer results.
+// real-estate agency and enables richer results + the sitelinks search box.
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "RealEstateAgent",
-  name: "NAKMA Realty",
-  description:
-    "Natural, refined real estate rooted in Costa Rica — curated homes, land, and investment opportunities.",
-  url: SITE_URL,
-  email: "info@nakmarealty.com",
-  telephone: "+506 8606-0252",
-  areaServed: { "@type": "Country", name: "Costa Rica" },
-  address: { "@type": "PostalAddress", addressCountry: "CR" },
-  knowsLanguage: ["en", "es"],
-  sameAs: [
-    "https://www.instagram.com/nakma.realty",
-    "https://www.facebook.com/share/1BMPUF416f/",
+  "@graph": [
+    {
+      "@type": "RealEstateAgent",
+      "@id": `${SITE_URL}/#agency`,
+      name: "NAKMA Realty",
+      description:
+        "Natural, refined real estate rooted in Costa Rica — curated homes, land, and investment opportunities.",
+      url: SITE_URL,
+      email: "info@nakmarealty.com",
+      telephone: "+506 8606-0252",
+      priceRange: "$$$",
+      currenciesAccepted: "USD",
+      areaServed: [
+        { "@type": "Country", name: "Costa Rica" },
+        { "@type": "AdministrativeArea", name: "Guanacaste" },
+        { "@type": "AdministrativeArea", name: "Puntarenas" },
+        { "@type": "AdministrativeArea", name: "San José" },
+        { "@type": "Place", name: "Central Pacific" },
+      ],
+      address: { "@type": "PostalAddress", addressCountry: "CR" },
+      knowsLanguage: ["en", "es"],
+      sameAs: [
+        "https://www.instagram.com/nakma.realty",
+        "https://www.facebook.com/share/1BMPUF416f/",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: "NAKMA Realty",
+      inLanguage: ["en", "es"],
+      publisher: { "@id": `${SITE_URL}/#agency` },
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${SITE_URL}/listings?q={search_term_string}`,
+        },
+        "query-input": "required name=search_term_string",
+      },
+    },
   ],
 };
 
