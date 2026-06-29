@@ -8,7 +8,7 @@ import { BLUR_DATA_URL } from "@/lib/constants";
 // Real 4K Costa Rica & tropical nature images from Unsplash (free to use)
 const SCENES = [
   {
-    img: "https://images.unsplash.com/photo-1573790387438-4da905039392?auto=format&fit=crop&w=2560&q=90",
+    img: "https://images.pexels.com/photos/29943338/pexels-photo-29943338.jpeg?auto=compress&cs=tinysrgb&w=2400",
     eyebrow: "Why Invest in Costa Rica?",
     stat: "5% – 8%",
     statLabel: "Average annual ROI",
@@ -23,7 +23,7 @@ const SCENES = [
     align: "left" as const,
   },
   {
-    img: "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=2560&q=90",
+    img: "https://images.pexels.com/photos/15365639/pexels-photo-15365639.jpeg?auto=compress&cs=tinysrgb&w=2400",
     eyebrow: "Why Invest in Costa Rica?",
     stat: "25%",
     statLabel: "Land protected as national reserve",
@@ -38,7 +38,7 @@ const SCENES = [
     align: "right" as const,
   },
   {
-    img: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?auto=format&fit=crop&w=2560&q=90",
+    img: "https://images.pexels.com/photos/36827348/pexels-photo-36827348.jpeg?auto=compress&cs=tinysrgb&w=2400",
     eyebrow: "Why Invest in Costa Rica?",
     stat: "#1",
     statLabel: "Happiest country in Latin America",
@@ -53,7 +53,7 @@ const SCENES = [
     align: "left" as const,
   },
   {
-    img: "https://images.unsplash.com/photo-1540202404-a2f29016b523?auto=format&fit=crop&w=2560&q=90",
+    img: "https://images.pexels.com/photos/11181988/pexels-photo-11181988.jpeg?auto=compress&cs=tinysrgb&w=2400",
     eyebrow: "Why Invest in Costa Rica?",
     stat: "$3.2B",
     statLabel: "Foreign investment in 2023",
@@ -68,7 +68,7 @@ const SCENES = [
     align: "right" as const,
   },
   {
-    img: "https://images.unsplash.com/photo-1518182170546-07661fd94144?auto=format&fit=crop&w=2560&q=90",
+    img: "https://images.pexels.com/photos/17302412/pexels-photo-17302412.jpeg?auto=compress&cs=tinysrgb&w=2400",
     eyebrow: "Why Invest in Costa Rica?",
     stat: "98%",
     statLabel: "Electricity from renewable sources",

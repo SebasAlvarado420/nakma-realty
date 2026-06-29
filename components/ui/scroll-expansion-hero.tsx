@@ -352,7 +352,7 @@ export default function ScrollExpandMedia({
               textShadow: "0 6px 44px rgba(0,0,0,0.5)",
             }}
           >
-            <BrandName />
+            <BrandName showMark={false} />
           </h2>
           <p
             className="nakma-body relative mt-6 uppercase"

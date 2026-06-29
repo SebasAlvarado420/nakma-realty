@@ -12,7 +12,7 @@ const REGIONS = [
   {
     name: "Central Pacific",
     sub: "Jacó · Manuel Antonio",
-    img: "https://images.unsplash.com/photo-1540202404-a2f29016b523?auto=format&fit=crop&w=1200&q=80",
+    img: "https://images.pexels.com/photos/17302366/pexels-photo-17302366.jpeg?auto=compress&cs=tinysrgb&w=1600",
     href: "/listings?province=Puntarenas",
   },
   {

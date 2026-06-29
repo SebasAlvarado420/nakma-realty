@@ -486,9 +486,9 @@ export default function PropertyDetailLX({
                     href={`https://wa.me/${waNumber}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="nakma-body inline-flex w-fit items-center gap-2 rounded-full bg-[#1FA855] px-4 py-2 text-[13px] font-medium text-white shadow-sm transition hover:bg-[#1c994d]"
+                    className="nakma-body inline-flex items-center gap-2.5 text-[14px] text-[var(--nakma-dark)]/75 transition hover:text-[var(--nakma-olive)]"
                   >
-                    <WhatsAppIcon className="h-4 w-4" /> WhatsApp
+                    <WhatsAppIcon className="h-4 w-4 text-[var(--nakma-dark)]/40" /> {agent.whatsapp}
                   </a>
                 )}
                 {agent.office && (

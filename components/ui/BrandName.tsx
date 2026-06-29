@@ -3,18 +3,29 @@
 //   "˘" breve · "¨" diaeresis · "ˇ" caron · "˜" tilde
 export const BRAND_MARK = "˘";
 
-export default function BrandName({ className = "" }: { className?: string }) {
+export default function BrandName({
+  className = "",
+  showMark = true,
+}: {
+  className?: string;
+  /** When false, renders a plain "NAKMA" with no diacritic over the N. */
+  showMark?: boolean;
+}) {
   return (
-    <span className={className} aria-label="Ñakma">
-      <span className="relative inline-block" aria-hidden="true">
-        N
-        <span
-          className="pointer-events-none absolute left-1/2 -translate-x-1/2 select-none"
-          style={{ top: "-0.17em", fontSize: "0.46em", lineHeight: 1 }}
-        >
-          {BRAND_MARK}
+    <span className={className} aria-label={showMark ? "Ñakma" : "Nakma"}>
+      {showMark ? (
+        <span className="relative inline-block" aria-hidden="true">
+          N
+          <span
+            className="pointer-events-none absolute left-1/2 -translate-x-1/2 select-none"
+            style={{ top: "-0.17em", fontSize: "0.46em", lineHeight: 1 }}
+          >
+            {BRAND_MARK}
+          </span>
         </span>
-      </span>
+      ) : (
+        <span aria-hidden="true">N</span>
+      )}
       <span aria-hidden="true">AKMA</span>
     </span>
   );
