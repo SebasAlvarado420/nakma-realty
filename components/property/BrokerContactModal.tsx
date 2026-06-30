@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { X, Mail, Phone, MapPin, Send } from "lucide-react";
 import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
+import { useLang } from "@/lib/i18n";
 import type { TeamMember } from "@/data/team";
 import type { Property } from "@/types/property";
 
@@ -27,13 +28,18 @@ export default function BrokerContactModal({
   property: Property;
   onClose: () => void;
 }) {
+  const { t, lang } = useLang();
+  const agentFirst = agent.name.split(" ")[0];
+  const defaultMessage =
+    lang === "es"
+      ? `Hola ${agentFirst}, me interesa ${property.title} (${property.code}). ¿Podrías darme más detalles?`
+      : `Hi ${agentFirst}, I'm interested in ${property.title} (${property.code}). Could you share more details?`;
+
   const [first, setFirst] = useState("");
   const [last, setLast] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState(
-    `Hi ${agent.name.split(" ")[0]}, I'm interested in ${property.title} (${property.code}). Could you share more details?`
-  );
+  const [message, setMessage] = useState(defaultMessage);
 
   // Close on ESC + lock background scroll while open.
   useEffect(() => {
@@ -48,9 +54,7 @@ export default function BrokerContactModal({
   }, [onClose]);
 
   const waNumber = digits(agent.whatsapp);
-  const waText = encodeURIComponent(
-    `Hi ${agent.name.split(" ")[0]}, I'm interested in ${property.title} (${property.code}). Could you share more details?`
-  );
+  const waText = encodeURIComponent(defaultMessage);
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -86,7 +90,7 @@ export default function BrokerContactModal({
         {/* ── Broker / brand panel ─────────────────────────── */}
         <div className="flex flex-col bg-[var(--nakma-dark)] p-7 text-white sm:p-9">
           <p className="nakma-body text-[10px] uppercase tracking-[0.34em] text-[var(--nakma-sand)]">
-            NAKMA Realty · Rooted in Costa Rica
+            {t("modal.rooted")}
           </p>
 
           <div className="mt-7 flex items-center gap-4">
@@ -136,17 +140,17 @@ export default function BrokerContactModal({
           </div>
 
           <p className="nakma-body mt-auto pt-7 text-[12px] leading-relaxed text-white/55">
-            A real person from our team will reply — never an automated system.
+            {t("modal.realPerson")}
           </p>
         </div>
 
         {/* ── Enquiry form ─────────────────────────────────── */}
         <form onSubmit={submit} className="flex flex-col p-7 sm:p-9">
           <p className="nakma-body text-[10px] uppercase tracking-[0.32em] text-[var(--nakma-olive)]">
-            Enquire about this property
+            {t("modal.eyebrow")}
           </p>
           <h2 className="nakma-display mt-2 text-[24px] leading-tight text-[var(--nakma-dark)]">
-            Let&apos;s talk about{" "}
+            {t("modal.title")}{" "}
             <span className="text-[var(--nakma-earth)]">{property.code}</span>
           </h2>
           <p className="nakma-body mt-1.5 text-[13px] text-[var(--nakma-dark)]/55">
@@ -159,28 +163,28 @@ export default function BrokerContactModal({
               <input
                 value={first}
                 onChange={(e) => setFirst(e.target.value)}
-                placeholder="First name"
+                placeholder={t("modal.first")}
                 required
                 className="h-[46px] rounded-xl border border-[var(--nakma-dark)]/12 bg-white px-4 text-[14px] text-[var(--nakma-dark)] outline-none transition focus:border-[var(--nakma-olive)]"
               />
               <input
                 value={last}
                 onChange={(e) => setLast(e.target.value)}
-                placeholder="Last name"
+                placeholder={t("modal.last")}
                 className="h-[46px] rounded-xl border border-[var(--nakma-dark)]/12 bg-white px-4 text-[14px] text-[var(--nakma-dark)] outline-none transition focus:border-[var(--nakma-olive)]"
               />
             </div>
             <input
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="Phone"
+              placeholder={t("modal.phone")}
               inputMode="tel"
               className="h-[46px] rounded-xl border border-[var(--nakma-dark)]/12 bg-white px-4 text-[14px] text-[var(--nakma-dark)] outline-none transition focus:border-[var(--nakma-olive)]"
             />
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
+              placeholder={t("modal.email")}
               type="email"
               required
               className="h-[46px] rounded-xl border border-[var(--nakma-dark)]/12 bg-white px-4 text-[14px] text-[var(--nakma-dark)] outline-none transition focus:border-[var(--nakma-olive)]"
@@ -197,14 +201,14 @@ export default function BrokerContactModal({
             type="submit"
             className="nakma-body mt-4 inline-flex h-[48px] items-center justify-center gap-2 rounded-full bg-[var(--nakma-dark)] text-[12px] uppercase tracking-[0.2em] text-white transition hover:bg-[var(--nakma-olive)]"
           >
-            <Send className="h-4 w-4" /> Send enquiry
+            <Send className="h-4 w-4" /> {t("modal.send")}
           </button>
           <button
             type="button"
             onClick={onClose}
             className="nakma-body mt-2 text-[12px] uppercase tracking-[0.18em] text-[var(--nakma-dark)]/45 transition hover:text-[var(--nakma-dark)]"
           >
-            Cancel
+            {t("modal.cancel")}
           </button>
         </form>
       </div>

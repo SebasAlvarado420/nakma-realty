@@ -13,10 +13,10 @@ const SCENES = [
     stat: "5% – 8%",
     statLabel: "Average annual ROI",
     headline: "Where the jungle\nmeets the sea.",
-    body: "Costa Rica's Pacific coast combines tropical biodiversity, ocean access, and architectural freedom. Properties here don't just hold value — they grow it while offering a lifestyle most only dream of.",
+    body: "From the beaches of Guanacaste and the Central Pacific to the highlands of the Central Valley and the wild Caribbean, Costa Rica blends tropical biodiversity, ocean and mountain access, and architectural freedom. Properties here don't just hold value — they grow it while offering a lifestyle most only dream of.",
     points: [
       "Foreigners can own property outright — no restrictions",
-      "Titled ocean-view & beachfront land available",
+      "Titled beachfront, valley & rainforest land available",
       "Transactions handled in US dollars",
     ],
     cta: { label: "Explore Coastal Listings", href: "/listings" },

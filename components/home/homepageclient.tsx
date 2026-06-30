@@ -22,6 +22,8 @@ export default function HomePageClient() {
     // If everything happens to be featured, fall back to the full list.
     return rest.length > 0 ? rest : properties;
   }, [properties]);
+  // Newest listings (the context returns them created-at descending).
+  const recent = useMemo(() => properties.slice(0, 8), [properties]);
 
   return (
     <>
@@ -34,13 +36,13 @@ export default function HomePageClient() {
         title={
           lang === "es" ? (
             <>
-              Residencias con raíces en{" "}
+              Residencias en armonía con{" "}
               <span className="italic text-[var(--nakma-earth)]">su entorno</span>.
             </>
           ) : (
             <>
-              Residences rooted in{" "}
-              <span className="italic text-[var(--nakma-earth)]">their landscape</span>.
+              Residences in harmony with{" "}
+              <span className="italic text-[var(--nakma-earth)]">their surroundings</span>.
             </>
           )
         }
@@ -80,23 +82,23 @@ export default function HomePageClient() {
       {/* 7. Brand story */}
       <NatureIntroSection />
 
-      {/* 7b. One more pass of the portfolio — carousel before the close */}
+      {/* 7b. Recently added — newest listings (properties come newest-first) */}
       <ListingsCarousel
-        eyebrow={lang === "es" ? "Explora la colección" : "Browse the collection"}
+        eyebrow={lang === "es" ? "Recién Agregadas" : "Recently Added"}
         title={
           lang === "es" ? (
             <>
-              Más hogares por{" "}
-              <span className="italic text-[var(--nakma-earth)]">descubrir</span>.
+              Lo más reciente en{" "}
+              <span className="italic text-[var(--nakma-earth)]">nuestro portafolio</span>.
             </>
           ) : (
             <>
-              More homes to{" "}
-              <span className="italic text-[var(--nakma-earth)]">discover</span>.
+              The latest additions to{" "}
+              <span className="italic text-[var(--nakma-earth)]">our portfolio</span>.
             </>
           )
         }
-        properties={properties}
+        properties={recent}
         viewAllLabel={t("featured.viewAll")}
       />
 

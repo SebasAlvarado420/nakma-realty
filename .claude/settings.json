@@ -90,7 +90,8 @@
       "Bash(curl -s -o /dev/null -w \"HTTP %{http_code} | %{time_total}s | %{size_download} bytes\\\\n\" \"https://nakmarealty.com\")",
       "Bash(curl -s \"https://nakmarealty.com/robots.txt\")",
       "Bash(curl -s \"https://nakmarealty.com/sitemap.xml\")",
-      "Bash(curl -s \"https://nakmarealty.com\")"
+      "Bash(curl -s \"https://nakmarealty.com\")",
+      "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy14.log\")"
     ]
   }
 }

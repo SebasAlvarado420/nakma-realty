@@ -24,6 +24,7 @@ import {
 import type { Property } from "@/types/property";
 import type { TeamMember } from "@/data/team";
 import { BLUR_DATA_URL } from "@/lib/constants";
+import { useLang } from "@/lib/i18n";
 import PropertyCard from "@/components/property/PropertyCard";
 import BrokerContactModal from "@/components/property/BrokerContactModal";
 import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
@@ -72,6 +73,7 @@ export default function PropertyDetailLX({
   agent: TeamMember;
   related: Property[];
 }) {
+  const { t } = useLang();
   const images = useMemo(
     () =>
       property.gallery && property.gallery.length > 0
@@ -90,8 +92,8 @@ export default function PropertyDetailLX({
   // Auto-rotate the main photo (pauses on hover / when the lightbox is open).
   useEffect(() => {
     if (images.length < 2 || paused || lightbox) return;
-    const t = setInterval(() => setActive((a) => (a + 1) % images.length), 4500);
-    return () => clearInterval(t);
+    const timer = setInterval(() => setActive((a) => (a + 1) % images.length), 4500);
+    return () => clearInterval(timer);
   }, [images.length, paused, lightbox]);
 
   useEffect(() => {
@@ -129,9 +131,9 @@ export default function PropertyDetailLX({
   // Features are fully optional and admin-driven — only show the categories
   // that actually have entries, and centre whatever's left.
   const featureGroups = [
-    { title: "Internal", items: property.features?.internal ?? [] },
-    { title: "External", items: property.features?.external ?? [] },
-    { title: "Community", items: property.features?.community ?? [] },
+    { key: "listing.internal", items: property.features?.internal ?? [] },
+    { key: "listing.external", items: property.features?.external ?? [] },
+    { key: "listing.community", items: property.features?.community ?? [] },
   ].filter((g) => g.items.length > 0);
   const hasDescription = Boolean(property.description && property.description.trim());
   const descIsLong = (property.description ?? "").length > 320;
@@ -167,7 +169,7 @@ export default function PropertyDetailLX({
               onClick={() => setContactOpen(true)}
               className="nakma-body inline-flex h-[42px] items-center rounded-md bg-[var(--nakma-olive)] px-6 text-[12px] uppercase tracking-[0.18em] text-white transition hover:opacity-90"
             >
-              Contact
+              {t("listing.contact")}
             </button>
           </div>
         </div>
@@ -234,7 +236,7 @@ export default function PropertyDetailLX({
             </span>
             {property.exclusive && (
               <span className="nakma-body absolute left-4 top-4 z-10 rounded-full bg-black/55 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
-                Exclusive
+                {t("listing.exclusive")}
               </span>
             )}
           </div>
@@ -277,27 +279,27 @@ export default function PropertyDetailLX({
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
               {property.bedrooms > 0 && (
                 <span className="inline-flex items-center gap-2">
-                  <Bed className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.bedrooms} beds
+                  <Bed className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.bedrooms} {t("listing.beds")}
                 </span>
               )}
               {property.bathrooms > 0 && (
                 <span className="inline-flex items-center gap-2">
-                  <Bath className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.bathrooms} baths
+                  <Bath className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.bathrooms} {t("listing.baths")}
                 </span>
               )}
               {property.constructionSize && (
                 <span className="inline-flex items-center gap-2">
-                  <Home className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.constructionSize} construction
+                  <Home className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.constructionSize} {t("listing.construction")}
                 </span>
               )}
               {property.landSize && (
                 <span className="inline-flex items-center gap-2">
-                  <Ruler className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.landSize} property
+                  <Ruler className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {property.landSize} {t("listing.property")}
                 </span>
               )}
               {property.hoa && (
                 <span className="inline-flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-[var(--nakma-dark)]/45" /> HOA: {property.hoa}
+                  <Building2 className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {t("listing.hoa")}: {property.hoa}
                 </span>
               )}
             </div>
@@ -308,7 +310,7 @@ export default function PropertyDetailLX({
               href="/contact-us"
               className="nakma-body inline-flex h-9 items-center gap-2 rounded-md border border-[var(--nakma-dark)]/15 px-4 text-[12px] text-[var(--nakma-dark)] transition hover:bg-[var(--nakma-dark)]/5"
             >
-              <Play className="h-3.5 w-3.5" /> Tour
+              <Play className="h-3.5 w-3.5" /> {t("listing.tour")}
             </Link>
             <button
               type="button"
@@ -318,17 +320,17 @@ export default function PropertyDetailLX({
               <Bookmark
                 className={`h-3.5 w-3.5 ${saved ? "fill-[var(--nakma-olive)] text-[var(--nakma-olive)]" : ""}`}
               />{" "}
-              {saved ? "Saved" : "Save"}
+              {saved ? t("listing.saved") : t("listing.save")}
             </button>
             <button
               type="button"
               onClick={share}
               className="nakma-body inline-flex h-9 items-center gap-2 rounded-md border border-[var(--nakma-dark)]/15 px-4 text-[12px] text-[var(--nakma-dark)] transition hover:bg-[var(--nakma-dark)]/5"
             >
-              <Share2 className="h-3.5 w-3.5" /> Share
+              <Share2 className="h-3.5 w-3.5" /> {t("listing.share")}
             </button>
             <span className="nakma-body ml-1 text-[12px] text-[var(--nakma-dark)]/45">
-              Code: {property.code}
+              {t("listing.code")}: {property.code}
             </span>
           </div>
         </div>
@@ -339,7 +341,7 @@ export default function PropertyDetailLX({
         {/* Highlights */}
         {property.highlights && property.highlights.length > 0 && (
           <section className="pt-14">
-            <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">Highlights</h2>
+            <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">{t("listing.highlights")}</h2>
             <ul className="mt-5 space-y-3">
               {property.highlights.map((h) => (
                 <li
@@ -357,7 +359,7 @@ export default function PropertyDetailLX({
         {/* Description — admin-written only, no filler text. */}
         {hasDescription && (
           <section className="mt-14 border-t border-[var(--nakma-dark)]/8 pt-10">
-            <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">Description</h2>
+            <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">{t("listing.description")}</h2>
             <div
               className={`nakma-body mt-5 whitespace-pre-line text-[15px] leading-[1.85] text-[var(--nakma-dark)]/72 ${
                 showFullDesc || !descIsLong ? "" : "line-clamp-[7]"
@@ -371,7 +373,7 @@ export default function PropertyDetailLX({
                 onClick={() => setShowFullDesc((s) => !s)}
                 className="nakma-body mt-4 text-[13px] uppercase tracking-[0.18em] text-[var(--nakma-olive)] underline-offset-4 hover:underline"
               >
-                {showFullDesc ? "Show less" : "Show more description"}
+                {showFullDesc ? t("listing.showLess") : t("listing.showMore")}
               </button>
             )}
           </section>
@@ -380,11 +382,11 @@ export default function PropertyDetailLX({
         {/* Features — only the categories that have entries, centred. */}
         {featureGroups.length > 0 && (
           <section className="mt-14 border-t border-[var(--nakma-dark)]/8 pt-10">
-            <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">Features</h2>
+            <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">{t("listing.features")}</h2>
             <div className="mt-7 flex flex-wrap justify-start gap-x-16 gap-y-9 text-left">
               {featureGroups.map((g) => (
-                <div key={g.title} className="w-full sm:w-[230px]">
-                  <FeatureColumn title={g.title} items={g.items} />
+                <div key={g.key} className="w-full sm:w-[230px]">
+                  <FeatureColumn title={t(g.key)} items={g.items} />
                 </div>
               ))}
             </div>
@@ -395,7 +397,7 @@ export default function PropertyDetailLX({
         {property.communityInfo && (
           <section className="mt-14 border-t border-[var(--nakma-dark)]/8 pt-10">
             <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">
-              Community:{" "}
+              {t("listing.community")}:{" "}
               <span className="text-[var(--nakma-earth)]">{property.communityInfo.name}</span>
             </h2>
             <div className="mt-6 grid gap-6 sm:grid-cols-[200px_1fr] sm:items-start">
@@ -421,7 +423,7 @@ export default function PropertyDetailLX({
 
         {/* Map */}
         <section className="mt-14 border-t border-[var(--nakma-dark)]/8 pt-10">
-          <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">Location</h2>
+          <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">{t("listing.location")}</h2>
           <p className="nakma-body mt-3 text-[14px] text-[var(--nakma-dark)]/60">
             {property.geo?.address ?? property.location}
           </p>
@@ -432,7 +434,7 @@ export default function PropertyDetailLX({
           ) : (
             <div className="mt-5 flex h-[200px] items-center justify-center rounded-[12px] border border-[var(--nakma-dark)]/10 bg-[var(--nakma-bg)]">
               <p className="nakma-body text-[13px] text-[var(--nakma-dark)]/45">
-                Location coordinates not set for this property.
+                {t("listing.noCoords")}
               </p>
             </div>
           )}
@@ -442,13 +444,13 @@ export default function PropertyDetailLX({
             rel="noreferrer"
             className="nakma-body mt-4 inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.2em] text-[var(--nakma-olive)] transition hover:text-[var(--nakma-dark)]"
           >
-            <MapPin className="h-4 w-4" /> Open in Google Maps
+            <MapPin className="h-4 w-4" /> {t("listing.openMaps")}
           </a>
         </section>
 
         {/* Agent */}
         <section className="mt-14 border-t border-[var(--nakma-dark)]/8 pb-4 pt-10">
-          <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">Real Estate Agent</h2>
+          <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">{t("listing.agent")}</h2>
           <div className="mt-6 flex flex-col gap-6 sm:flex-row sm:items-start">
             <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-[10px]">
               <Image
@@ -502,7 +504,7 @@ export default function PropertyDetailLX({
                 onClick={() => setContactOpen(true)}
                 className="nakma-body mt-6 inline-flex h-[44px] items-center rounded-md bg-[var(--nakma-olive)] px-7 text-[12px] uppercase tracking-[0.18em] text-white transition hover:opacity-90"
               >
-                Contact {agent.name.split(" ")[0]}
+                {t("listing.contact")} {agent.name.split(" ")[0]}
               </button>
             </div>
           </div>
@@ -514,7 +516,7 @@ export default function PropertyDetailLX({
         <section className="mt-16 bg-[var(--nakma-bg)] px-6 py-16 lg:px-16">
           <div className="mx-auto max-w-7xl">
             <h2 className="nakma-display text-[28px] text-[var(--nakma-dark)] md:text-[34px]">
-              Properties you might like
+              {t("listing.related")}
             </h2>
             <div className="mt-9 grid gap-x-7 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((p) => (
@@ -528,8 +530,7 @@ export default function PropertyDetailLX({
       {/* Legal note */}
       <div className="px-6 py-8 lg:px-16">
         <p className="nakma-body mx-auto max-w-7xl text-[11px] leading-relaxed text-[var(--nakma-dark)]/35">
-          All information is deemed reliable but not guaranteed and may be subject to errors,
-          omissions, change of price, or withdrawal without notice.
+          {t("listing.legal")}
         </p>
       </div>
 
