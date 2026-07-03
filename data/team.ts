@@ -19,7 +19,7 @@ export const teamMembers: TeamMember[] = [
     role: "Real Estate Advisor",
     bio: "Sergio guides clients through every step of buying in Costa Rica with patience, local knowledge, and a genuine eye for properties that fit each buyer's vision.",
     image:
-      "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80",
+      "https://lh3.googleusercontent.com/d/1LjKpwBSzcjN4wwXg6NcUnv576NvxHDsf=w1200",
     languages: ["Spanish", "English"],
     email: "srodriguez@nakmarealty.com",
     phone: "+506 8606-0252",

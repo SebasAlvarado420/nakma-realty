@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "me7aitdbxq.ufs.sh" },
       { protocol: "https", hostname: "images.pexels.com" },
       { protocol: "https", hostname: "plus.unsplash.com" },
+      { protocol: "https", hostname: "lh3.googleusercontent.com" },
       // Supabase Storage (uploaded property photos)
       { protocol: "https", hostname: "hiqmowapbdaspcxgoduv.supabase.co" },
     ],
