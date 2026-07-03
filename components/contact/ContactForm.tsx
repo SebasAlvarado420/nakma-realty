@@ -3,15 +3,7 @@
 import { useState } from "react";
 import { SITE } from "@/lib/site";
 
-const INTERESTS = [
-  "Residential Property",
-  "Investment Land",
-  "Ocean View Property",
-  "Mountain Retreat",
-  "Jungle / Eco Property",
-  "Commercial Property",
-  "Other",
-];
+const INTERESTS = ["Home", "Condo", "Land", "Commercial"];
 
 const BUDGETS = [
   "Under $250,000",

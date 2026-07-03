@@ -22,6 +22,20 @@ function formatPrice(price: string) {
   }).format(numeric);
 }
 
+// Rentals: format the amount like sale prices ($4,500) but keep the /period.
+function formatRent(rent: string) {
+  const numeric = Number(rent.replace(/[^0-9.]/g, ""));
+  if (!numeric) return rent;
+  const per = rent.match(/\/\s*[a-zA-Z]+/)?.[0]?.replace(/\s/g, "") ?? "/mo";
+  return (
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0,
+    }).format(numeric) + per
+  );
+}
+
 export default function PropertyCard({ property }: PropertyCardProps) {
   const [saved, setSaved] = useState(false);
 
@@ -140,12 +154,9 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         </div>
 
         <p className="nakma-display mt-3.5 text-[19px] font-semibold tracking-[-0.01em] text-[var(--nakma-dark)]">
-          {formatPrice(property.price)}
-          {isRent && property.rentPrice && (
-            <span className="nakma-body ml-2 text-[13px] font-normal text-[var(--nakma-dark)]/55">
-              · {property.rentPrice}
-            </span>
-          )}
+          {isRent && property.rentPrice
+            ? formatRent(property.rentPrice)
+            : formatPrice(property.price)}
         </p>
       </div>
     </Link>

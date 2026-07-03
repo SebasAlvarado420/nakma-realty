@@ -191,6 +191,25 @@ body {
 .bg-white-4 { background: rgba(255,255,255,0.04); }
 .bg-white-6 { background: rgba(255,255,255,0.06); }
 
+/* ─── Map property popup (Airbnb-style photo strip) ──────── */
+.nakma-popup .leaflet-popup-content-wrapper {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 14px;
+  box-shadow: 0 12px 44px rgba(22, 17, 13, 0.22);
+}
+.nakma-popup .leaflet-popup-content {
+  margin: 0;
+  width: 240px !important;
+}
+.nakma-popup-strip {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.nakma-popup-strip::-webkit-scrollbar {
+  display: none;
+}
+
 /* ─── Respect reduced-motion preference (accessibility) ──── */
 @media (prefers-reduced-motion: reduce) {
   *,

@@ -59,14 +59,34 @@ export default function PropertiesMap({
       properties
         .filter((p) => p.geo)
         .forEach((p) => {
-          const m = L.marker([p.geo!.lat, p.geo!.lng], { icon: pin(p.price) }).addTo(map);
+          const priceLabel =
+            p.listingType === "rent" && p.rentPrice ? p.rentPrice : p.price;
+
+          // Swipeable cover-photo strip (Airbnb-style, pure CSS scroll-snap).
+          const images = (p.gallery && p.gallery.length > 0 ? p.gallery : [p.image])
+            .filter(Boolean)
+            .slice(0, 6);
+          const strip = images
+            .map(
+              (src) =>
+                `<img src="${src}" alt="" loading="lazy" style="width:240px;height:150px;object-fit:cover;flex:0 0 240px;scroll-snap-align:start;display:block;" />`
+            )
+            .join("");
+
+          const m = L.marker([p.geo!.lat, p.geo!.lng], {
+            icon: pin(priceLabel),
+          }).addTo(map);
           m.bindPopup(
-            `<div style="font-family:system-ui,sans-serif;min-width:160px;">
-               <div style="font-weight:600;color:#16110d;font-size:14px;">${p.title}</div>
-               <div style="color:#6b6b6b;font-size:12px;margin-top:2px;">${p.location}</div>
-               <div style="color:#16110d;font-weight:600;margin-top:6px;">${p.price}</div>
-               <a href="/listings/${p.slug}" style="color:${OLIVE};font-size:12px;text-transform:uppercase;letter-spacing:0.08em;display:inline-block;margin-top:8px;">View property →</a>
-             </div>`
+            `<div style="font-family:system-ui,sans-serif;width:240px;">
+               <div class="nakma-popup-strip" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;">${strip}</div>
+               <div style="padding:10px 12px 12px;">
+                 <div style="font-weight:600;color:#16110d;font-size:14px;line-height:1.25;">${p.title}</div>
+                 <div style="color:#6b6b6b;font-size:12px;margin-top:2px;">${p.location}</div>
+                 <div style="color:#16110d;font-weight:700;margin-top:6px;font-size:14px;">${priceLabel}</div>
+                 <a href="/listings/${p.slug}" style="color:${OLIVE};font-size:11px;text-transform:uppercase;letter-spacing:0.08em;display:inline-block;margin-top:8px;font-weight:600;">View property →</a>
+               </div>
+             </div>`,
+            { maxWidth: 260, minWidth: 240, className: "nakma-popup" }
           );
           markers.push(m);
         });

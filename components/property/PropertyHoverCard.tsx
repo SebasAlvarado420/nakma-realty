@@ -16,6 +16,20 @@ function formatPrice(price: string) {
   }).format(numeric);
 }
 
+// Rentals: format the amount like sale prices ($4,500) but keep the /period.
+function formatRent(rent: string) {
+  const numeric = Number(rent.replace(/[^0-9.]/g, ""));
+  if (!numeric) return rent;
+  const per = rent.match(/\/\s*[a-zA-Z]+/)?.[0]?.replace(/\s/g, "") ?? "/mo";
+  return (
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0,
+    }).format(numeric) + per
+  );
+}
+
 export default function PropertyHoverCard({ property }: { property: Property }) {
   const isRent = property.listingType === "rent";
 
@@ -49,7 +63,9 @@ export default function PropertyHoverCard({ property }: { property: Property }) 
           <div className="mt-1.5 flex items-center justify-between gap-3">
             <p className="nakma-body text-[12px] text-white/75">{property.location}</p>
             <p className="nakma-display text-[16px] font-semibold text-white">
-              {formatPrice(property.price)}
+              {isRent && property.rentPrice
+                ? formatRent(property.rentPrice)
+                : formatPrice(property.price)}
             </p>
           </div>
         </div>
@@ -93,12 +109,9 @@ export default function PropertyHoverCard({ property }: { property: Property }) 
 
         <div className="mt-3 flex items-center justify-between">
           <p className="nakma-display text-[18px] font-semibold text-[var(--nakma-dark)]">
-            {formatPrice(property.price)}
-            {isRent && property.rentPrice && (
-              <span className="nakma-body ml-2 text-[12px] font-normal text-[var(--nakma-dark)]/55">
-                · {property.rentPrice}
-              </span>
-            )}
+            {isRent && property.rentPrice
+              ? formatRent(property.rentPrice)
+              : formatPrice(property.price)}
           </p>
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--nakma-dark)] text-white transition-transform duration-500 group-hover:-rotate-45">
             <ArrowUpRight className="h-4 w-4" />

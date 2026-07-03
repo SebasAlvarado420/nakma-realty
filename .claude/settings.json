@@ -91,7 +91,9 @@
       "Bash(curl -s \"https://nakmarealty.com/robots.txt\")",
       "Bash(curl -s \"https://nakmarealty.com/sitemap.xml\")",
       "Bash(curl -s \"https://nakmarealty.com\")",
-      "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy14.log\")"
+      "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy14.log\")",
+      "PowerShell(git -C $repo commit -m \"Realtor feedback: clearer featured title, national Why-Invest copy, distinct Recently-Added carousel, bilingual listing detail + broker modal\" 2>&1)",
+      "PowerShell(npx vercel --prod --yes --scope nakmarealty-5086s-projects 2>&1 | Tee-Object -FilePath \"$env:TEMP\\\\nakma_deploy15.log\")"
     ]
   }
 }

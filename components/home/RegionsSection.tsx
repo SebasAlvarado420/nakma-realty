@@ -11,19 +11,19 @@ import { useLang } from "@/lib/i18n";
 const REGIONS = [
   {
     name: "Central Pacific",
-    sub: "Jacó · Manuel Antonio",
+    sub: "Puntarenas",
     img: "https://images.pexels.com/photos/17302366/pexels-photo-17302366.jpeg?auto=compress&cs=tinysrgb&w=1600",
     href: "/listings?province=Puntarenas",
   },
   {
     name: "Central Valley",
-    sub: "San José · Santa Ana",
+    sub: "San José",
     img: "https://images.unsplash.com/photo-1699385600854-5b2137d14cfd?auto=format&fit=crop&w=1200&q=80",
     href: "/listings?province=San José",
   },
   {
     name: "Pacific Coast",
-    sub: "Guanacaste · Tamarindo",
+    sub: "Guanacaste",
     img: "https://images.unsplash.com/photo-1643122542225-6a618183b16d?auto=format&fit=crop&w=1200&q=80",
     href: "/listings?province=Guanacaste",
   },

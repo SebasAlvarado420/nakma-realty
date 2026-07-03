@@ -150,7 +150,9 @@ export default function PropertyDetailLX({
           <div>
             <h1 className="nakma-display text-[26px] leading-tight text-[var(--nakma-dark)] md:text-[32px]">
               {property.title}{" "}
-              <span className="text-[var(--nakma-dark)]/40">| {property.price}</span>
+              <span className="text-[var(--nakma-dark)]/40">
+                | {property.listingType === "rent" && property.rentPrice ? property.rentPrice : property.price}
+              </span>
             </h1>
             <p className="nakma-body mt-1 text-[14px] text-[var(--nakma-dark)]/55">
               {property.location}
