@@ -17,6 +17,7 @@ import { useProperties } from "@/lib/propertiescontext";
 import { useLang } from "@/lib/i18n";
 import { PROPERTY_TYPES } from "@/types/property";
 import PropertyCard from "@/components/property/PropertyCard";
+import PriceRangeFilter from "@/components/listings/PriceRangeFilter";
 import Reveal from "@/components/ui/Reveal";
 
 const PropertiesMap = dynamic(() => import("./PropertiesMap"), {
@@ -30,7 +31,6 @@ const PropertiesMap = dynamic(() => import("./PropertiesMap"), {
 
 const MIN_PRICE = 0;
 const MAX_PRICE = 8_000_000;
-const STEP = 50_000;
 
 const PROVINCES = [
   "San José",
@@ -103,7 +103,10 @@ export default function ListingsExplorer() {
   const [interest, setInterest] = useState<Interest>(
     (["sale", "rent"].includes(sp.get("type") ?? "") ? sp.get("type") : "all") as Interest
   );
-  const [price, setPrice] = useState(Number(sp.get("maxPrice")) || MAX_PRICE);
+  const [priceRange, setPriceRange] = useState<number[] | null>(
+    sp.get("maxPrice") ? [0, Number(sp.get("maxPrice"))] : null
+  );
+  const [priceOpen, setPriceOpen] = useState(false);
   const [bedrooms, setBedrooms] = useState(Number(sp.get("beds")) || 0);
   const [bathrooms, setBathrooms] = useState(Number(sp.get("baths")) || 0);
   const [exclusiveOnly, setExclusiveOnly] = useState(false);
@@ -111,7 +114,23 @@ export default function ListingsExplorer() {
   const [showMore, setShowMore] = useState(false);
   const [view, setView] = useState<View>("list");
 
-  const priceLabel = useMemo(() => formatPrice(price), [price]);
+  // Price bounds derived from the actual listings so the histogram fills nicely.
+  const histPrices = useMemo(
+    () => properties.map((p) => parseNum(p.price)).filter((v) => v > 0),
+    [properties]
+  );
+  const bounds = useMemo(() => {
+    if (!histPrices.length) return { min: MIN_PRICE, max: MAX_PRICE };
+    const hi = Math.ceil(Math.max(...histPrices) / 100_000) * 100_000;
+    return { min: MIN_PRICE, max: Math.max(hi, 100_000) };
+  }, [histPrices]);
+  const priceStep = Math.max(5000, Math.round((bounds.max - bounds.min) / 200 / 5000) * 5000);
+  const range = priceRange
+    ? [
+        Math.max(bounds.min, Math.min(priceRange[0], bounds.max)),
+        Math.min(bounds.max, Math.max(priceRange[1], bounds.min)),
+      ]
+    : [bounds.min, bounds.max];
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -126,7 +145,10 @@ export default function ListingsExplorer() {
       }
       if (province && p.province !== province) return false;
       if (propertyType && p.propertyType !== propertyType) return false;
-      if (parseNum(p.price) > price) return false;
+      if (!p.priceOnRequest) {
+        const pn = parseNum(p.price);
+        if (pn < range[0] || pn > range[1]) return false;
+      }
       if (p.bedrooms < bedrooms) return false;
       if (p.bathrooms < bathrooms) return false;
       if (exclusiveOnly && !p.exclusive) return false;
@@ -139,7 +161,8 @@ export default function ListingsExplorer() {
     province,
     propertyType,
     interest,
-    price,
+    range[0],
+    range[1],
     bedrooms,
     bathrooms,
     exclusiveOnly,
@@ -151,7 +174,8 @@ export default function ListingsExplorer() {
     setProvince("");
     setPropertyType("");
     setInterest("all");
-    setPrice(MAX_PRICE);
+    setPriceRange(null);
+    setPriceOpen(false);
     setBedrooms(0);
     setBathrooms(0);
     setExclusiveOnly(false);
@@ -202,7 +226,7 @@ export default function ListingsExplorer() {
         </div>
 
         {/* ── Controls row ────────────────────────────────────── */}
-        <div className="mt-4 flex flex-wrap items-end gap-x-5 gap-y-5">
+        <div className="mt-4 flex flex-wrap items-end justify-center gap-x-5 gap-y-5">
           {/* Interested in */}
           <div>
             <p className="nakma-body mb-2 text-[12px] text-[var(--nakma-dark)]/65">
@@ -240,27 +264,33 @@ export default function ListingsExplorer() {
             </div>
           </div>
 
-          {/* Price */}
-          <div className="w-[170px]">
-            <div className="mb-2 flex items-center justify-between">
-              <p className="nakma-body text-[12px] text-[var(--nakma-dark)]/65">{t("listings.price")}</p>
-              <span className="nakma-body text-[12px] font-medium text-[var(--nakma-dark)]">
-                {priceLabel}
-              </span>
-            </div>
-            <input
-              type="range"
-              min={MIN_PRICE}
-              max={MAX_PRICE}
-              step={STEP}
-              value={price}
-              onChange={(e) => setPrice(Number(e.target.value))}
-              className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-[rgba(22,17,13,0.15)] accent-[var(--nakma-dark)]"
-            />
-            <div className="mt-1.5 flex justify-between text-[11px] text-[var(--nakma-dark)]/45 nakma-body">
-              <span>$0</span>
-              <span>$8.0M+</span>
-            </div>
+          {/* Price — popover with histogram range slider */}
+          <div className="relative">
+            <p className="nakma-body mb-2 text-[12px] text-[var(--nakma-dark)]/65">{t("listings.price")}</p>
+            <button
+              type="button"
+              onClick={() => setPriceOpen((o) => !o)}
+              className="nakma-body flex h-[46px] min-w-[160px] items-center justify-between gap-3 rounded-xl border border-[rgba(22,17,13,0.14)] px-4 text-[13px] text-[var(--nakma-dark)] transition hover:bg-[rgba(22,17,13,0.03)]"
+            >
+              <span>{formatPrice(range[0])} – {formatPrice(range[1])}</span>
+              <ChevronDown className={`h-4 w-4 text-[var(--nakma-dark)]/45 transition-transform ${priceOpen ? "rotate-180" : ""}`} />
+            </button>
+            {priceOpen && (
+              <>
+                <div className="fixed inset-0 z-30" onClick={() => setPriceOpen(false)} />
+                <div className="absolute left-0 top-full z-40 mt-2 w-[300px] rounded-2xl border border-[var(--nakma-dark)]/10 bg-white p-5 shadow-[0_16px_50px_rgba(22,17,13,0.16)]">
+                  <PriceRangeFilter
+                    value={range}
+                    onChange={setPriceRange}
+                    min={bounds.min}
+                    max={bounds.max}
+                    step={priceStep}
+                    prices={histPrices}
+                    t={t}
+                  />
+                </div>
+              </>
+            )}
           </div>
 
           <Stepper label={t("search.bedrooms")} value={bedrooms} onChange={setBedrooms} />
@@ -298,7 +328,7 @@ export default function ListingsExplorer() {
           </div>
 
           {/* List / Map toggle */}
-          <div className="ml-auto">
+          <div>
             <p className="nakma-body mb-2 text-[12px] text-transparent">.</p>
             <div className="flex h-[46px] overflow-hidden rounded-xl border border-[rgba(22,17,13,0.14)]">
               <button
