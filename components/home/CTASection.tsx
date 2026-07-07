@@ -1,12 +1,41 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { BLUR_DATA_URL } from "@/lib/constants";
 import { useLang } from "@/lib/i18n";
 
 export default function CTASection() {
   const { lang, t } = useLang();
+
+  // Rotating NAKMA-flavoured phrases (in the earth accent colour).
+  const phrases = useMemo(
+    () =>
+      lang === "es"
+        ? [
+            "conectada a la tierra.",
+            "con raíces en la naturaleza.",
+            "parte del paisaje.",
+            "como en casa.",
+            "realmente tuya.",
+          ]
+        : [
+            "connected to the land.",
+            "rooted in nature.",
+            "part of the landscape.",
+            "like home.",
+            "truly yours.",
+          ],
+    [lang]
+  );
+  const [index, setIndex] = useState(0);
+  useEffect(() => {
+    const id = setTimeout(() => setIndex((i) => (i + 1) % phrases.length), 2200);
+    return () => clearTimeout(id);
+  }, [index, phrases.length]);
+
   return (
     <section className="relative overflow-hidden bg-[var(--nakma-bg)] px-4 py-24 lg:py-36">
       {/* Background image with overlay */}
@@ -30,17 +59,29 @@ export default function CTASection() {
         </p>
 
         <h2 className="nakma-display mx-auto mt-6 max-w-2xl text-[38px] leading-[1.06] tracking-[-0.04em] text-[var(--nakma-dark)] md:text-[54px] lg:text-[64px]">
-          {lang === "es" ? (
-            <>
-              Encuentra una propiedad que se sienta{" "}
-              <span className="text-[var(--nakma-earth)]">conectada a la tierra.</span>
-            </>
-          ) : (
-            <>
-              Find a property that feels{" "}
-              <span className="text-[var(--nakma-earth)]">connected to the land.</span>
-            </>
-          )}
+          <span className="block">
+            {lang === "es"
+              ? "Encuentra una propiedad que se sienta"
+              : "Find a property that feels"}
+          </span>
+          <span className="relative flex w-full justify-center overflow-hidden pb-3 pt-1 md:pb-4">
+            &nbsp;
+            {phrases.map((phrase, i) => (
+              <motion.span
+                key={i}
+                className="absolute whitespace-nowrap text-[var(--nakma-earth)]"
+                initial={{ opacity: 0, y: -120 }}
+                transition={{ type: "spring", stiffness: 50 }}
+                animate={
+                  index === i
+                    ? { y: 0, opacity: 1 }
+                    : { y: index > i ? -150 : 150, opacity: 0 }
+                }
+              >
+                {phrase}
+              </motion.span>
+            ))}
+          </span>
         </h2>
 
         <p className="nakma-body mx-auto mt-6 max-w-md text-[15px] leading-relaxed text-[var(--nakma-dark)]/60">

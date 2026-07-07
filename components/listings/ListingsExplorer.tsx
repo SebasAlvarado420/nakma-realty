@@ -278,7 +278,7 @@ export default function ListingsExplorer() {
             {priceOpen && (
               <>
                 <div className="fixed inset-0 z-30" onClick={() => setPriceOpen(false)} />
-                <div className="absolute left-0 top-full z-40 mt-2 w-[300px] rounded-2xl border border-[var(--nakma-dark)]/10 bg-white p-5 shadow-[0_16px_50px_rgba(22,17,13,0.16)]">
+                <div className="absolute left-1/2 top-full z-40 mt-2 w-[380px] max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-2xl border border-[var(--nakma-dark)]/10 bg-white p-6 shadow-[0_16px_50px_rgba(22,17,13,0.16)]">
                   <PriceRangeFilter
                     value={range}
                     onChange={setPriceRange}
