@@ -87,6 +87,16 @@ const DICT: Record<Lang, Record<string, string>> = {
     "modal.rooted": "NAKMA Realty · Rooted in Costa Rica",
     "modal.realPerson": "A real person from our team will reply — never an automated system.",
 
+    "agent.back": "Back to team",
+    "agent.notFound": "Agent not found.",
+    "agent.listings": "Listings",
+    "agent.regions": "Regions",
+    "agent.languages": "Languages",
+    "agent.email": "Email",
+    "agent.propertiesBy": "Properties represented by",
+    "agent.noProperties": "No active listings at the moment.",
+    "agent.viewProfile": "View profile",
+
     "footer.tagline": "Natural, refined real estate rooted in the tropical richness of Costa Rica.",
     "footer.rooted": "Rooted in Costa Rica.",
     "footer.navigate": "Navigate",
@@ -175,6 +185,16 @@ const DICT: Record<Lang, Record<string, string>> = {
     "modal.cancel": "Cancelar",
     "modal.rooted": "NAKMA Realty · Con raíces en Costa Rica",
     "modal.realPerson": "Te responde una persona real de nuestro equipo, nunca un sistema automático.",
+
+    "agent.back": "Volver al equipo",
+    "agent.notFound": "Agente no encontrado.",
+    "agent.listings": "Propiedades",
+    "agent.regions": "Zonas",
+    "agent.languages": "Idiomas",
+    "agent.email": "Correo",
+    "agent.propertiesBy": "Propiedades de",
+    "agent.noProperties": "Sin propiedades activas por el momento.",
+    "agent.viewProfile": "Ver perfil",
 
     "footer.tagline": "Bienes raíces naturales y refinados, arraigados en la riqueza tropical de Costa Rica.",
     "footer.rooted": "Con raíces en Costa Rica.",

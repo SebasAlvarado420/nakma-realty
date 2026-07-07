@@ -38,49 +38,47 @@ export default function OurTeamPage() {
                 delay={i * 0.1}
                 className="group overflow-hidden rounded-[28px] bg-white/70 shadow-[0_16px_48px_rgba(22,17,13,0.08)] transition-transform duration-300 hover:-translate-y-1"
               >
-                <div className="relative h-[320px] overflow-hidden">
-                  <Image
-                    src={member.image}
-                    alt={member.name}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    placeholder="blur"
-                    blurDataURL={BLUR_DATA_URL}
-                    className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                </div>
-                <div className="p-7">
-                  <p className="nakma-body text-[10px] uppercase tracking-[0.36em] text-[var(--nakma-olive)]">
-                    {member.role}
-                  </p>
-                  <h2 className="nakma-display mt-2 text-[24px] font-semibold text-[var(--nakma-dark)]">
-                    {member.name}
-                  </h2>
-                  <p className="nakma-body mt-4 text-[13px] leading-[1.8] text-[var(--nakma-dark)]/62">
-                    {member.bio}
-                  </p>
-                  {member.languages && (
-                    <div className="mt-5 flex flex-wrap gap-2">
-                      {member.languages.map((lang) => (
-                        <span
-                          key={lang}
-                          className="rounded-full border border-[var(--nakma-dark)]/12 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-[var(--nakma-dark)]/60 nakma-body"
-                        >
-                          {lang}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                  {member.email && (
-                    <a
-                      href={`mailto:${member.email}`}
-                      className="nakma-body mt-6 inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.24em] text-[var(--nakma-olive)] transition hover:text-[var(--nakma-dark)]"
-                    >
-                      {member.email}
-                    </a>
-                  )}
-                </div>
+                <Link href={`/our-team/${member.slug}`} className="block">
+                  <div className="relative h-[360px] overflow-hidden">
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      placeholder="blur"
+                      blurDataURL={BLUR_DATA_URL}
+                      className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                  </div>
+                  <div className="p-7">
+                    <p className="nakma-body text-[10px] uppercase tracking-[0.36em] text-[var(--nakma-olive)]">
+                      {member.role}
+                    </p>
+                    <h2 className="nakma-display mt-2 text-[24px] font-semibold text-[var(--nakma-dark)] transition-colors group-hover:text-[var(--nakma-earth)]">
+                      {member.name}
+                    </h2>
+                    <p className="nakma-body mt-4 text-[13px] leading-[1.8] text-[var(--nakma-dark)]/62">
+                      {member.bio}
+                    </p>
+                    {member.languages && (
+                      <div className="mt-5 flex flex-wrap gap-2">
+                        {member.languages.map((lang) => (
+                          <span
+                            key={lang}
+                            className="rounded-full border border-[var(--nakma-dark)]/12 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-[var(--nakma-dark)]/60 nakma-body"
+                          >
+                            {lang}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <span className="nakma-body mt-6 inline-flex items-center gap-1.5 text-[12px] uppercase tracking-[0.24em] text-[var(--nakma-olive)] transition group-hover:text-[var(--nakma-dark)]">
+                      View Profile
+                      <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                    </span>
+                  </div>
+                </Link>
               </Reveal>
             ))}
           </div>

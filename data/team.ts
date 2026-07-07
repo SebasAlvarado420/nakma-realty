@@ -1,5 +1,7 @@
 export type TeamMember = {
   id: string;
+  /** URL-friendly slug for the agent's own page (/our-team/<slug>). */
+  slug: string;
   name: string;
   role: string;
   bio: string;
@@ -15,6 +17,7 @@ export type TeamMember = {
 export const teamMembers: TeamMember[] = [
   {
     id: "1",
+    slug: "sergio-rodriguez",
     name: "Sergio Rodríguez",
     role: "Real Estate Advisor",
     bio: "Sergio guides clients through every step of buying in Costa Rica with patience, local knowledge, and a genuine eye for properties that fit each buyer's vision.",
@@ -28,6 +31,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     id: "2",
+    slug: "jose-mario-alvarado",
     name: "Jose Mario Alvarado",
     role: "Founder & Lead Advisor",
     bio: "Jose Mario leads NAKMA Realty with deep roots in Costa Rica and a calm, clear approach to every transaction — from the first conversation to the final signature.",
@@ -41,6 +45,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     id: "4",
+    slug: "jenny-chaverri",
     name: "Jenny Chaverri",
     role: "Client Relations & Property Specialist",
     bio: "Jenny brings warmth and precision to every client relationship, evaluating properties not just for their numbers but for how they feel to live in.",
@@ -54,6 +59,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     id: "3",
+    slug: "marcel-torres",
     name: "Marcel Torres",
     role: "Investment & Land Specialist",
     bio: "Marcel focuses on investment-oriented properties and land, with a strong grasp of the legal landscape and the long-term potential of each opportunity NAKMA represents.",
@@ -69,4 +75,8 @@ export const teamMembers: TeamMember[] = [
 
 export function getAgent(id?: string) {
   return teamMembers.find((m) => m.id === id) ?? teamMembers[0];
+}
+
+export function getAgentBySlug(slug?: string) {
+  return teamMembers.find((m) => m.slug === slug);
 }
