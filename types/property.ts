@@ -33,6 +33,8 @@ export type Property = {
   location: string;
   province: string;
   price: string;
+  /** When true, the price is hidden and shown as "Price Upon Request". */
+  priceOnRequest?: boolean;
   bedrooms: number;
   bathrooms: number;
   landSize: string;

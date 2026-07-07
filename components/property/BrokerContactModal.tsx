@@ -155,7 +155,11 @@ export default function BrokerContactModal({
           </h2>
           <p className="nakma-body mt-1.5 text-[13px] text-[var(--nakma-dark)]/55">
             {property.title}
-            {property.price ? ` · ${property.price}` : ""}
+            {property.priceOnRequest
+              ? ` · ${t("listing.priceOnRequest")}`
+              : property.price
+              ? ` · ${property.price}`
+              : ""}
           </p>
 
           <div className="mt-6 grid gap-3">

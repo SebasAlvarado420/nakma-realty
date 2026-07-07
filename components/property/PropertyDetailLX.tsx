@@ -164,7 +164,11 @@ export default function PropertyDetailLX({
             <h1 className="nakma-display text-[26px] leading-tight text-[var(--nakma-dark)] md:text-[32px]">
               {property.title}{" "}
               <span className="font-semibold text-[var(--nakma-dark)]/80">
-                | {property.listingType === "rent" && property.rentPrice ? property.rentPrice : property.price}
+                | {property.priceOnRequest
+                  ? t("listing.priceOnRequest")
+                  : property.listingType === "rent" && property.rentPrice
+                  ? property.rentPrice
+                  : property.price}
               </span>
             </h1>
             <p className="nakma-body mt-1 text-[14px] text-[var(--nakma-dark)]/55">
@@ -317,7 +321,7 @@ export default function PropertyDetailLX({
               )}
               {property.hoa && (
                 <span className="inline-flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {t("listing.hoa")}: {property.hoa}
+                  <Building2 className="h-4 w-4 text-[var(--nakma-dark)]/45" /> {t("listing.hoa")}: {property.hoa.startsWith("$") ? property.hoa : `$${property.hoa}`}
                 </span>
               )}
             </div>

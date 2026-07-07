@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Bed, Bath, Ruler, Home, Share2, Bookmark } from "lucide-react";
 import type { Property } from "@/types/property";
+import { useLang } from "@/lib/i18n";
 import CardImageCarousel from "@/components/property/CardImageCarousel";
 
 type PropertyCardProps = {
@@ -37,6 +38,7 @@ function formatRent(rent: string) {
 }
 
 export default function PropertyCard({ property }: PropertyCardProps) {
+  const { t } = useLang();
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
@@ -154,7 +156,9 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         </div>
 
         <p className="nakma-display mt-3.5 text-[19px] font-semibold tracking-[-0.01em] text-[var(--nakma-dark)]">
-          {isRent && property.rentPrice
+          {property.priceOnRequest
+            ? t("listing.priceOnRequest")
+            : isRent && property.rentPrice
             ? formatRent(property.rentPrice)
             : formatPrice(property.price)}
         </p>

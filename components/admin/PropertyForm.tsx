@@ -29,6 +29,7 @@ type FormState = {
   propertyType: string;
   listingType: string;
   price: string;
+  priceOnRequest: boolean;
   rentPrice: string;
   featured: string;
   exclusive: string;
@@ -52,7 +53,7 @@ type FormState = {
 
 const emptyForm: FormState = {
   title: "", slug: "", location: "", province: "", agentId: "", propertyType: "",
-  listingType: "sale", price: "", rentPrice: "", featured: "No", exclusive: "No",
+  listingType: "sale", price: "", priceOnRequest: false, rentPrice: "", featured: "No", exclusive: "No",
   landSize: "", constructionSize: "", bedrooms: "", bathrooms: "",
   hoa: "", address: "", lat: "", lng: "",
   image: "", gallery: "", video: "", highlights: "", description: "",
@@ -90,6 +91,7 @@ function fromProperty(p: Property): FormState {
     propertyType: p.propertyType ?? "",
     listingType: p.listingType ?? "sale",
     price: withCommas(stripDollar(p.price)),
+    priceOnRequest: p.priceOnRequest ?? false,
     rentPrice: p.rentPrice ?? "",
     featured: p.featured ? "Yes" : "No",
     exclusive: p.exclusive ? "Yes" : "No",
@@ -237,7 +239,8 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
       agentId: form.agentId || undefined,
       propertyType: form.propertyType || undefined,
       listingType: (form.listingType === "rent" ? "rent" : "sale") as "sale" | "rent",
-      price: price ? `$${price}` : "",
+      price: form.priceOnRequest ? "" : price ? `$${price}` : "",
+      priceOnRequest: form.priceOnRequest,
       rentPrice: form.rentPrice.trim() || undefined,
       featured: form.featured === "Yes",
       exclusive: form.exclusive === "Yes",
@@ -245,7 +248,11 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
       constructionSize: form.constructionSize.trim() ? `${form.constructionSize.trim()} m²` : "",
       bedrooms: Number(form.bedrooms || 0),
       bathrooms: Number(form.bathrooms || 0),
-      hoa: form.hoa.trim() || undefined,
+      hoa: form.hoa.trim()
+        ? form.hoa.trim().startsWith("$")
+          ? form.hoa.trim()
+          : `$${form.hoa.trim()}`
+        : undefined,
       image: form.image || galleryUrls[0] || DEFAULT_IMG,
       gallery: galleryUrls,
       video: form.video.trim(),
@@ -330,8 +337,25 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
           <Field label="Price (USD)">
             <div className="relative">
               <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[15px] font-medium text-[#163126]">$</span>
-              <input name="price" value={form.price} onChange={handleChange} inputMode="numeric" className={`${inputCls} pl-8`} placeholder="1,250,000" />
+              <input
+                name="price"
+                value={form.priceOnRequest ? "" : form.price}
+                onChange={handleChange}
+                disabled={form.priceOnRequest}
+                inputMode="numeric"
+                className={`${inputCls} pl-8 ${form.priceOnRequest ? "opacity-40" : ""}`}
+                placeholder={form.priceOnRequest ? "Price Upon Request" : "1,250,000"}
+              />
             </div>
+            <label className="mt-2 flex cursor-pointer items-center gap-2 text-[12.5px] text-[#5d7268]">
+              <input
+                type="checkbox"
+                checked={form.priceOnRequest}
+                onChange={(e) => setForm((prev) => ({ ...prev, priceOnRequest: e.target.checked }))}
+                className="h-4 w-4 accent-[#163126]"
+              />
+              Price upon request (hide the price)
+            </label>
           </Field>
           <Field label="Rent Price" hint="Optional — only for rentals.">
             <input name="rentPrice" value={form.rentPrice} onChange={handleChange} className={inputCls} placeholder="$4,500/mo" />
@@ -372,7 +396,10 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
             <input name="bathrooms" value={form.bathrooms} onChange={handleChange} type="number" min="0" step="0.5" className={inputCls} placeholder="2.5" />
           </Field>
           <Field label="HOA / Fee">
-            <input name="hoa" value={form.hoa} onChange={handleChange} className={inputCls} placeholder="$300/mo" />
+            <div className="relative">
+              <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[15px] font-medium text-[#163126]">$</span>
+              <input name="hoa" value={form.hoa.replace(/^\$/, "")} onChange={handleChange} className={`${inputCls} pl-8`} placeholder="300/mo" />
+            </div>
           </Field>
         </div>
       </Card>

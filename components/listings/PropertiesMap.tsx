@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import type { Property } from "@/types/property";
+import { useLang } from "@/lib/i18n";
 
 const OLIVE = "#6f673d";
 
@@ -16,6 +17,7 @@ export default function PropertiesMap({
   const containerRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mapRef = useRef<any>(null);
+  const { t } = useLang();
 
   useEffect(() => {
     let cancelled = false;
@@ -59,8 +61,11 @@ export default function PropertiesMap({
       properties
         .filter((p) => p.geo)
         .forEach((p) => {
-          const priceLabel =
-            p.listingType === "rent" && p.rentPrice ? p.rentPrice : p.price;
+          const priceLabel = p.priceOnRequest
+            ? t("listing.priceOnRequest")
+            : p.listingType === "rent" && p.rentPrice
+            ? p.rentPrice
+            : p.price;
 
           // Swipeable cover-photo strip (Airbnb-style, pure CSS scroll-snap).
           const images = (p.gallery && p.gallery.length > 0 ? p.gallery : [p.image])
@@ -107,7 +112,7 @@ export default function PropertiesMap({
         mapRef.current = null;
       }
     };
-  }, [properties]);
+  }, [properties, t]);
 
   return (
     <div

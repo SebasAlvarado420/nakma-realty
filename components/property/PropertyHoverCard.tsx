@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight, Bed, Bath, Ruler, Home } from "lucide-react";
 import type { Property } from "@/types/property";
+import { useLang } from "@/lib/i18n";
 import { BLUR_DATA_URL } from "@/lib/constants";
 
 function formatPrice(price: string) {
@@ -31,7 +32,13 @@ function formatRent(rent: string) {
 }
 
 export default function PropertyHoverCard({ property }: { property: Property }) {
+  const { t } = useLang();
   const isRent = property.listingType === "rent";
+  const priceDisplay = property.priceOnRequest
+    ? t("listing.priceOnRequest")
+    : isRent && property.rentPrice
+    ? formatRent(property.rentPrice)
+    : formatPrice(property.price);
 
   return (
     <Link
@@ -63,9 +70,7 @@ export default function PropertyHoverCard({ property }: { property: Property }) 
           <div className="mt-1.5 flex items-center justify-between gap-3">
             <p className="nakma-body text-[12px] text-white/75">{property.location}</p>
             <p className="nakma-display text-[16px] font-semibold text-white">
-              {isRent && property.rentPrice
-                ? formatRent(property.rentPrice)
-                : formatPrice(property.price)}
+              {priceDisplay}
             </p>
           </div>
         </div>
@@ -109,9 +114,7 @@ export default function PropertyHoverCard({ property }: { property: Property }) 
 
         <div className="mt-3 flex items-center justify-between">
           <p className="nakma-display text-[18px] font-semibold text-[var(--nakma-dark)]">
-            {isRent && property.rentPrice
-              ? formatRent(property.rentPrice)
-              : formatPrice(property.price)}
+            {priceDisplay}
           </p>
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--nakma-dark)] text-white transition-transform duration-500 group-hover:-rotate-45">
             <ArrowUpRight className="h-4 w-4" />

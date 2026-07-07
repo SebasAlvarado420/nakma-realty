@@ -202,27 +202,23 @@ export default function ListingsExplorer() {
         </div>
 
         {/* ── Controls row ────────────────────────────────────── */}
-        <div className="mt-4 flex flex-wrap items-end gap-x-6 gap-y-5">
+        <div className="mt-4 flex flex-wrap items-end gap-x-5 gap-y-5">
           {/* Interested in */}
           <div>
             <p className="nakma-body mb-2 text-[12px] text-[var(--nakma-dark)]/65">
               {t("search.interested")}
             </p>
-            <div className="flex h-[46px] rounded-xl border border-[rgba(22,17,13,0.14)] p-1">
-              {(["all", "sale", "rent"] as Interest[]).map((opt) => (
-                <button
-                  key={opt}
-                  type="button"
-                  onClick={() => setInterest(opt)}
-                  className={`nakma-body rounded-lg px-4 text-[12px] uppercase tracking-[0.12em] transition ${
-                    interest === opt
-                      ? "bg-[var(--nakma-dark)] text-white"
-                      : "text-[var(--nakma-dark)]/60 hover:text-[var(--nakma-dark)]"
-                  }`}
-                >
-                  {opt === "all" ? t("search.all") : opt === "sale" ? t("search.sale") : t("search.rent")}
-                </button>
-              ))}
+            <div className="relative flex h-[46px] items-center rounded-xl border border-[rgba(22,17,13,0.14)]">
+              <select
+                value={interest}
+                onChange={(e) => setInterest(e.target.value as Interest)}
+                className="nakma-body h-full w-full min-w-[128px] cursor-pointer appearance-none rounded-xl bg-transparent px-4 pr-9 text-[13px] text-[var(--nakma-dark)] outline-none"
+              >
+                <option value="all">{t("search.all")}</option>
+                <option value="sale">{t("search.sale")}</option>
+                <option value="rent">{t("search.rent")}</option>
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 h-4 w-4 text-[var(--nakma-dark)]/45" />
             </div>
           </div>
 
@@ -245,7 +241,7 @@ export default function ListingsExplorer() {
           </div>
 
           {/* Price */}
-          <div className="min-w-[200px] flex-1">
+          <div className="w-[170px]">
             <div className="mb-2 flex items-center justify-between">
               <p className="nakma-body text-[12px] text-[var(--nakma-dark)]/65">{t("listings.price")}</p>
               <span className="nakma-body text-[12px] font-medium text-[var(--nakma-dark)]">

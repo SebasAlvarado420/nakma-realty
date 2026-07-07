@@ -25,6 +25,7 @@ type CreatePropertyInput = {
   location: string;
   province: string;
   price: string;
+  priceOnRequest?: boolean;
   bedrooms: number;
   bathrooms: number;
   landSize: string;
@@ -110,6 +111,7 @@ export function PropertiesProvider({ children }: { children: React.ReactNode }) 
         location: input.location.trim(),
         province: input.province.trim(),
         price: input.price.trim(),
+        priceOnRequest: input.priceOnRequest ?? false,
         bedrooms: Number(input.bedrooms) || 0,
         bathrooms: Number(input.bathrooms) || 0,
         landSize: input.landSize.trim(),
