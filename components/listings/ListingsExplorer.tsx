@@ -14,6 +14,7 @@ import {
   Plus,
 } from "lucide-react";
 import { useProperties } from "@/lib/propertiescontext";
+import { useLang } from "@/lib/i18n";
 import { PROPERTY_TYPES } from "@/types/property";
 import PropertyCard from "@/components/property/PropertyCard";
 import Reveal from "@/components/ui/Reveal";
@@ -93,6 +94,7 @@ function Stepper({
 
 export default function ListingsExplorer() {
   const { properties } = useProperties();
+  const { t } = useLang();
   const sp = useSearchParams();
 
   const [query, setQuery] = useState(sp.get("q") ?? "");
@@ -162,10 +164,10 @@ export default function ListingsExplorer() {
         {/* Slim header */}
         <div className="mb-8 max-w-2xl">
           <p className="nakma-body text-[10px] uppercase tracking-[0.46em] text-[var(--nakma-olive)]">
-            Curated Listings
+            {t("listings.eyebrow")}
           </p>
           <h1 className="nakma-display mt-3 text-[34px] leading-[1.06] tracking-[-0.02em] text-[var(--nakma-dark)] md:text-[46px]">
-            Find your place in Costa Rica.
+            {t("listings.title")}
           </h1>
         </div>
 
@@ -176,7 +178,7 @@ export default function ListingsExplorer() {
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by name, location, or ID"
+              placeholder={t("search.placeholder")}
               className="nakma-body h-[44px] w-full bg-transparent text-[14px] text-[var(--nakma-dark)] outline-none placeholder:text-[var(--nakma-dark)]/40"
             />
           </div>
@@ -189,7 +191,7 @@ export default function ListingsExplorer() {
               onChange={(e) => setProvince(e.target.value)}
               className="nakma-body h-[44px] w-full cursor-pointer appearance-none rounded-xl bg-transparent pl-9 pr-9 text-[14px] text-[var(--nakma-dark)] outline-none sm:w-[200px]"
             >
-              <option value="">All Locations</option>
+              <option value="">{t("search.allLocations")}</option>
               {PROVINCES.map((p) => (
                 <option key={p} value={p}>
                   {p}
@@ -204,21 +206,21 @@ export default function ListingsExplorer() {
           {/* Interested in */}
           <div>
             <p className="nakma-body mb-2 text-[12px] text-[var(--nakma-dark)]/65">
-              I&apos;m interested in
+              {t("search.interested")}
             </p>
             <div className="flex h-[46px] rounded-xl border border-[rgba(22,17,13,0.14)] p-1">
-              {(["all", "sale", "rent"] as Interest[]).map((t) => (
+              {(["all", "sale", "rent"] as Interest[]).map((opt) => (
                 <button
-                  key={t}
+                  key={opt}
                   type="button"
-                  onClick={() => setInterest(t)}
+                  onClick={() => setInterest(opt)}
                   className={`nakma-body rounded-lg px-4 text-[12px] uppercase tracking-[0.12em] transition ${
-                    interest === t
+                    interest === opt
                       ? "bg-[var(--nakma-dark)] text-white"
                       : "text-[var(--nakma-dark)]/60 hover:text-[var(--nakma-dark)]"
                   }`}
                 >
-                  {t === "all" ? "All" : t === "sale" ? "Sale" : "Rent"}
+                  {opt === "all" ? t("search.all") : opt === "sale" ? t("search.sale") : t("search.rent")}
                 </button>
               ))}
             </div>
@@ -226,16 +228,16 @@ export default function ListingsExplorer() {
 
           {/* Property Type */}
           <div>
-            <p className="nakma-body mb-2 text-[12px] text-[var(--nakma-dark)]/65">Property Type</p>
+            <p className="nakma-body mb-2 text-[12px] text-[var(--nakma-dark)]/65">{t("search.propertyType")}</p>
             <div className="relative flex h-[46px] items-center rounded-xl border border-[rgba(22,17,13,0.14)]">
               <select
                 value={propertyType}
                 onChange={(e) => setPropertyType(e.target.value)}
                 className="nakma-body h-full w-full min-w-[140px] cursor-pointer appearance-none rounded-xl bg-transparent px-4 pr-9 text-[13px] text-[var(--nakma-dark)] outline-none"
               >
-                <option value="">Any Type</option>
+                <option value="">{t("search.anyType")}</option>
                 {PROPERTY_TYPES.map((tp) => (
-                  <option key={tp} value={tp}>{tp}</option>
+                  <option key={tp} value={tp}>{t(`type.${tp.toLowerCase()}`)}</option>
                 ))}
               </select>
               <ChevronDown className="pointer-events-none absolute right-3 h-4 w-4 text-[var(--nakma-dark)]/45" />
@@ -245,7 +247,7 @@ export default function ListingsExplorer() {
           {/* Price */}
           <div className="min-w-[200px] flex-1">
             <div className="mb-2 flex items-center justify-between">
-              <p className="nakma-body text-[12px] text-[var(--nakma-dark)]/65">Price</p>
+              <p className="nakma-body text-[12px] text-[var(--nakma-dark)]/65">{t("listings.price")}</p>
               <span className="nakma-body text-[12px] font-medium text-[var(--nakma-dark)]">
                 {priceLabel}
               </span>
@@ -265,13 +267,13 @@ export default function ListingsExplorer() {
             </div>
           </div>
 
-          <Stepper label="Bedrooms" value={bedrooms} onChange={setBedrooms} />
-          <Stepper label="Baths" value={bathrooms} onChange={setBathrooms} />
+          <Stepper label={t("search.bedrooms")} value={bedrooms} onChange={setBedrooms} />
+          <Stepper label={t("search.baths")} value={bathrooms} onChange={setBathrooms} />
 
           {/* Exclusive */}
           <label className="flex cursor-pointer select-none flex-col gap-2">
             <span className="nakma-body text-[12px] text-[var(--nakma-dark)]/65">
-              Exclusive
+              {t("listing.exclusive")}
             </span>
             <span className="flex h-[46px] items-center">
               <input
@@ -292,7 +294,7 @@ export default function ListingsExplorer() {
               className="nakma-body flex h-[46px] items-center gap-2 rounded-xl border border-[rgba(22,17,13,0.14)] px-4 text-[13px] text-[var(--nakma-dark)] transition hover:bg-[rgba(22,17,13,0.04)]"
             >
               <SlidersHorizontal className="h-4 w-4" />
-              More filters
+              {t("listings.moreFilters")}
               <ChevronDown
                 className={`h-4 w-4 transition-transform ${showMore ? "rotate-180" : ""}`}
               />
@@ -312,7 +314,7 @@ export default function ListingsExplorer() {
                     : "text-[var(--nakma-dark)]/60"
                 }`}
               >
-                <LayoutGrid className="h-4 w-4" /> List
+                <LayoutGrid className="h-4 w-4" /> {t("listings.list")}
               </button>
               <button
                 type="button"
@@ -323,7 +325,7 @@ export default function ListingsExplorer() {
                     : "text-[var(--nakma-dark)]/60"
                 }`}
               >
-                <MapIcon className="h-4 w-4" /> Map
+                <MapIcon className="h-4 w-4" /> {t("listings.map")}
               </button>
             </div>
           </div>
@@ -335,12 +337,12 @@ export default function ListingsExplorer() {
             <div className="grid gap-5 sm:max-w-md">
               <div>
                 <p className="nakma-body mb-2 text-[12px] text-[var(--nakma-dark)]/65">
-                  Min Land Size
+                  {t("listings.minLand")}
                 </p>
                 <input
                   value={landSize}
                   onChange={(e) => setLandSize(e.target.value)}
-                  placeholder="e.g. 800 m²"
+                  placeholder={t("listings.minLandPlaceholder")}
                   className="nakma-body h-[46px] w-full rounded-xl border border-[rgba(22,17,13,0.14)] bg-white px-4 text-[14px] text-[var(--nakma-dark)] outline-none placeholder:text-[var(--nakma-dark)]/40"
                 />
               </div>
@@ -351,16 +353,16 @@ export default function ListingsExplorer() {
         {/* ── Results meta ────────────────────────────────────── */}
         <div className="mb-8 mt-10 flex items-center justify-between border-t border-[var(--nakma-dark)]/8 pt-6">
           <p className="nakma-body text-[13px] text-[var(--nakma-dark)]/60">
-            Showing{" "}
+            {t("listings.showing")}{" "}
             <span className="font-medium text-[var(--nakma-dark)]">{filtered.length}</span>{" "}
-            {filtered.length === 1 ? "property" : "properties"}
+            {filtered.length === 1 ? t("listings.propertyOne") : t("listings.propertyMany")}
           </p>
           <button
             type="button"
             onClick={reset}
             className="nakma-body text-[12px] uppercase tracking-[0.2em] text-[var(--nakma-olive)] transition hover:text-[var(--nakma-dark)]"
           >
-            Reset filters
+            {t("listings.reset")}
           </button>
         </div>
 
@@ -378,17 +380,17 @@ export default function ListingsExplorer() {
         ) : (
           <div className="rounded-[24px] border border-[var(--nakma-dark)]/8 bg-white/40 px-6 py-16 text-center">
             <p className="nakma-display text-[22px] text-[var(--nakma-dark)]">
-              No properties match your search.
+              {t("listings.noResults")}
             </p>
             <p className="nakma-body mt-3 text-[14px] text-[var(--nakma-dark)]/55">
-              Try a different location or widen your filters.
+              {t("listings.noResultsHint")}
             </p>
             <button
               type="button"
               onClick={reset}
               className="nakma-body mt-7 inline-flex h-[46px] items-center rounded-full bg-[var(--nakma-dark)] px-7 text-[11px] uppercase tracking-[0.24em] text-white transition hover:opacity-90"
             >
-              Reset Filters
+              {t("listings.reset")}
             </button>
           </div>
         )}

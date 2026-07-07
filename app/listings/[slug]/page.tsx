@@ -2,12 +2,14 @@
 
 import { useParams } from "next/navigation";
 import { useProperties } from "@/lib/propertiescontext";
+import { useLang } from "@/lib/i18n";
 import { getAgent } from "@/data/team";
 import PropertyDetailLX from "@/components/property/PropertyDetailLX";
 
 export default function PropertyPage() {
   const params = useParams();
   const { properties } = useProperties();
+  const { t } = useLang();
 
   const slug = typeof params.slug === "string" ? params.slug : "";
   const property = properties.find((item) => item.slug === slug);
@@ -17,13 +19,13 @@ export default function PropertyPage() {
       <section className="flex min-h-screen items-center justify-center px-6 pt-32 pb-20">
         <div className="text-center">
           <p className="nakma-body text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-olive)]">
-            Property Not Found
+            {t("listings.notFoundEyebrow")}
           </p>
           <h1 className="nakma-display mt-4 text-4xl text-[var(--nakma-dark)]">
-            This property does not exist.
+            {t("listings.notFoundTitle")}
           </h1>
           <p className="nakma-body mt-4 text-[var(--nakma-dark)]/60">
-            The listing may have been removed or the URL may be incorrect.
+            {t("listings.notFoundBody")}
           </p>
         </div>
       </section>

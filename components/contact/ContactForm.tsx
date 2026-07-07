@@ -2,17 +2,9 @@
 
 import { useState } from "react";
 import { SITE } from "@/lib/site";
+import { useLang } from "@/lib/i18n";
 
 const INTERESTS = ["Home", "Condo", "Land", "Commercial"];
-
-const BUDGETS = [
-  "Under $250,000",
-  "$250,000 – $500,000",
-  "$500,000 – $1,000,000",
-  "$1,000,000 – $2,500,000",
-  "$2,500,000+",
-  "Open / Flexible",
-];
 
 const inputClass =
   "h-[52px] w-full rounded-2xl border border-[rgba(22,17,13,0.12)] bg-white/80 px-4 text-[var(--nakma-dark)] outline-none placeholder:text-[rgba(22,17,13,0.35)] focus:border-[var(--nakma-olive)] nakma-body text-[14px]";
@@ -36,9 +28,19 @@ const EMPTY: FormState = {
 };
 
 export default function ContactForm() {
+  const { t } = useLang();
   const [form, setForm] = useState<FormState>(EMPTY);
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
+
+  const BUDGETS = [
+    t("form.budgetUnder"),
+    "$250,000 – $500,000",
+    "$500,000 – $1,000,000",
+    "$1,000,000 – $2,500,000",
+    "$2,500,000+",
+    t("form.budgetFlexible"),
+  ];
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -48,9 +50,9 @@ export default function ContactForm() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!form.name.trim()) return setError("Please share your name.");
+    if (!form.name.trim()) return setError(t("form.errName"));
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-      return setError("Please enter a valid email address.");
+      return setError(t("form.errEmail"));
 
     // No backend yet — compose a pre-filled email so the inquiry actually goes
     // somewhere. Swap for an API route / form service when the backend exists.
@@ -91,11 +93,10 @@ export default function ContactForm() {
           </svg>
         </div>
         <h2 className="nakma-display mt-6 text-[24px] font-semibold text-[var(--nakma-dark)]">
-          Thank you, {form.name.split(" ")[0]}.
+          {t("form.thankyou")}, {form.name.split(" ")[0]}.
         </h2>
         <p className="nakma-body mt-3 max-w-sm text-[14px] leading-relaxed text-[var(--nakma-dark)]/60">
-          Your email app should have opened with your inquiry ready to send. A member of
-          our team will get back to you within 24 hours.
+          {t("form.thankyouBody")}
         </p>
         <button
           type="button"
@@ -105,7 +106,7 @@ export default function ContactForm() {
           }}
           className="nakma-body mt-8 inline-flex h-[48px] items-center rounded-full border border-[var(--nakma-dark)]/22 px-7 text-[11px] uppercase tracking-[0.26em] text-[var(--nakma-dark)] transition hover:bg-[var(--nakma-dark)] hover:text-white"
         >
-          Send Another
+          {t("form.sendAnother")}
         </button>
       </div>
     );
@@ -117,35 +118,35 @@ export default function ContactForm() {
       className="rounded-[32px] bg-white/65 p-8 shadow-[0_20px_60px_rgba(22,17,13,0.09)] lg:p-12"
     >
       <h2 className="nakma-display text-[22px] font-semibold text-[var(--nakma-dark)]">
-        Tell us about your search
+        {t("form.title")}
       </h2>
       <p className="nakma-body mt-2 text-[13px] text-[var(--nakma-dark)]/55">
-        Name and email are required — share as much else as you like.
+        {t("form.subtitle")}
       </p>
 
       <div className="mt-8 space-y-5">
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
             <label className="nakma-body block mb-2 text-[10px] uppercase tracking-[0.32em] text-[var(--nakma-dark)]/60">
-              Name
+              {t("form.name")}
             </label>
             <input
               type="text"
               value={form.name}
               onChange={(e) => update("name", e.target.value)}
-              placeholder="Your full name"
+              placeholder={t("form.namePlaceholder")}
               className={inputClass}
             />
           </div>
           <div>
             <label className="nakma-body block mb-2 text-[10px] uppercase tracking-[0.32em] text-[var(--nakma-dark)]/60">
-              Email
+              {t("form.email")}
             </label>
             <input
               type="email"
               value={form.email}
               onChange={(e) => update("email", e.target.value)}
-              placeholder="your@email.com"
+              placeholder={t("form.emailPlaceholder")}
               className={inputClass}
             />
           </div>
@@ -153,7 +154,7 @@ export default function ContactForm() {
 
         <div>
           <label className="nakma-body block mb-2 text-[10px] uppercase tracking-[0.32em] text-[var(--nakma-dark)]/60">
-            Phone / WhatsApp
+            {t("form.phone")}
           </label>
           <input
             type="tel"
@@ -166,30 +167,30 @@ export default function ContactForm() {
 
         <div>
           <label className="nakma-body block mb-2 text-[10px] uppercase tracking-[0.32em] text-[var(--nakma-dark)]/60">
-            I'm interested in
+            {t("form.interest")}
           </label>
           <select
             value={form.interest}
             onChange={(e) => update("interest", e.target.value)}
             className={inputClass}
           >
-            <option value="">Select property type</option>
+            <option value="">{t("form.interestPlaceholder")}</option>
             {INTERESTS.map((i) => (
-              <option key={i}>{i}</option>
+              <option key={i} value={i}>{t(`type.${i.toLowerCase()}`)}</option>
             ))}
           </select>
         </div>
 
         <div>
           <label className="nakma-body block mb-2 text-[10px] uppercase tracking-[0.32em] text-[var(--nakma-dark)]/60">
-            Budget Range
+            {t("form.budget")}
           </label>
           <select
             value={form.budget}
             onChange={(e) => update("budget", e.target.value)}
             className={inputClass}
           >
-            <option value="">Select budget range</option>
+            <option value="">{t("form.budgetPlaceholder")}</option>
             {BUDGETS.map((b) => (
               <option key={b}>{b}</option>
             ))}
@@ -198,13 +199,13 @@ export default function ContactForm() {
 
         <div>
           <label className="nakma-body block mb-2 text-[10px] uppercase tracking-[0.32em] text-[var(--nakma-dark)]/60">
-            Message
+            {t("form.message")}
           </label>
           <textarea
             rows={5}
             value={form.message}
             onChange={(e) => update("message", e.target.value)}
-            placeholder="Tell us what you are looking for, or any questions you have..."
+            placeholder={t("form.messagePlaceholder")}
             className="w-full resize-none rounded-2xl border border-[rgba(22,17,13,0.12)] bg-white/80 px-4 py-4 text-[var(--nakma-dark)] outline-none placeholder:text-[rgba(22,17,13,0.35)] focus:border-[var(--nakma-olive)] nakma-body text-[14px]"
           />
         </div>
@@ -217,7 +218,7 @@ export default function ContactForm() {
           type="submit"
           className="nakma-body w-full rounded-2xl bg-[var(--nakma-dark)] py-4 text-[12px] uppercase tracking-[0.28em] text-white shadow-[0_8px_30px_rgba(22,17,13,0.18)] transition hover:opacity-88"
         >
-          Send Message
+          {t("form.send")}
         </button>
       </div>
     </form>
