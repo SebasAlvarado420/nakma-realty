@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { BLUR_DATA_URL } from "@/lib/constants";
+import { useLang } from "@/lib/i18n";
 
 const NATURE_IMAGES = [
   {
@@ -25,6 +26,7 @@ const NATURE_IMAGES = [
 ];
 
 export default function NatureIntroSection() {
+  const { t } = useLang();
   const [current, setCurrent] = useState(0);
   const [fading, setFading] = useState(false);
 
@@ -99,45 +101,31 @@ export default function NatureIntroSection() {
           {/* ── Right: Brand story ──────────────────────── */}
           <div className="flex flex-col justify-center">
             <p className="nakma-body text-[10px] uppercase tracking-[0.46em] text-[var(--nakma-olive)]">
-              About NAKMA
+              {t("nature.eyebrow")}
             </p>
 
             <h2 className="nakma-display mt-5 text-[36px] leading-[1.08] tracking-[-0.03em] text-[var(--nakma-dark)] md:text-[44px] lg:text-[52px]">
-              More than a destination.{" "}
-              <span className="text-[var(--nakma-earth)]">A way of life.</span>
+              {t("nature.titleA")}{" "}
+              <span className="text-[var(--nakma-earth)]">{t("nature.titleB")}</span>
             </h2>
 
             <div className="mt-8 space-y-5 text-[15px] leading-[1.85] text-[var(--nakma-dark)]/68 nakma-body">
-              <p>
-                NAKMA Realty was created for those who see Costa Rica as more than a
-                destination. We connect people with properties that carry a sense of
-                place: homes surrounded by nature, land with long-term potential, and
-                spaces designed for a more intentional way of living.
-              </p>
-              <p>
-                Every property we represent has been selected with care — not just for
-                its value, but for its relationship with its surroundings. We believe
-                that the right home should feel like it belongs where it stands.
-              </p>
+              <p>{t("nature.p1")}</p>
+              <p>{t("nature.p2")}</p>
             </div>
 
             {/* Value pillars */}
             <div className="mt-10 grid grid-cols-2 gap-4">
-              {[
-                { label: "Curated Properties", desc: "Handpicked for quality & setting" },
-                { label: "Local Market Insight", desc: "Deep knowledge of Costa Rica" },
-                { label: "Nature-Driven Living", desc: "Properties rooted in landscape" },
-                { label: "Personalized Guidance", desc: "Every client, guided with care" },
-              ].map(({ label, desc }) => (
+              {["nature.pillar1", "nature.pillar2", "nature.pillar3", "nature.pillar4"].map((prefix) => (
                 <div
-                  key={label}
+                  key={prefix}
                   className="rounded-[20px] border border-[var(--nakma-dark)]/8 bg-white/60 p-5"
                 >
                   <p className="nakma-display text-[13px] font-semibold text-[var(--nakma-dark)]">
-                    {label}
+                    {t(`${prefix}Label`)}
                   </p>
                   <p className="nakma-body mt-1.5 text-[12px] leading-relaxed text-[var(--nakma-dark)]/55">
-                    {desc}
+                    {t(`${prefix}Desc`)}
                   </p>
                 </div>
               ))}
@@ -148,13 +136,13 @@ export default function NatureIntroSection() {
                 href="/about-us"
                 className="nakma-body inline-flex h-[50px] items-center rounded-full bg-[var(--nakma-dark)] px-7 text-[11px] uppercase tracking-[0.28em] text-white transition-opacity hover:opacity-88"
               >
-                Our Story
+                {t("nature.ourStory")}
               </Link>
               <Link
                 href="/listings"
                 className="nakma-body inline-flex h-[50px] items-center rounded-full border border-[var(--nakma-dark)]/30 px-7 text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-dark)] transition-colors hover:bg-[var(--nakma-dark)] hover:text-white"
               >
-                Explore Listings
+                {t("hero.cta")}
               </Link>
             </div>
           </div>

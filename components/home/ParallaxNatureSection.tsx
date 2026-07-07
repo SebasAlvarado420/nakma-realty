@@ -4,84 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { BLUR_DATA_URL } from "@/lib/constants";
+import { useLang } from "@/lib/i18n";
 
-// Real 4K Costa Rica & tropical nature images from Unsplash (free to use)
+// Costa Rica imagery (Pexels, free). Copy is i18n-driven (invest.* keys).
 const SCENES = [
-  {
-    img: "https://images.pexels.com/photos/29943338/pexels-photo-29943338.jpeg?auto=compress&cs=tinysrgb&w=2400",
-    eyebrow: "Why Invest in Costa Rica?",
-    stat: "5% – 8%",
-    statLabel: "Average annual ROI",
-    headline: "Where the jungle\nmeets the sea.",
-    body: "From the beaches of Guanacaste and the Central Pacific to the highlands of the Central Valley and the wild Caribbean, Costa Rica blends tropical biodiversity, ocean and mountain access, and architectural freedom. Properties here don't just hold value — they grow it while offering a lifestyle most only dream of.",
-    points: [
-      "Foreigners can own property outright — no restrictions",
-      "Titled beachfront, valley & rainforest land available",
-      "Transactions handled in US dollars",
-    ],
-    cta: { label: "Explore Coastal Listings", href: "/listings" },
-    align: "left" as const,
-  },
-  {
-    img: "https://images.pexels.com/photos/15365639/pexels-photo-15365639.jpeg?auto=compress&cs=tinysrgb&w=2400",
-    eyebrow: "Why Invest in Costa Rica?",
-    stat: "25%",
-    statLabel: "Land protected as national reserve",
-    headline: "25% of the world's\nspecies. One country.",
-    body: "Costa Rica protects more than 25% of its territory as national parks and reserves. Properties here don't just offer a view — they offer belonging to one of the most biodiverse places on the planet.",
-    points: [
-      "30+ national parks within easy reach",
-      "Home to ~6% of the planet's biodiversity",
-      "A global leader in reforestation",
-    ],
-    cta: { label: "Nature Properties", href: "/listings" },
-    align: "right" as const,
-  },
-  {
-    img: "https://images.pexels.com/photos/36827348/pexels-photo-36827348.jpeg?auto=compress&cs=tinysrgb&w=2400",
-    eyebrow: "Why Invest in Costa Rica?",
-    stat: "#1",
-    statLabel: "Happiest country in Latin America",
-    headline: "Homes built for\nan intentional life.",
-    body: "The best properties in Costa Rica don't compete with their environment — they extend it. Open walls, natural materials, indoor-outdoor flow, and architecture shaped by what surrounds it.",
-    points: [
-      "Pura Vida — a genuine, slower way of living",
-      "Among the highest life expectancies in the Americas",
-      "Stable democracy with no standing army since 1948",
-    ],
-    cta: { label: "View Properties", href: "/listings" },
-    align: "left" as const,
-  },
-  {
-    img: "https://images.pexels.com/photos/11181988/pexels-photo-11181988.jpeg?auto=compress&cs=tinysrgb&w=2400",
-    eyebrow: "Why Invest in Costa Rica?",
-    stat: "$3.2B",
-    statLabel: "Foreign investment in 2023",
-    headline: "Land that appreciates\nwith purpose.",
-    body: "Costa Rica's real estate market attracts international buyers for its political stability, natural capital, and strong rental demand. Investing here means investing in something that endures.",
-    points: [
-      "Booming short-term & vacation rental demand",
-      "Fast-growing digital-nomad visa program",
-      "Low annual property tax — around 0.25%",
-    ],
-    cta: { label: "Investment Opportunities", href: "/listings" },
-    align: "right" as const,
-  },
-  {
-    img: "https://images.pexels.com/photos/17302412/pexels-photo-17302412.jpeg?auto=compress&cs=tinysrgb&w=2400",
-    eyebrow: "Why Invest in Costa Rica?",
-    stat: "98%",
-    statLabel: "Electricity from renewable sources",
-    headline: "A blueprint for\nsustainable living.",
-    body: "Few places on earth align lifestyle and responsibility like Costa Rica. A near-100% renewable grid, protected forests, and eco-conscious design make every property part of something larger than itself.",
-    points: [
-      "Nearly carbon-neutral national energy grid",
-      "2M+ visitors drawn by nature each year",
-      "Eco-architecture that works with the land",
-    ],
-    cta: { label: "Sustainable Estates", href: "/listings" },
-    align: "left" as const,
-  },
+  { img: "https://images.pexels.com/photos/29943338/pexels-photo-29943338.jpeg?auto=compress&cs=tinysrgb&w=2400", key: "invest.s1", stat: "5% – 8%", href: "/listings", align: "left" as const },
+  { img: "https://images.pexels.com/photos/15365639/pexels-photo-15365639.jpeg?auto=compress&cs=tinysrgb&w=2400", key: "invest.s2", stat: "25%", href: "/listings", align: "right" as const },
+  { img: "https://images.pexels.com/photos/36827348/pexels-photo-36827348.jpeg?auto=compress&cs=tinysrgb&w=2400", key: "invest.s3", stat: "#1", href: "/listings", align: "left" as const },
+  { img: "https://images.pexels.com/photos/11181988/pexels-photo-11181988.jpeg?auto=compress&cs=tinysrgb&w=2400", key: "invest.s4", stat: "$3.2B", href: "/listings", align: "right" as const },
+  { img: "https://images.pexels.com/photos/17302412/pexels-photo-17302412.jpeg?auto=compress&cs=tinysrgb&w=2400", key: "invest.s5", stat: "98%", href: "/listings", align: "left" as const },
 ];
 
 function useInView(threshold = 0.15) {
@@ -102,7 +33,9 @@ function useInView(threshold = 0.15) {
 
 function ParallaxScene({ scene, index }: { scene: typeof SCENES[0]; index: number }) {
   const { ref: contentRef, inView } = useInView(0.12);
+  const { t } = useLang();
   const isLeft = scene.align === "left";
+  const points = [t(`${scene.key}P1`), t(`${scene.key}P2`), t(`${scene.key}P3`)];
 
   return (
     <div className="relative h-screen min-h-[700px] overflow-hidden">
@@ -110,10 +43,9 @@ function ParallaxScene({ scene, index }: { scene: typeof SCENES[0]; index: numbe
       <div className="absolute inset-0">
         <Image
           src={scene.img}
-          alt={`${scene.headline.replace(/\n/g, " ")} — Costa Rica real estate`}
+          alt={`${t("invest.eyebrow")} — Costa Rica real estate`}
           fill
           sizes="100vw"
-          quality={90}
           priority={index === 0}
           placeholder="blur"
           blurDataURL={BLUR_DATA_URL}
@@ -151,7 +83,7 @@ function ParallaxScene({ scene, index }: { scene: typeof SCENES[0]; index: numbe
               transitionDelay: "0ms",
             }}
           >
-            {scene.eyebrow}
+            {t("invest.eyebrow")}
           </p>
 
           {/* Stat — pops in with scale */}
@@ -167,7 +99,7 @@ function ParallaxScene({ scene, index }: { scene: typeof SCENES[0]; index: numbe
               {scene.stat}
             </span>
             <span className="nakma-body mt-1 block text-[11px] uppercase tracking-[0.32em] text-[var(--nakma-sand)]/65">
-              {scene.statLabel}
+              {t(`${scene.key}StatLabel`)}
             </span>
           </div>
 
@@ -184,7 +116,7 @@ function ParallaxScene({ scene, index }: { scene: typeof SCENES[0]; index: numbe
               transitionDelay: "220ms",
             }}
           >
-            {scene.headline}
+            {t(`${scene.key}Headline`)}
           </h2>
 
           {/* Body */}
@@ -196,13 +128,13 @@ function ParallaxScene({ scene, index }: { scene: typeof SCENES[0]; index: numbe
               transitionDelay: "330ms",
             }}
           >
-            {scene.body}
+            {t(`${scene.key}Body`)}
           </p>
 
           {/* Key facts — staggered reveal */}
-          {scene.points && (
+          {points.length > 0 && (
             <ul className={`mt-7 flex flex-col gap-3 ${isLeft ? "" : "items-end"}`}>
-              {scene.points.map((point, pi) => (
+              {points.map((point, pi) => (
                 <li
                   key={point}
                   className={`nakma-body flex max-w-[440px] items-center gap-3 text-[13px] leading-snug text-white/72 transition-all duration-700 lg:text-[14px] ${
@@ -235,10 +167,10 @@ function ParallaxScene({ scene, index }: { scene: typeof SCENES[0]; index: numbe
             }}
           >
             <Link
-              href={scene.cta.href}
+              href={scene.href}
               className="nakma-body group inline-flex h-[52px] items-center gap-3 rounded-full border border-white/20 px-7 text-[11px] uppercase tracking-[0.36em] text-white/75 backdrop-blur-sm transition-all duration-300 hover:border-white/50 hover:bg-white/10 hover:text-white"
             >
-              {scene.cta.label}
+              {t(`${scene.key}Cta`)}
               <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
             </Link>
           </div>
@@ -267,6 +199,7 @@ function ParallaxScene({ scene, index }: { scene: typeof SCENES[0]; index: numbe
 export default function ParallaxNatureSection() {
   // Section intro header — "Why Invest in Costa Rica?"
   const { ref: headerRef, inView: headerVisible } = useInView(0.3);
+  const { t } = useLang();
 
   return (
     <div className="bg-[#0e0b08]">
@@ -279,7 +212,7 @@ export default function ParallaxNatureSection() {
           className="nakma-body text-[9px] uppercase tracking-[0.54em] text-[var(--nakma-sand)]/55 transition-all duration-700"
           style={{ opacity: headerVisible ? 1 : 0, transform: headerVisible ? "translateY(0)" : "translateY(12px)" }}
         >
-          NAKMA Realty · Market Intelligence
+          {t("invest.header")}
         </p>
         <h2
           className="nakma-display mt-4 max-w-2xl text-[38px] font-semibold leading-[1.04] tracking-[-0.04em] transition-all duration-700 md:text-[56px]"
@@ -290,8 +223,8 @@ export default function ParallaxNatureSection() {
             transitionDelay: "120ms",
           }}
         >
-          Why invest in{" "}
-          <span className="text-[var(--nakma-sand)]">Costa Rica?</span>
+          {t("invest.title")}{" "}
+          <span className="text-[var(--nakma-sand)]">{t("invest.titleHighlight")}</span>
         </h2>
         <p
           className="nakma-body mt-5 max-w-lg text-[15px] leading-relaxed text-white/40 transition-all duration-700"
@@ -301,7 +234,7 @@ export default function ParallaxNatureSection() {
             transitionDelay: "220ms",
           }}
         >
-          One of the most stable, biodiverse, and sought-after real estate markets in Latin America.
+          {t("invest.intro")}
         </p>
       </div>
 

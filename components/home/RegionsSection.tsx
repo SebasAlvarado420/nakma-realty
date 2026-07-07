@@ -11,18 +11,21 @@ import { useLang } from "@/lib/i18n";
 const REGIONS = [
   {
     name: "Central Pacific",
+    nameKey: "region.centralPacific",
     sub: "Puntarenas",
     img: "https://images.pexels.com/photos/17302366/pexels-photo-17302366.jpeg?auto=compress&cs=tinysrgb&w=1600",
     href: "/listings?province=Puntarenas",
   },
   {
     name: "Central Valley",
+    nameKey: "region.centralValley",
     sub: "San José",
     img: "https://images.unsplash.com/photo-1699385600854-5b2137d14cfd?auto=format&fit=crop&w=1200&q=80",
     href: "/listings?province=San José",
   },
   {
     name: "Pacific Coast",
+    nameKey: "region.pacificCoast",
     sub: "Guanacaste",
     img: "https://images.unsplash.com/photo-1643122542225-6a618183b16d?auto=format&fit=crop&w=1200&q=80",
     href: "/listings?province=Guanacaste",
@@ -86,13 +89,13 @@ export default function RegionsSection() {
                 {/* Label */}
                 <div className="absolute inset-x-0 bottom-0 p-6 text-center">
                   <h3 className="nakma-display text-[26px] leading-tight text-white">
-                    {region.name}
+                    {t(region.nameKey)}
                   </h3>
                   <p className="nakma-body mt-1.5 text-[11px] uppercase tracking-[0.26em] text-white/75">
                     {region.sub}
                   </p>
                   <span className="nakma-body mt-3 inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.24em] text-[var(--nakma-sand)] opacity-0 transition-all duration-300 group-hover:opacity-100">
-                    View Properties
+                    {t("regions.viewProperties")}
                     <span className="transition-transform duration-300 group-hover:translate-x-1">
                       →
                     </span>
