@@ -1,12 +1,11 @@
+"use client";
+
 import ContactForm from "@/components/contact/ContactForm";
 import { SITE } from "@/lib/site";
-
-export const metadata = {
-  title: "Contact Us · NAKMA Realty",
-  description: "Get in touch with NAKMA Realty — find your place in Costa Rica.",
-};
+import { useLang } from "@/lib/i18n";
 
 export default function ContactUsPage() {
+  const { t } = useLang();
   return (
     <div className="bg-[var(--nakma-bg)]">
 
@@ -14,13 +13,13 @@ export default function ContactUsPage() {
       <section className="px-6 pb-0 pt-36 lg:px-16">
         <div className="mx-auto max-w-7xl">
           <p className="nakma-body text-[10px] uppercase tracking-[0.46em] text-[var(--nakma-olive)]">
-            Get In Touch
+            {t("contactpage.eyebrow")}
           </p>
           <h1 className="nakma-display mt-5 max-w-2xl text-[42px] leading-[1.04] tracking-[-0.04em] text-[var(--nakma-dark)] md:text-[58px]">
-            Let's find your place in Costa Rica.
+            {t("contactpage.title")}
           </h1>
           <p className="nakma-body mt-6 max-w-md text-[15px] leading-relaxed text-[var(--nakma-dark)]/60">
-            Tell us what you're looking for, and our team will guide you through selected opportunities that match your vision.
+            {t("contactpage.intro")}
           </p>
         </div>
       </section>
@@ -38,11 +37,11 @@ export default function ContactUsPage() {
               {/* Info card */}
               <div className="rounded-[28px] border border-[var(--nakma-dark)]/8 bg-white/50 p-7">
                 <p className="nakma-body text-[10px] uppercase tracking-[0.40em] text-[var(--nakma-olive)]">
-                  Contact Info
+                  {t("contactpage.info")}
                 </p>
                 <div className="mt-6 space-y-5">
                   <div>
-                    <p className="nakma-body text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-dark)]/48">Email</p>
+                    <p className="nakma-body text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-dark)]/48">{t("form.email")}</p>
                     <a href={`mailto:${SITE.email}`} className="nakma-body mt-1.5 block text-[15px] text-[var(--nakma-dark)] hover:text-[var(--nakma-olive)]">
                       {SITE.email}
                     </a>
@@ -54,14 +53,14 @@ export default function ContactUsPage() {
                     </a>
                   </div>
                   <div>
-                    <p className="nakma-body text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-dark)]/48">Social</p>
+                    <p className="nakma-body text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-dark)]/48">{t("contactpage.social")}</p>
                     <div className="mt-1.5 flex gap-3 text-[14px]">
                       <a href={SITE.instagram} target="_blank" rel="noreferrer" className="nakma-body text-[var(--nakma-dark)] hover:text-[var(--nakma-olive)]">Instagram</a>
                       <a href={SITE.facebook} target="_blank" rel="noreferrer" className="nakma-body text-[var(--nakma-dark)] hover:text-[var(--nakma-olive)]">Facebook</a>
                     </div>
                   </div>
                   <div>
-                    <p className="nakma-body text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-dark)]/48">Location</p>
+                    <p className="nakma-body text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-dark)]/48">{t("contactpage.location")}</p>
                     <p className="nakma-body mt-1.5 text-[15px] text-[var(--nakma-dark)]">Costa Rica</p>
                   </div>
                 </div>
@@ -70,29 +69,29 @@ export default function ContactUsPage() {
               {/* Response time */}
               <div className="rounded-[28px] bg-[var(--nakma-olive)]/10 p-7">
                 <p className="nakma-display text-[15px] font-semibold text-[var(--nakma-dark)]">
-                  We respond within 24 hours.
+                  {t("contactpage.respond")}
                 </p>
                 <p className="nakma-body mt-2 text-[13px] leading-relaxed text-[var(--nakma-dark)]/58">
-                  Your inquiry will be received by a member of our team — not an automated system.
+                  {t("contactpage.respondBody")}
                 </p>
               </div>
 
               {/* List your property */}
               <div className="rounded-[28px] border border-[var(--nakma-dark)]/8 bg-white/50 p-7">
                 <p className="nakma-body text-[10px] uppercase tracking-[0.36em] text-[var(--nakma-olive)]">
-                  Property Owners
+                  {t("contactpage.owners")}
                 </p>
                 <p className="nakma-display mt-3 text-[18px] font-semibold leading-snug text-[var(--nakma-dark)]">
-                  Looking to list your property with NAKMA?
+                  {t("contactpage.ownersTitle")}
                 </p>
                 <p className="nakma-body mt-3 text-[13px] leading-relaxed text-[var(--nakma-dark)]/58">
-                  We work with a select portfolio of properties. If you believe yours fits our standards, we'd love to hear from you.
+                  {t("contactpage.ownersBody")}
                 </p>
                 <a
                   href={`mailto:${SITE.email}`}
                   className="nakma-body mt-5 inline-flex h-[44px] items-center rounded-full border border-[var(--nakma-dark)]/22 px-5 text-[11px] uppercase tracking-[0.26em] text-[var(--nakma-dark)] transition hover:bg-[var(--nakma-dark)] hover:text-white"
                 >
-                  Contact for Listing
+                  {t("contactpage.contactListing")}
                 </a>
               </div>
             </div>
