@@ -94,8 +94,8 @@ export default function BrokerContactModal({
           </p>
 
           <div className="mt-7 flex items-center gap-4">
-            <div className="relative h-[68px] w-[68px] shrink-0 overflow-hidden rounded-full ring-2 ring-white/20">
-              <Image src={agent.image} alt={agent.name} fill sizes="68px" className="object-cover" />
+            <div className="relative h-[86px] w-[86px] shrink-0 overflow-hidden rounded-full ring-2 ring-white/20">
+              <Image src={agent.image} alt={agent.name} fill sizes="86px" className="object-cover object-top" />
             </div>
             <div>
               <h3 className="nakma-display text-[22px] leading-tight">{agent.name}</h3>

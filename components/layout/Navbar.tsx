@@ -79,7 +79,7 @@ export default function Navbar() {
             style={{ color: logoColor }}
             aria-label="NAKMA Real Estate — Home"
           >
-            <BrandName className="nakma-brand text-[22px] tracking-[0.22em]" />
+            <BrandName showMark={false} className="nakma-brand text-[22px] tracking-[0.22em]" />
             <span className="nakma-body mt-0.5 text-[7px] uppercase tracking-[0.5em] opacity-75">
               Real Estate
             </span>
@@ -179,7 +179,7 @@ export default function Navbar() {
         }`}
       >
         <div className="flex h-[72px] items-center justify-between px-5">
-          <BrandName className="nakma-brand text-[21px] tracking-[0.22em] text-[var(--nakma-dark)]" />
+          <BrandName showMark={false} className="nakma-brand text-[21px] tracking-[0.22em] text-[var(--nakma-dark)]" />
           <button
             type="button"
             aria-label="Close menu"

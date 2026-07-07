@@ -30,8 +30,8 @@ export default function OurTeamPage() {
 
       {/* ── Team grid ──────────────────────────────────── */}
       <section className="px-6 pb-24 lg:px-16">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto max-w-5xl">
+          <div className="grid gap-8 sm:grid-cols-2">
             {teamMembers.map((member, i) => (
               <Reveal
                 key={member.id}

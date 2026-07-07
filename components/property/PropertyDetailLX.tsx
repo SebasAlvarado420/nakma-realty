@@ -150,7 +150,7 @@ export default function PropertyDetailLX({
           <div>
             <h1 className="nakma-display text-[26px] leading-tight text-[var(--nakma-dark)] md:text-[32px]">
               {property.title}{" "}
-              <span className="text-[var(--nakma-dark)]/40">
+              <span className="font-semibold text-[var(--nakma-dark)]/80">
                 | {property.listingType === "rent" && property.rentPrice ? property.rentPrice : property.price}
               </span>
             </h1>
@@ -162,9 +162,9 @@ export default function PropertyDetailLX({
             <Image
               src={agent.image}
               alt={agent.name}
-              width={40}
-              height={40}
-              className="h-10 w-10 rounded-full object-cover"
+              width={56}
+              height={56}
+              className="h-14 w-14 rounded-full object-cover object-top ring-1 ring-[var(--nakma-dark)]/10"
             />
             <button
               type="button"
@@ -454,13 +454,13 @@ export default function PropertyDetailLX({
         <section className="mt-14 border-t border-[var(--nakma-dark)]/8 pb-4 pt-10">
           <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">{t("listing.agent")}</h2>
           <div className="mt-6 flex flex-col gap-6 sm:flex-row sm:items-start">
-            <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-[10px]">
+            <div className="relative h-44 w-36 shrink-0 overflow-hidden rounded-[14px] sm:h-48 sm:w-40">
               <Image
                 src={agent.image}
                 alt={agent.name}
                 fill
-                sizes="112px"
-                className="object-cover"
+                sizes="160px"
+                className="object-cover object-top"
               />
             </div>
             <div>
@@ -544,9 +544,10 @@ export default function PropertyDetailLX({
         >
           <button
             type="button"
-            onClick={() => setLightbox(false)}
+            onClick={(e) => { e.stopPropagation(); setLightbox(false); }}
             aria-label="Close"
-            className="absolute right-5 top-5 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl leading-none text-white transition hover:bg-white/20"
+            className="fixed z-[30] flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-3xl leading-none text-white shadow-lg backdrop-blur-sm transition hover:bg-white/30"
+            style={{ top: "max(1rem, env(safe-area-inset-top))", right: "max(1rem, env(safe-area-inset-right))" }}
           >
             ×
           </button>
@@ -573,16 +574,28 @@ export default function PropertyDetailLX({
           )}
 
           <div
-            className="relative h-[82vh] w-full max-w-6xl"
+            className="relative mx-auto h-[82vh] w-full max-w-6xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <Image
-              src={images[active]}
-              alt={property.title}
-              fill
-              sizes="100vw"
-              className="object-contain"
-            />
+            {/* Render the active image plus its neighbours (hidden) so the
+                prev/next photos are already fetched — arrows feel instant. */}
+            {[...new Set([
+              active,
+              (active - 1 + images.length) % images.length,
+              (active + 1) % images.length,
+            ])].map((idx) => (
+              <Image
+                key={idx}
+                src={images[idx]}
+                alt={property.title}
+                fill
+                sizes="100vw"
+                priority={idx === active}
+                className={`object-contain transition-opacity duration-200 ${
+                  idx === active ? "opacity-100" : "pointer-events-none opacity-0"
+                }`}
+              />
+            ))}
           </div>
 
           <p className="absolute bottom-5 left-1/2 -translate-x-1/2 text-[12px] tracking-[0.2em] text-white/60">
