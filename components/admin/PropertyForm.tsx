@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useProperties } from "@/lib/propertiescontext";
 import { uploadMedia } from "@/lib/properties-api";
 import { teamMembers } from "@/data/team";
+import { PROPERTY_TYPES } from "@/types/property";
 import type { Property } from "@/types/property";
 
 const PROVINCES = [
@@ -25,6 +26,7 @@ type FormState = {
   location: string;
   province: string;
   agentId: string;
+  propertyType: string;
   listingType: string;
   price: string;
   rentPrice: string;
@@ -49,7 +51,7 @@ type FormState = {
 };
 
 const emptyForm: FormState = {
-  title: "", slug: "", location: "", province: "", agentId: "",
+  title: "", slug: "", location: "", province: "", agentId: "", propertyType: "",
   listingType: "sale", price: "", rentPrice: "", featured: "No", exclusive: "No",
   landSize: "", constructionSize: "", bedrooms: "", bathrooms: "",
   hoa: "", address: "", lat: "", lng: "",
@@ -85,6 +87,7 @@ function fromProperty(p: Property): FormState {
     location: p.location ?? "",
     province: p.province ?? "",
     agentId: p.agentId ?? "",
+    propertyType: p.propertyType ?? "",
     listingType: p.listingType ?? "sale",
     price: withCommas(stripDollar(p.price)),
     rentPrice: p.rentPrice ?? "",
@@ -232,6 +235,7 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
       location: form.location.trim(),
       province: form.province,
       agentId: form.agentId || undefined,
+      propertyType: form.propertyType || undefined,
       listingType: (form.listingType === "rent" ? "rent" : "sale") as "sale" | "rent",
       price: price ? `$${price}` : "",
       rentPrice: form.rentPrice.trim() || undefined,
@@ -304,6 +308,12 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
             <select name="agentId" value={form.agentId} onChange={handleChange} className={inputCls}>
               <option value="">Select agent</option>
               {teamMembers.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
+            </select>
+          </Field>
+          <Field label="Property Type" hint="Optional — powers the search filter.">
+            <select name="propertyType" value={form.propertyType} onChange={handleChange} className={inputCls}>
+              <option value="">Select type</option>
+              {PROPERTY_TYPES.map((tp) => <option key={tp} value={tp}>{tp}</option>)}
             </select>
           </Field>
         </div>

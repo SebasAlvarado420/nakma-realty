@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search, MapPin, ChevronDown, Minus, Plus } from "lucide-react";
 import { useLang } from "@/lib/i18n";
+import { PROPERTY_TYPES } from "@/types/property";
 
 const MAX_PRICE = 8_000_000;
 const STEP = 50_000;
@@ -68,6 +69,7 @@ export default function HomeSearch() {
   const { t } = useLang();
   const [query, setQuery] = useState("");
   const [province, setProvince] = useState("");
+  const [propertyType, setPropertyType] = useState("");
   const [interest, setInterest] = useState<"all" | "sale" | "rent">("all");
   const [price, setPrice] = useState(MAX_PRICE);
   const [bedrooms, setBedrooms] = useState(0);
@@ -79,6 +81,7 @@ export default function HomeSearch() {
     const params = new URLSearchParams();
     if (query.trim()) params.set("q", query.trim());
     if (province) params.set("province", province);
+    if (propertyType) params.set("propertyType", propertyType);
     if (interest !== "all") params.set("type", interest);
     if (price < MAX_PRICE) params.set("maxPrice", String(price));
     if (bedrooms > 0) params.set("beds", String(bedrooms));
@@ -152,6 +155,26 @@ export default function HomeSearch() {
                   {opt === "all" ? t("search.all") : opt === "sale" ? t("search.sale") : t("search.rent")}
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Property Type */}
+          <div>
+            <p className="nakma-body mb-2 text-[11px] uppercase tracking-[0.2em] text-[var(--nakma-dark)]/55">
+              {t("search.propertyType")}
+            </p>
+            <div className="relative flex h-[46px] items-center rounded-xl border border-[var(--nakma-dark)]/14">
+              <select
+                value={propertyType}
+                onChange={(e) => setPropertyType(e.target.value)}
+                className="nakma-body h-full w-full min-w-[150px] cursor-pointer appearance-none rounded-xl bg-transparent px-4 pr-9 text-[13px] text-[var(--nakma-dark)] outline-none"
+              >
+                <option value="">{t("search.anyType")}</option>
+                {PROPERTY_TYPES.map((tp) => (
+                  <option key={tp} value={tp}>{t(`type.${tp.toLowerCase()}`)}</option>
+                ))}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 h-4 w-4 text-[var(--nakma-dark)]/40" />
             </div>
           </div>
 

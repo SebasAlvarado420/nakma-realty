@@ -1,3 +1,8 @@
+// The four property categories used across the admin form and the search
+// filters. Kept as plain labels so they read the same everywhere.
+export const PROPERTY_TYPES = ["Home", "Condo", "Land", "Commercial"] as const;
+export type PropertyType = (typeof PROPERTY_TYPES)[number];
+
 export type PropertyFeatures = {
   internal: string[];
   external: string[];
@@ -64,6 +69,9 @@ export type Property = {
   geo?: PropertyLocation;
   /** Id of the selling agent (references a team member). */
   agentId?: string;
+  /** Category — Home / Condo / Land / Commercial (optional). Drives the
+   *  property-type search filter. */
+  propertyType?: PropertyType | string;
   /** Archived listings keep their NK code but are hidden from the public site
    *  and can be re-published at any time from the admin "Archived" section. */
   archived?: boolean;

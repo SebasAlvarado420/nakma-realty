@@ -41,6 +41,7 @@ type CreatePropertyInput = {
   highlights?: string[];
   features?: PropertyFeatures;
   agentId?: string;
+  propertyType?: string;
   geo?: PropertyLocation;
 };
 
@@ -127,6 +128,7 @@ export function PropertiesProvider({ children }: { children: React.ReactNode }) 
         highlights: input.highlights?.filter((h) => h.trim()) ?? [],
         features: input.features,
         agentId: input.agentId || undefined,
+        propertyType: input.propertyType || undefined,
         geo: input.geo,
       });
       await refresh();

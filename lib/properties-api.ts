@@ -36,6 +36,7 @@ export function rowToProperty(r: any): Property {
     communityInfo: r.community_info ?? undefined,
     geo: r.geo ?? undefined,
     agentId: r.agent_id ?? undefined,
+    propertyType: r.property_type ?? undefined,
     archived: !!r.archived,
   };
 }
@@ -69,6 +70,7 @@ export function propertyToRow(p: Partial<Property>) {
     community_info: p.communityInfo ?? null,
     geo: p.geo ?? null,
     agent_id: p.agentId ?? null,
+    property_type: p.propertyType ?? null,
     archived: p.archived ?? false,
   };
 }

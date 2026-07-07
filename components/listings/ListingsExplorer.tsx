@@ -14,6 +14,7 @@ import {
   Plus,
 } from "lucide-react";
 import { useProperties } from "@/lib/propertiescontext";
+import { PROPERTY_TYPES } from "@/types/property";
 import PropertyCard from "@/components/property/PropertyCard";
 import Reveal from "@/components/ui/Reveal";
 
@@ -96,6 +97,7 @@ export default function ListingsExplorer() {
 
   const [query, setQuery] = useState(sp.get("q") ?? "");
   const [province, setProvince] = useState(sp.get("province") ?? ""); // "" = all locations
+  const [propertyType, setPropertyType] = useState(sp.get("propertyType") ?? "");
   const [interest, setInterest] = useState<Interest>(
     (["sale", "rent"].includes(sp.get("type") ?? "") ? sp.get("type") : "all") as Interest
   );
@@ -121,6 +123,7 @@ export default function ListingsExplorer() {
         if (!haystack.includes(q)) return false;
       }
       if (province && p.province !== province) return false;
+      if (propertyType && p.propertyType !== propertyType) return false;
       if (parseNum(p.price) > price) return false;
       if (p.bedrooms < bedrooms) return false;
       if (p.bathrooms < bathrooms) return false;
@@ -132,6 +135,7 @@ export default function ListingsExplorer() {
     properties,
     query,
     province,
+    propertyType,
     interest,
     price,
     bedrooms,
@@ -143,6 +147,7 @@ export default function ListingsExplorer() {
   function reset() {
     setQuery("");
     setProvince("");
+    setPropertyType("");
     setInterest("all");
     setPrice(MAX_PRICE);
     setBedrooms(0);
@@ -216,6 +221,24 @@ export default function ListingsExplorer() {
                   {t === "all" ? "All" : t === "sale" ? "Sale" : "Rent"}
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Property Type */}
+          <div>
+            <p className="nakma-body mb-2 text-[12px] text-[var(--nakma-dark)]/65">Property Type</p>
+            <div className="relative flex h-[46px] items-center rounded-xl border border-[rgba(22,17,13,0.14)]">
+              <select
+                value={propertyType}
+                onChange={(e) => setPropertyType(e.target.value)}
+                className="nakma-body h-full w-full min-w-[140px] cursor-pointer appearance-none rounded-xl bg-transparent px-4 pr-9 text-[13px] text-[var(--nakma-dark)] outline-none"
+              >
+                <option value="">Any Type</option>
+                {PROPERTY_TYPES.map((tp) => (
+                  <option key={tp} value={tp}>{tp}</option>
+                ))}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 h-4 w-4 text-[var(--nakma-dark)]/45" />
             </div>
           </div>
 
