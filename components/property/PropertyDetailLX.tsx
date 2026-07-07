@@ -88,6 +88,7 @@ export default function PropertyDetailLX({
   const [paused, setPaused] = useState(false);
   const [lightbox, setLightbox] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
+  const [galleryOpen, setGalleryOpen] = useState(false);
 
   // Auto-rotate the main photo (pauses on hover / when the lightbox is open).
   useEffect(() => {
@@ -95,6 +96,18 @@ export default function PropertyDetailLX({
     const timer = setInterval(() => setActive((a) => (a + 1) % images.length), 4500);
     return () => clearInterval(timer);
   }, [images.length, paused, lightbox]);
+
+  // Keyboard: ESC closes the lightbox/gallery, arrows navigate the lightbox.
+  useEffect(() => {
+    if (!lightbox && !galleryOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { setLightbox(false); setGalleryOpen(false); }
+      if (lightbox && e.key === "ArrowRight") setActive((a) => (a + 1) % images.length);
+      if (lightbox && e.key === "ArrowLeft") setActive((a) => (a - 1 + images.length) % images.length);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [lightbox, galleryOpen, images.length]);
 
   useEffect(() => {
     try {
@@ -249,8 +262,10 @@ export default function PropertyDetailLX({
               <button
                 key={src + i}
                 type="button"
-                onClick={() => setActive(i)}
-                className={`relative aspect-[16/10] overflow-hidden rounded-[8px] transition lg:aspect-[16/9] ${
+                onClick={() =>
+                  i === 2 && images.length > 3 ? setGalleryOpen(true) : setActive(i)
+                }
+                className={`group/thumb relative aspect-[16/10] overflow-hidden rounded-[8px] transition lg:aspect-[16/9] ${
                   active === i ? "ring-2 ring-[var(--nakma-olive)]" : "opacity-90 hover:opacity-100"
                 }`}
               >
@@ -264,8 +279,9 @@ export default function PropertyDetailLX({
                   className="object-cover"
                 />
                 {i === 2 && images.length > 3 && (
-                  <span className="nakma-body absolute inset-0 flex items-center justify-center bg-black/55 text-[12px] uppercase tracking-[0.18em] text-white">
-                    + {images.length - 3} more
+                  <span className="nakma-body absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/60 text-white transition group-hover/thumb:bg-black/70">
+                    <span className="nakma-display text-[22px] leading-none">+{images.length - 3}</span>
+                    <span className="text-[9px] uppercase tracking-[0.24em]">{t("listing.viewAllPhotos")}</span>
                   </span>
                 )}
               </button>
@@ -601,6 +617,58 @@ export default function PropertyDetailLX({
           <p className="absolute bottom-5 left-1/2 -translate-x-1/2 text-[12px] tracking-[0.2em] text-white/60">
             {active + 1} / {images.length}
           </p>
+        </div>
+      )}
+
+      {/* ── All-photos gallery panel (opens from "+N") ─────────── */}
+      {galleryOpen && (
+        <div className="fixed inset-0 z-[10000] flex flex-col bg-[var(--nakma-bg)]">
+          <div className="flex items-center justify-between border-b border-[var(--nakma-dark)]/10 px-6 py-5 lg:px-12">
+            <div>
+              <p className="nakma-body text-[10px] uppercase tracking-[0.4em] text-[var(--nakma-olive)]">
+                {t("listing.gallery")}
+              </p>
+              <h3 className="nakma-display mt-1 text-[19px] text-[var(--nakma-dark)] md:text-[22px]">
+                {property.title}{" "}
+                <span className="text-[var(--nakma-dark)]/40">
+                  · {images.length} {t("listing.photos")}
+                </span>
+              </h3>
+            </div>
+            <button
+              type="button"
+              onClick={() => setGalleryOpen(false)}
+              aria-label="Close"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[var(--nakma-dark)]/15 text-2xl leading-none text-[var(--nakma-dark)] transition hover:bg-[var(--nakma-dark)] hover:text-white"
+            >
+              ×
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto px-6 py-6 lg:px-12">
+            <div className="mx-auto grid max-w-6xl grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+              {images.map((src, i) => (
+                <button
+                  key={src + i}
+                  type="button"
+                  onClick={() => { setActive(i); setGalleryOpen(false); setLightbox(true); }}
+                  className="group relative aspect-[4/3] overflow-hidden rounded-[12px] bg-[var(--nakma-sand)]/20"
+                >
+                  <Image
+                    src={src}
+                    alt={`${property.title} — ${i + 1}`}
+                    fill
+                    sizes="(max-width: 640px) 50vw, 300px"
+                    placeholder="blur"
+                    blurDataURL={BLUR_DATA_URL}
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                  />
+                  <span className="nakma-body absolute left-2 top-2 rounded-full bg-black/45 px-2 py-0.5 text-[10px] text-white backdrop-blur-sm">
+                    {i + 1}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
