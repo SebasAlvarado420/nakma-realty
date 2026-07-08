@@ -90,6 +90,20 @@ export async function fetchProperties(): Promise<Property[]> {
   return (data ?? []).map(rowToProperty);
 }
 
+// Single active listing by slug — used server-side for per-page SEO metadata
+// and structured data. Best-effort: returns null if unavailable.
+export async function fetchPropertyBySlug(slug: string): Promise<Property | null> {
+  if (!supabase || !slug) return null;
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select("*")
+    .eq("slug", slug)
+    .limit(1)
+    .maybeSingle();
+  if (error || !data) return null;
+  return rowToProperty(data);
+}
+
 export async function createProperty(p: Partial<Property>): Promise<Property | null> {
   if (!supabase) return null;
   const { data, error } = await supabase

@@ -1,78 +1,150 @@
-"use client";
+import type { Metadata } from "next";
+import { fetchPropertyBySlug } from "@/lib/properties-api";
+import type { Property } from "@/types/property";
+import PropertyPageClient from "./PropertyPageClient";
 
-import { useParams } from "next/navigation";
-import { useProperties } from "@/lib/propertiescontext";
-import { useLang } from "@/lib/i18n";
-import { getAgent } from "@/data/team";
-import PropertyDetailLX from "@/components/property/PropertyDetailLX";
+const SITE_URL = "https://nakmarealty.com";
 
-export default function PropertyPage() {
-  const params = useParams();
-  const { properties } = useProperties();
-  const { t } = useLang();
+type Props = { params: Promise<{ slug: string }> };
 
-  const slug = typeof params.slug === "string" ? params.slug : "";
-  const property = properties.find((item) => item.slug === slug);
+function priceLine(p: Property): string {
+  if (p.priceOnRequest) return "Price Upon Request";
+  if (p.listingType === "rent" && p.rentPrice) return `${p.rentPrice} / month`;
+  return p.price || "";
+}
+
+function metaDescription(p: Property): string {
+  if (p.description && p.description.trim()) {
+    return p.description.trim().replace(/\s+/g, " ").slice(0, 155);
+  }
+  const bits: string[] = [];
+  if (p.bedrooms > 0) bits.push(`${p.bedrooms} bed`);
+  if (p.bathrooms > 0) bits.push(`${p.bathrooms} bath`);
+  const specs = bits.length ? `${bits.join(" · ")} ` : "";
+  const price = priceLine(p);
+  const type = p.propertyType ? p.propertyType.toLowerCase() : "property";
+  return `${specs}${type} in ${p.location || p.province}, Costa Rica${
+    price ? ` — ${price}` : ""
+  }. Presented by NAKMA Realty.`.replace(/\s+/g, " ").trim();
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const property = await fetchPropertyBySlug(slug);
 
   if (!property) {
-    return (
-      <section className="flex min-h-screen items-center justify-center px-6 pt-32 pb-20">
-        <div className="text-center">
-          <p className="nakma-body text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-olive)]">
-            {t("listings.notFoundEyebrow")}
-          </p>
-          <h1 className="nakma-display mt-4 text-4xl text-[var(--nakma-dark)]">
-            {t("listings.notFoundTitle")}
-          </h1>
-          <p className="nakma-body mt-4 text-[var(--nakma-dark)]/60">
-            {t("listings.notFoundBody")}
-          </p>
-        </div>
-      </section>
-    );
+    return {
+      title: "Property",
+      description:
+        "Explore refined homes, land, and investment properties across Costa Rica with NAKMA Realty.",
+      alternates: { canonical: `/listings/${slug}` },
+    };
   }
 
-  const agent = getAgent(property.agentId);
+  const price = priceLine(property);
+  const title = `${property.title}${price ? ` — ${price}` : ""}`;
+  const description = metaDescription(property);
+  const images = (property.gallery?.length ? property.gallery : [property.image])
+    .filter(Boolean)
+    .slice(0, 4);
 
-  // Related: same province first, then fill with others.
-  const sameProvince = properties.filter(
-    (p) => p.id !== property.id && p.province === property.province
-  );
-  const others = properties.filter(
-    (p) => p.id !== property.id && p.province !== property.province
-  );
-  const related = [...sameProvince, ...others].slice(0, 3);
-
-  // Per-listing structured data — richer search results for each property.
-  const priceNumber = Number((property.price || "").replace(/[^0-9.]/g, "")) || undefined;
-  const listingLd = {
-    "@context": "https://schema.org",
-    "@type": "RealEstateListing",
-    name: property.title,
-    url: `https://nakmarealty.com/listings/${property.slug}`,
-    image: property.gallery?.length ? property.gallery : [property.image],
-    description: property.description || `${property.title} — ${property.location}, Costa Rica.`,
-    ...(priceNumber
-      ? { offers: { "@type": "Offer", price: priceNumber, priceCurrency: "USD", availability: "https://schema.org/InStock" } }
-      : {}),
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: property.location || property.province,
-      addressRegion: property.province,
-      addressCountry: "CR",
+  return {
+    title,
+    description,
+    alternates: { canonical: `/listings/${property.slug}` },
+    openGraph: {
+      type: "website",
+      url: `${SITE_URL}/listings/${property.slug}`,
+      title: `${title} · NAKMA Realty`,
+      description,
+      images: images.map((url) => ({ url })),
     },
-    ...(property.geo
-      ? { geo: { "@type": "GeoCoordinates", latitude: property.geo.lat, longitude: property.geo.lng } }
-      : {}),
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} · NAKMA Realty`,
+      description,
+      images: images.slice(0, 1),
+    },
   };
+}
+
+export default async function PropertyPage({ params }: Props) {
+  const { slug } = await params;
+  const property = await fetchPropertyBySlug(slug);
+
+  const listingLd = property
+    ? {
+        "@context": "https://schema.org",
+        "@type": "RealEstateListing",
+        name: property.title,
+        url: `${SITE_URL}/listings/${property.slug}`,
+        image: property.gallery?.length ? property.gallery : [property.image],
+        description:
+          property.description ||
+          `${property.title} — ${property.location}, Costa Rica.`,
+        ...(() => {
+          const n = Number((property.price || "").replace(/[^0-9.]/g, "")) || undefined;
+          return n
+            ? {
+                offers: {
+                  "@type": "Offer",
+                  price: n,
+                  priceCurrency: "USD",
+                  availability: "https://schema.org/InStock",
+                },
+              }
+            : {};
+        })(),
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: property.location || property.province,
+          addressRegion: property.province,
+          addressCountry: "CR",
+        },
+        ...(property.geo
+          ? {
+              geo: {
+                "@type": "GeoCoordinates",
+                latitude: property.geo.lat,
+                longitude: property.geo.lng,
+              },
+            }
+          : {}),
+      }
+    : null;
+
+  const breadcrumbLd = property
+    ? {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+          { "@type": "ListItem", position: 2, name: "Listings", item: `${SITE_URL}/listings` },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: property.title,
+            item: `${SITE_URL}/listings/${property.slug}`,
+          },
+        ],
+      }
+    : null;
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(listingLd) }}
-      />
-      <PropertyDetailLX property={property} agent={agent} related={related} />
+      {listingLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(listingLd) }}
+        />
+      )}
+      {breadcrumbLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        />
+      )}
+      <PropertyPageClient />
     </>
   );
 }
