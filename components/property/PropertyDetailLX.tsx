@@ -20,6 +20,7 @@ import {
   ZoomIn,
   ChevronLeft,
   ChevronRight,
+  X,
 } from "lucide-react";
 import type { Property } from "@/types/property";
 import type { TeamMember } from "@/data/team";
@@ -566,10 +567,10 @@ export default function PropertyDetailLX({
             type="button"
             onClick={(e) => { e.stopPropagation(); setLightbox(false); }}
             aria-label="Close"
-            className="fixed z-[30] flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-3xl leading-none text-white shadow-lg backdrop-blur-sm transition hover:bg-white/30"
-            style={{ top: "max(1rem, env(safe-area-inset-top))", right: "max(1rem, env(safe-area-inset-right))" }}
+            className="fixed z-[10002] flex h-12 w-12 items-center justify-center rounded-full border border-white/25 bg-black/70 text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-sm transition hover:bg-black/90"
+            style={{ top: "max(1.15rem, env(safe-area-inset-top))", right: "max(1.15rem, env(safe-area-inset-right))" }}
           >
-            ×
+            <X className="h-6 w-6" />
           </button>
 
           {images.length > 1 && (

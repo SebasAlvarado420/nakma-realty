@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import HeroVideo from "@/components/home/HeroVideo";
-import HomeSearch from "@/components/home/HomeSearch";
+import HomeMap from "@/components/home/HomeMap";
 import ListingsCarousel from "@/components/home/ListingsCarousel";
 import ListingsGridSection from "@/components/home/ListingsGridSection";
 import RegionsSection from "@/components/home/RegionsSection";
@@ -53,8 +53,8 @@ export default function HomePageClient() {
       {/* 4. Local areas — explore by region */}
       <RegionsSection />
 
-      {/* 5. Search Properties — primary CTA */}
-      <HomeSearch />
+      {/* 5. Begin your search — interactive portfolio map */}
+      <HomeMap />
 
       {/* 6. More of the portfolio — 3×4 grid */}
       <ListingsGridSection

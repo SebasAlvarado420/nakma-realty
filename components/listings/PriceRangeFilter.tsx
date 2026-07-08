@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import RangeSlider from "@/components/ui/RangeSlider";
 
-const TICKS = 26;
+const TICKS = 36;
 
 /**
  * Airbnb-style price filter (NAKMA-styled): a distribution histogram over the
@@ -70,23 +70,23 @@ export default function PriceRangeFilter({
   return (
     <div className="w-full">
       {/* Histogram */}
-      <div className="flex h-[68px] w-full items-end gap-[3px]" aria-hidden="true">
+      <div className="flex h-[72px] w-full items-end gap-[2px]" aria-hidden="true">
         {counts.map((c, i) => (
           <div key={i} className="flex flex-1 items-end">
             <span
-              className={`w-full rounded-t-[3px] transition-colors duration-200 ${
+              className={`w-full rounded-t-[2px] transition-colors duration-200 ${
                 barSelected(i)
                   ? "bg-[var(--nakma-dark)]"
-                  : "bg-[var(--nakma-dark)]/15"
+                  : "bg-[var(--nakma-dark)]/12"
               }`}
-              style={{ height: `${14 + (c / maxCount) * 86}%` }}
+              style={{ height: `${8 + (c / maxCount) * 92}%` }}
             />
           </div>
         ))}
       </div>
 
       {/* Slider */}
-      <div className="mt-3 px-0.5">
+      <div className="-mt-1 px-0.5">
         <RangeSlider value={value} onValueChange={onChange} min={min} max={max} step={step} />
       </div>
 

@@ -7,7 +7,6 @@ import {
   Search,
   MapPin,
   ChevronDown,
-  SlidersHorizontal,
   Map as MapIcon,
   LayoutGrid,
   Minus,
@@ -46,13 +45,6 @@ type View = "list" | "map";
 
 function parseNum(value: string) {
   return Number(String(value).replace(/[^0-9.]/g, "")) || 0;
-}
-
-function formatPrice(value: number) {
-  if (value >= MAX_PRICE) return "$8.0M+";
-  if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
-  if (value >= 1000) return `$${(value / 1000).toFixed(0)}K`;
-  return `$${value}`;
 }
 
 function Stepper({
@@ -106,12 +98,9 @@ export default function ListingsExplorer() {
   const [priceRange, setPriceRange] = useState<number[] | null>(
     sp.get("maxPrice") ? [0, Number(sp.get("maxPrice"))] : null
   );
-  const [priceOpen, setPriceOpen] = useState(false);
   const [bedrooms, setBedrooms] = useState(Number(sp.get("beds")) || 0);
   const [bathrooms, setBathrooms] = useState(Number(sp.get("baths")) || 0);
   const [exclusiveOnly, setExclusiveOnly] = useState(false);
-  const [landSize, setLandSize] = useState("");
-  const [showMore, setShowMore] = useState(false);
   const [view, setView] = useState<View>("list");
 
   // Price bounds derived from the actual listings so the histogram fills nicely.
@@ -134,7 +123,6 @@ export default function ListingsExplorer() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const minLand = parseNum(landSize);
     return properties.filter((p) => {
       const type = p.listingType ?? "sale";
       if (interest !== "all" && type !== interest) return false;
@@ -152,7 +140,6 @@ export default function ListingsExplorer() {
       if (p.bedrooms < bedrooms) return false;
       if (p.bathrooms < bathrooms) return false;
       if (exclusiveOnly && !p.exclusive) return false;
-      if (minLand > 0 && parseNum(p.landSize) < minLand) return false;
       return true;
     });
   }, [
@@ -166,7 +153,6 @@ export default function ListingsExplorer() {
     bedrooms,
     bathrooms,
     exclusiveOnly,
-    landSize,
   ]);
 
   function reset() {
@@ -175,11 +161,9 @@ export default function ListingsExplorer() {
     setPropertyType("");
     setInterest("all");
     setPriceRange(null);
-    setPriceOpen(false);
     setBedrooms(0);
     setBathrooms(0);
     setExclusiveOnly(false);
-    setLandSize("");
   }
 
   return (
@@ -225,18 +209,18 @@ export default function ListingsExplorer() {
           </div>
         </div>
 
-        {/* ── Controls row ────────────────────────────────────── */}
-        <div className="mt-4 flex flex-wrap items-end justify-center gap-x-5 gap-y-5">
+        {/* ── Controls row (centered) ─────────────────────────── */}
+        <div className="mt-6 flex flex-wrap items-end justify-center gap-x-5 gap-y-5">
           {/* Interested in */}
           <div>
-            <p className="nakma-body mb-2 text-[12px] text-[var(--nakma-dark)]/65">
+            <p className="nakma-body mb-2 text-center text-[12px] text-[var(--nakma-dark)]/65">
               {t("search.interested")}
             </p>
             <div className="relative flex h-[46px] items-center rounded-xl border border-[rgba(22,17,13,0.14)]">
               <select
                 value={interest}
                 onChange={(e) => setInterest(e.target.value as Interest)}
-                className="nakma-body h-full w-full min-w-[128px] cursor-pointer appearance-none rounded-xl bg-transparent px-4 pr-9 text-[13px] text-[var(--nakma-dark)] outline-none"
+                className="nakma-body h-full w-full min-w-[130px] cursor-pointer appearance-none rounded-xl bg-transparent px-4 pr-9 text-[13px] text-[var(--nakma-dark)] outline-none"
               >
                 <option value="all">{t("search.all")}</option>
                 <option value="sale">{t("search.sale")}</option>
@@ -248,7 +232,7 @@ export default function ListingsExplorer() {
 
           {/* Property Type */}
           <div>
-            <p className="nakma-body mb-2 text-[12px] text-[var(--nakma-dark)]/65">{t("search.propertyType")}</p>
+            <p className="nakma-body mb-2 text-center text-[12px] text-[var(--nakma-dark)]/65">{t("search.propertyType")}</p>
             <div className="relative flex h-[46px] items-center rounded-xl border border-[rgba(22,17,13,0.14)]">
               <select
                 value={propertyType}
@@ -264,72 +248,36 @@ export default function ListingsExplorer() {
             </div>
           </div>
 
-          {/* Price — popover with histogram range slider */}
-          <div className="relative">
-            <p className="nakma-body mb-2 text-[12px] text-[var(--nakma-dark)]/65">{t("listings.price")}</p>
-            <button
-              type="button"
-              onClick={() => setPriceOpen((o) => !o)}
-              className="nakma-body flex h-[46px] min-w-[160px] items-center justify-between gap-3 rounded-xl border border-[rgba(22,17,13,0.14)] px-4 text-[13px] text-[var(--nakma-dark)] transition hover:bg-[rgba(22,17,13,0.03)]"
-            >
-              <span>{formatPrice(range[0])} – {formatPrice(range[1])}</span>
-              <ChevronDown className={`h-4 w-4 text-[var(--nakma-dark)]/45 transition-transform ${priceOpen ? "rotate-180" : ""}`} />
-            </button>
-            {priceOpen && (
-              <>
-                <div className="fixed inset-0 z-30" onClick={() => setPriceOpen(false)} />
-                <div className="absolute left-1/2 top-full z-40 mt-2 w-[380px] max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-2xl border border-[var(--nakma-dark)]/10 bg-white p-6 shadow-[0_16px_50px_rgba(22,17,13,0.16)]">
-                  <PriceRangeFilter
-                    value={range}
-                    onChange={setPriceRange}
-                    min={bounds.min}
-                    max={bounds.max}
-                    step={priceStep}
-                    prices={histPrices}
-                    t={t}
-                  />
-                </div>
-              </>
-            )}
-          </div>
-
           <Stepper label={t("search.bedrooms")} value={bedrooms} onChange={setBedrooms} />
           <Stepper label={t("search.baths")} value={bathrooms} onChange={setBathrooms} />
 
-          {/* Exclusive */}
-          <label className="flex cursor-pointer select-none flex-col gap-2">
-            <span className="nakma-body text-[12px] text-[var(--nakma-dark)]/65">
-              {t("listing.exclusive")}
-            </span>
-            <span className="flex h-[46px] items-center">
-              <input
-                type="checkbox"
-                checked={exclusiveOnly}
-                onChange={(e) => setExclusiveOnly(e.target.checked)}
-                className="h-5 w-5 cursor-pointer accent-[var(--nakma-dark)]"
-              />
-            </span>
-          </label>
-
-          {/* More filters */}
+          {/* Exclusive — toggle pill */}
           <div>
-            <p className="nakma-body mb-2 text-[12px] text-transparent">.</p>
+            <p className="nakma-body mb-2 text-center text-[12px] text-transparent">.</p>
             <button
               type="button"
-              onClick={() => setShowMore((s) => !s)}
-              className="nakma-body flex h-[46px] items-center gap-2 rounded-xl border border-[rgba(22,17,13,0.14)] px-4 text-[13px] text-[var(--nakma-dark)] transition hover:bg-[rgba(22,17,13,0.04)]"
+              onClick={() => setExclusiveOnly((v) => !v)}
+              aria-pressed={exclusiveOnly}
+              className={`nakma-body flex h-[46px] items-center gap-2.5 rounded-xl border px-5 text-[13px] transition ${
+                exclusiveOnly
+                  ? "border-[var(--nakma-dark)] bg-[var(--nakma-dark)] text-white"
+                  : "border-[rgba(22,17,13,0.14)] text-[var(--nakma-dark)]/75 hover:bg-[rgba(22,17,13,0.03)]"
+              }`}
             >
-              <SlidersHorizontal className="h-4 w-4" />
-              {t("listings.moreFilters")}
-              <ChevronDown
-                className={`h-4 w-4 transition-transform ${showMore ? "rotate-180" : ""}`}
-              />
+              <span
+                className={`flex h-[16px] w-[16px] items-center justify-center rounded-[4px] border text-[10px] leading-none ${
+                  exclusiveOnly ? "border-white bg-white text-[var(--nakma-dark)]" : "border-[var(--nakma-dark)]/40"
+                }`}
+              >
+                {exclusiveOnly ? "✓" : ""}
+              </span>
+              {t("listing.exclusive")}
             </button>
           </div>
 
           {/* List / Map toggle */}
           <div>
-            <p className="nakma-body mb-2 text-[12px] text-transparent">.</p>
+            <p className="nakma-body mb-2 text-center text-[12px] text-transparent">.</p>
             <div className="flex h-[46px] overflow-hidden rounded-xl border border-[rgba(22,17,13,0.14)]">
               <button
                 type="button"
@@ -357,24 +305,21 @@ export default function ListingsExplorer() {
           </div>
         </div>
 
-        {/* More filters panel */}
-        {showMore && (
-          <div className="mt-4 rounded-2xl border border-[var(--nakma-dark)]/8 bg-white/55 p-5">
-            <div className="grid gap-5 sm:max-w-md">
-              <div>
-                <p className="nakma-body mb-2 text-[12px] text-[var(--nakma-dark)]/65">
-                  {t("listings.minLand")}
-                </p>
-                <input
-                  value={landSize}
-                  onChange={(e) => setLandSize(e.target.value)}
-                  placeholder={t("listings.minLandPlaceholder")}
-                  className="nakma-body h-[46px] w-full rounded-xl border border-[rgba(22,17,13,0.14)] bg-white px-4 text-[14px] text-[var(--nakma-dark)] outline-none placeholder:text-[var(--nakma-dark)]/40"
-                />
-              </div>
-            </div>
-          </div>
-        )}
+        {/* ── Price range (inline, always visible) ─────────────── */}
+        <div className="mx-auto mt-8 w-full max-w-md rounded-2xl border border-[var(--nakma-dark)]/10 bg-white p-6 shadow-[0_10px_40px_rgba(22,17,13,0.06)]">
+          <p className="nakma-body mb-4 text-center text-[12px] uppercase tracking-[0.2em] text-[var(--nakma-dark)]/60">
+            {t("listings.price")}
+          </p>
+          <PriceRangeFilter
+            value={range}
+            onChange={setPriceRange}
+            min={bounds.min}
+            max={bounds.max}
+            step={priceStep}
+            prices={histPrices}
+            t={t}
+          />
+        </div>
 
         {/* ── Results meta ────────────────────────────────────── */}
         <div className="mb-8 mt-10 flex items-center justify-between border-t border-[var(--nakma-dark)]/8 pt-6">

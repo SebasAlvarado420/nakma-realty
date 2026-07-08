@@ -71,11 +71,11 @@ export default function BrokerContactModal({
 
   return (
     <div
-      className="fixed inset-0 z-[10000] flex items-center justify-center bg-[var(--nakma-dark)]/55 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[10000] flex items-start justify-center overflow-y-auto bg-[var(--nakma-dark)]/55 p-4 backdrop-blur-sm sm:items-center"
       onClick={onClose}
     >
       <div
-        className="relative grid w-full max-w-3xl overflow-hidden rounded-[26px] bg-[var(--nakma-bg)] shadow-2xl md:grid-cols-[0.92fr_1.08fr]"
+        className="relative my-auto grid w-full max-w-3xl overflow-hidden rounded-[26px] bg-[var(--nakma-bg)] shadow-2xl md:grid-cols-[0.92fr_1.08fr]"
         onClick={(e) => e.stopPropagation()}
       >
         <button
