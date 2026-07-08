@@ -162,9 +162,9 @@ export default function PropertyDetailLX({
       <div className="border-b border-[var(--nakma-dark)]/8 bg-white px-6 pt-28 pb-5 lg:px-16">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="nakma-display text-[26px] leading-tight text-[var(--nakma-dark)] md:text-[32px]">
+            <h1 className="nakma-display text-[26px] leading-tight text-[var(--nakma-dark)]/55 md:text-[32px]">
               {property.title}{" "}
-              <span className="font-semibold text-[var(--nakma-dark)]/80">
+              <span className="font-semibold text-[var(--nakma-dark)]">
                 | {property.priceOnRequest
                   ? t("listing.priceOnRequest")
                   : property.listingType === "rent" && property.rentPrice
@@ -567,8 +567,7 @@ export default function PropertyDetailLX({
             type="button"
             onClick={(e) => { e.stopPropagation(); setLightbox(false); }}
             aria-label="Close"
-            className="fixed z-[10002] flex h-12 w-12 items-center justify-center rounded-full border border-white/25 bg-black/70 text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-sm transition hover:bg-black/90"
-            style={{ top: "max(1.15rem, env(safe-area-inset-top))", right: "max(1.15rem, env(safe-area-inset-right))" }}
+            className="absolute right-4 top-4 z-[10002] flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-black/75 text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-sm transition hover:bg-black/95 sm:right-6 sm:top-6"
           >
             <X className="h-6 w-6" />
           </button>

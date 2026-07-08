@@ -41,7 +41,7 @@ export default function CardImageCarousel({
             type="button"
             onClick={(e) => go(e, -1)}
             aria-label="Previous photo"
-            className="absolute left-2.5 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-[var(--nakma-dark)] opacity-0 shadow transition hover:bg-white group-hover:opacity-100"
+            className="absolute left-2.5 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-[var(--nakma-dark)] opacity-100 shadow transition hover:bg-white sm:opacity-0 sm:group-hover:opacity-100"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -49,7 +49,7 @@ export default function CardImageCarousel({
             type="button"
             onClick={(e) => go(e, 1)}
             aria-label="Next photo"
-            className="absolute right-2.5 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-[var(--nakma-dark)] opacity-0 shadow transition hover:bg-white group-hover:opacity-100"
+            className="absolute right-2.5 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-[var(--nakma-dark)] opacity-100 shadow transition hover:bg-white sm:opacity-0 sm:group-hover:opacity-100"
           >
             <ChevronRight className="h-4 w-4" />
           </button>

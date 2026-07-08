@@ -16,7 +16,7 @@ import { useProperties } from "@/lib/propertiescontext";
 import { useLang } from "@/lib/i18n";
 import { PROPERTY_TYPES } from "@/types/property";
 import PropertyCard from "@/components/property/PropertyCard";
-import PriceRangeFilter from "@/components/listings/PriceRangeFilter";
+import RangeSlider from "@/components/ui/RangeSlider";
 import Reveal from "@/components/ui/Reveal";
 
 const PropertiesMap = dynamic(() => import("./PropertiesMap"), {
@@ -45,6 +45,12 @@ type View = "list" | "map";
 
 function parseNum(value: string) {
   return Number(String(value).replace(/[^0-9.]/g, "")) || 0;
+}
+
+function formatPrice(value: number) {
+  if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
+  if (value >= 1000) return `$${Math.round(value / 1000)}K`;
+  return `$${value}`;
 }
 
 function Stepper({
@@ -209,11 +215,11 @@ export default function ListingsExplorer() {
           </div>
         </div>
 
-        {/* ── Controls row (centered) ─────────────────────────── */}
-        <div className="mt-6 flex flex-wrap items-end justify-center gap-x-5 gap-y-5">
+        {/* ── Controls row (left-aligned) ─────────────────────── */}
+        <div className="mt-6 flex flex-wrap items-end gap-x-5 gap-y-5">
           {/* Interested in */}
           <div>
-            <p className="nakma-body mb-2 text-center text-[12px] text-[var(--nakma-dark)]/65">
+            <p className="nakma-body mb-2 text-[12px] text-[var(--nakma-dark)]/65">
               {t("search.interested")}
             </p>
             <div className="relative flex h-[46px] items-center rounded-xl border border-[rgba(22,17,13,0.14)]">
@@ -232,7 +238,7 @@ export default function ListingsExplorer() {
 
           {/* Property Type */}
           <div>
-            <p className="nakma-body mb-2 text-center text-[12px] text-[var(--nakma-dark)]/65">{t("search.propertyType")}</p>
+            <p className="nakma-body mb-2 text-[12px] text-[var(--nakma-dark)]/65">{t("search.propertyType")}</p>
             <div className="relative flex h-[46px] items-center rounded-xl border border-[rgba(22,17,13,0.14)]">
               <select
                 value={propertyType}
@@ -251,9 +257,28 @@ export default function ListingsExplorer() {
           <Stepper label={t("search.bedrooms")} value={bedrooms} onChange={setBedrooms} />
           <Stepper label={t("search.baths")} value={bathrooms} onChange={setBathrooms} />
 
+          {/* Price — compact dual-range slider */}
+          <div className="w-full sm:w-[230px]">
+            <div className="mb-2 flex items-center justify-between">
+              <p className="nakma-body text-[12px] text-[var(--nakma-dark)]/65">{t("listings.price")}</p>
+              <span className="nakma-body text-[12px] font-medium text-[var(--nakma-dark)]">
+                {formatPrice(range[0])} – {formatPrice(range[1])}
+              </span>
+            </div>
+            <div className="flex h-[46px] items-center rounded-xl border border-[rgba(22,17,13,0.14)] px-4">
+              <RangeSlider
+                value={range}
+                onValueChange={setPriceRange}
+                min={bounds.min}
+                max={bounds.max}
+                step={priceStep}
+              />
+            </div>
+          </div>
+
           {/* Exclusive — toggle pill */}
           <div>
-            <p className="nakma-body mb-2 text-center text-[12px] text-transparent">.</p>
+            <p className="nakma-body mb-2 text-[12px] text-transparent">.</p>
             <button
               type="button"
               onClick={() => setExclusiveOnly((v) => !v)}
@@ -277,7 +302,7 @@ export default function ListingsExplorer() {
 
           {/* List / Map toggle */}
           <div>
-            <p className="nakma-body mb-2 text-center text-[12px] text-transparent">.</p>
+            <p className="nakma-body mb-2 text-[12px] text-transparent">.</p>
             <div className="flex h-[46px] overflow-hidden rounded-xl border border-[rgba(22,17,13,0.14)]">
               <button
                 type="button"
@@ -303,22 +328,6 @@ export default function ListingsExplorer() {
               </button>
             </div>
           </div>
-        </div>
-
-        {/* ── Price range (inline, always visible) ─────────────── */}
-        <div className="mx-auto mt-8 w-full max-w-md rounded-2xl border border-[var(--nakma-dark)]/10 bg-white p-6 shadow-[0_10px_40px_rgba(22,17,13,0.06)]">
-          <p className="nakma-body mb-4 text-center text-[12px] uppercase tracking-[0.2em] text-[var(--nakma-dark)]/60">
-            {t("listings.price")}
-          </p>
-          <PriceRangeFilter
-            value={range}
-            onChange={setPriceRange}
-            min={bounds.min}
-            max={bounds.max}
-            step={priceStep}
-            prices={histPrices}
-            t={t}
-          />
         </div>
 
         {/* ── Results meta ────────────────────────────────────── */}
