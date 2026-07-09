@@ -5,6 +5,8 @@ import {
   Playfair_Display,
   Plus_Jakarta_Sans,
 } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Providers from "@/components/providers";
@@ -158,6 +160,8 @@ export default function RootLayout({
           <Footer />
           <WhatsAppButton />
         </Providers>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
