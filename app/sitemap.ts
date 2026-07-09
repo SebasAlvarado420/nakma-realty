@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { fetchProperties } from "@/lib/properties-api";
+import { zones } from "@/data/zones";
 
 const BASE = "https://nakmarealty.com";
 
@@ -15,6 +16,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/about-us`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/our-team`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${BASE}/contact-us`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    ...zones.map((z) => ({
+      url: `${BASE}/costa-rica/${z.slug}`,
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.75,
+    })),
   ];
 
   // Best-effort: include every active listing detail page.

@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Mail, Phone, MapPin } from "lucide-react";
-import { getAgentBySlug } from "@/data/team";
+import { getAgentBySlug, localizedBio } from "@/data/team";
 import { useProperties } from "@/lib/propertiescontext";
 import { useLang } from "@/lib/i18n";
 import { BLUR_DATA_URL } from "@/lib/constants";
@@ -34,7 +34,7 @@ export default function AgentPageClient() {
   const slug = typeof params.slug === "string" ? params.slug : "";
   const agent = getAgentBySlug(slug);
   const { properties } = useProperties();
-  const { t } = useLang();
+  const { t, lang } = useLang();
 
   const listings = useMemo(
     () => (agent ? properties.filter((p) => p.agentId === agent.id) : []),
@@ -112,8 +112,8 @@ export default function AgentPageClient() {
               <Stat value={agent.languages?.length ?? 0} label={t("agent.languages")} />
             </div>
 
-            <p className="nakma-body mt-7 max-w-2xl text-[15px] leading-[1.9] text-[var(--nakma-dark)]/72">
-              {agent.bio}
+            <p className="nakma-body mt-7 max-w-2xl whitespace-pre-line text-[15px] leading-[1.9] text-[var(--nakma-dark)]/72">
+              {localizedBio(agent, lang)}
             </p>
 
             {agent.languages && (

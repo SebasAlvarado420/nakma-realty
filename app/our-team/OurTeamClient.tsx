@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { teamMembers } from "@/data/team";
+import { teamMembers, localizedBio } from "@/data/team";
 import { BLUR_DATA_URL } from "@/lib/constants";
 import { useLang } from "@/lib/i18n";
 import Reveal from "@/components/ui/Reveal";
 
 export default function OurTeamClient() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   return (
     <div className="bg-[var(--nakma-bg)]">
 
@@ -57,8 +57,8 @@ export default function OurTeamClient() {
                     <h2 className="nakma-display mt-2 text-[24px] font-semibold text-[var(--nakma-dark)] transition-colors group-hover:text-[var(--nakma-earth)]">
                       {member.name}
                     </h2>
-                    <p className="nakma-body mt-4 text-[13px] leading-[1.8] text-[var(--nakma-dark)]/62">
-                      {member.bio}
+                    <p className="nakma-body mt-4 line-clamp-4 text-[13px] leading-[1.8] text-[var(--nakma-dark)]/62">
+                      {localizedBio(member, lang)}
                     </p>
                     {member.languages && (
                       <div className="mt-5 flex flex-wrap gap-2">

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useLang } from "@/lib/i18n";
 import { SITE } from "@/lib/site";
+import { zones } from "@/data/zones";
 import BrandName from "@/components/ui/BrandName";
 
 const NAV = [
@@ -20,7 +21,7 @@ const SOCIAL = [
 ];
 
 export default function Footer() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   return (
     <footer className="bg-[var(--nakma-dark)] text-[var(--nakma-white)]">
       <div className="h-px bg-[var(--nakma-sand)]/20" />
@@ -95,7 +96,25 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col items-start justify-between gap-4 border-t border-white/8 pt-6 sm:flex-row sm:items-center">
+        {/* Explore by area — SEO zone landing pages */}
+        <div className="mt-14 border-t border-white/8 pt-8">
+          <h3 className="nakma-body text-[10px] uppercase tracking-[0.38em] text-[var(--nakma-sand)]/65">
+            {lang === "es" ? "Explorar por zona" : "Explore by area"}
+          </h3>
+          <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2.5">
+            {zones.map((z) => (
+              <Link
+                key={z.slug}
+                href={`/costa-rica/${z.slug}`}
+                className="nakma-body text-[13px] text-white/55 transition-colors hover:text-white"
+              >
+                {z.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-white/8 pt-6 sm:flex-row sm:items-center">
           <p className="nakma-body text-[11px] uppercase tracking-[0.26em] text-white/28">
             © {new Date().getFullYear()} NAKMA Real Estate · Costa Rica
           </p>
