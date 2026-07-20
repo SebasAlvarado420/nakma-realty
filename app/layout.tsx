@@ -98,9 +98,12 @@ const jsonLd = {
       "@type": "RealEstateAgent",
       "@id": `${SITE_URL}/#agency`,
       name: "NAKMA Realty",
+      alternateName: ["NAKMA", "Nakma Real Estate", "NAKMA Realty Costa Rica"],
       description:
         "Natural, refined real estate rooted in Costa Rica — curated homes, land, and investment opportunities.",
       url: SITE_URL,
+      logo: `${SITE_URL}/icon.jpg`,
+      image: `${SITE_URL}/icon.jpg`,
       email: "info@nakmarealty.com",
       telephone: "+506 8606-0252",
       priceRange: "$$$",
