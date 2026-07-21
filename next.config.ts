@@ -12,6 +12,11 @@ const nextConfig: NextConfig = {
     "*.loca.lt",
   ],
   images: {
+    // Serve modern, much smaller formats and cache optimized images for a
+    // month so repeat/return visits load instantly (fixes the "sometimes slow"
+    // image loads — the first optimization is cached far longer).
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 2678400,
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "me7aitdbxq.ufs.sh" },

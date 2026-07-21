@@ -66,6 +66,11 @@ export default function PropertiesMap({
             : p.listingType === "rent" && p.rentPrice
             ? p.rentPrice
             : p.price;
+          // Popup shows a "Starting from" prefix when the project has varying prices.
+          const popupPrice =
+            !p.priceOnRequest && p.priceStartingFrom
+              ? `${t("listing.startingFrom")} ${priceLabel}`
+              : priceLabel;
 
           // Swipeable cover-photo strip (Airbnb-style, pure CSS scroll-snap).
           const images = (p.gallery && p.gallery.length > 0 ? p.gallery : [p.image])
@@ -87,7 +92,7 @@ export default function PropertiesMap({
                <div style="padding:10px 12px 12px;">
                  <div style="font-weight:600;color:#16110d;font-size:14px;line-height:1.25;">${p.title}</div>
                  <div style="color:#6b6b6b;font-size:12px;margin-top:2px;">${p.location}</div>
-                 <div style="color:#16110d;font-weight:700;margin-top:6px;font-size:14px;">${priceLabel}</div>
+                 <div style="color:#16110d;font-weight:700;margin-top:6px;font-size:14px;">${popupPrice}</div>
                  <a href="/listings/${p.slug}" style="color:${OLIVE};font-size:11px;text-transform:uppercase;letter-spacing:0.08em;display:inline-block;margin-top:8px;font-weight:600;">View property →</a>
                </div>
              </div>`,

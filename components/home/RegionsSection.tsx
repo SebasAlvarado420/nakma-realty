@@ -19,9 +19,9 @@ const REGIONS = [
   {
     name: "Central Valley",
     nameKey: "region.centralValley",
-    sub: "San José",
+    sub: "San José · Heredia · Alajuela · Cartago",
     img: "https://images.unsplash.com/photo-1699385600854-5b2137d14cfd?auto=format&fit=crop&w=1200&q=80",
-    href: "/listings?province=San José",
+    href: "/listings?region=central-valley",
   },
   {
     name: "Pacific Coast",

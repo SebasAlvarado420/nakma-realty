@@ -87,10 +87,19 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           alt={property.title}
           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
         />
-        {(property.exclusive || isRent) && (
-          <span className="nakma-body absolute left-4 top-4 z-10 rounded-full bg-black/55 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
-            {property.exclusive ? "Exclusive" : "For Rent"}
-          </span>
+        {(property.status || property.exclusive || isRent) && (
+          <div className="absolute left-4 top-4 z-10 flex flex-col items-start gap-1.5">
+            {property.status && (
+              <span className="nakma-body rounded-full bg-[#7a2438]/90 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
+                {property.status === "sold" ? t("listing.sold") : t("listing.rented")}
+              </span>
+            )}
+            {(property.exclusive || isRent) && (
+              <span className="nakma-body rounded-full bg-black/55 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
+                {property.exclusive ? "Exclusive" : "For Rent"}
+              </span>
+            )}
+          </div>
         )}
       </div>
 
@@ -159,8 +168,8 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           {property.priceOnRequest
             ? t("listing.priceOnRequest")
             : isRent && property.rentPrice
-            ? formatRent(property.rentPrice)
-            : formatPrice(property.price)}
+            ? `${property.priceStartingFrom ? `${t("listing.startingFrom")} ` : ""}${formatRent(property.rentPrice)}`
+            : `${property.priceStartingFrom ? `${t("listing.startingFrom")} ` : ""}${formatPrice(property.price)}`}
         </p>
       </div>
     </Link>

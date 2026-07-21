@@ -29,8 +29,8 @@ export const teamMembers: TeamMember[] = [
       "https://lh3.googleusercontent.com/d/1LjKpwBSzcjN4wwXg6NcUnv576NvxHDsf=w1200",
     languages: ["Spanish", "English"],
     email: "srodriguez@nakmarealty.com",
-    phone: "+506 8606-0252",
-    whatsapp: "+506 8606-0252",
+    phone: "+506 8323-9320",
+    whatsapp: "+506 8323-9320",
     office: "Costa Rica",
   },
   {
@@ -59,8 +59,8 @@ export const teamMembers: TeamMember[] = [
       "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=600&q=80",
     languages: ["Spanish", "English"],
     email: "jchaverri@nakmarealty.com",
-    phone: "+506 8606-0252",
-    whatsapp: "+506 8606-0252",
+    phone: "+506 8810-0797",
+    whatsapp: "+506 8810-0797",
     office: "Costa Rica",
   },
   {
@@ -74,8 +74,8 @@ export const teamMembers: TeamMember[] = [
       "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=600&q=80",
     languages: ["Spanish", "English"],
     email: "mtorres@nakmarealty.com",
-    phone: "+506 8606-0252",
-    whatsapp: "+506 8606-0252",
+    phone: "+506 6337-2493",
+    whatsapp: "+506 6337-2493",
     office: "Costa Rica",
   },
 ];

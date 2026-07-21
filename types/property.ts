@@ -35,6 +35,10 @@ export type Property = {
   price: string;
   /** When true, the price is hidden and shown as "Price Upon Request". */
   priceOnRequest?: boolean;
+  /** When true, prices vary within the project — shown as "Starting from $X". */
+  priceStartingFrom?: boolean;
+  /** Optional sale-status tag (Sold / Rented) shown as a badge on the card. */
+  status?: "sold" | "rented";
   bedrooms: number;
   bathrooms: number;
   landSize: string;

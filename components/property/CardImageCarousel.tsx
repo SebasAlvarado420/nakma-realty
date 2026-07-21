@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { BLUR_DATA_URL } from "@/lib/constants";
@@ -16,6 +16,7 @@ export default function CardImageCarousel({
 }) {
   const imgs = images.length > 0 ? images : [""];
   const [i, setI] = useState(0);
+  const touchX = useRef<number | null>(null);
 
   function go(e: React.MouseEvent, dir: 1 | -1) {
     e.preventDefault();
@@ -23,8 +24,25 @@ export default function CardImageCarousel({
     setI((p) => (p + dir + imgs.length) % imgs.length);
   }
 
+  // Swipe support for touch devices (left/right to change photo).
+  function onTouchStart(e: React.TouchEvent) {
+    touchX.current = e.touches[0].clientX;
+  }
+  function onTouchEnd(e: React.TouchEvent) {
+    if (touchX.current === null || imgs.length < 2) return;
+    const dx = e.changedTouches[0].clientX - touchX.current;
+    if (Math.abs(dx) > 40) {
+      setI((p) => (p + (dx < 0 ? 1 : -1) + imgs.length) % imgs.length);
+    }
+    touchX.current = null;
+  }
+
   return (
-    <div className="relative h-full w-full overflow-hidden">
+    <div
+      className="relative h-full w-full overflow-hidden"
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
       <Image
         src={imgs[i]}
         alt={alt}

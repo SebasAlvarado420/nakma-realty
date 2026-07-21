@@ -30,6 +30,8 @@ type FormState = {
   listingType: string;
   price: string;
   priceOnRequest: boolean;
+  priceStartingFrom: boolean;
+  status: string;
   rentPrice: string;
   featured: string;
   exclusive: string;
@@ -53,7 +55,7 @@ type FormState = {
 
 const emptyForm: FormState = {
   title: "", slug: "", location: "", province: "", agentId: "", propertyType: "",
-  listingType: "sale", price: "", priceOnRequest: false, rentPrice: "", featured: "No", exclusive: "No",
+  listingType: "sale", price: "", priceOnRequest: false, priceStartingFrom: false, status: "", rentPrice: "", featured: "No", exclusive: "No",
   landSize: "", constructionSize: "", bedrooms: "", bathrooms: "",
   hoa: "", address: "", lat: "", lng: "",
   image: "", gallery: "", video: "", highlights: "", description: "",
@@ -92,6 +94,8 @@ function fromProperty(p: Property): FormState {
     listingType: p.listingType ?? "sale",
     price: withCommas(stripDollar(p.price)),
     priceOnRequest: p.priceOnRequest ?? false,
+    priceStartingFrom: p.priceStartingFrom ?? false,
+    status: p.status ?? "",
     rentPrice: p.rentPrice ?? "",
     featured: p.featured ? "Yes" : "No",
     exclusive: p.exclusive ? "Yes" : "No",
@@ -241,6 +245,11 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
       listingType: (form.listingType === "rent" ? "rent" : "sale") as "sale" | "rent",
       price: form.priceOnRequest ? "" : price ? `$${price}` : "",
       priceOnRequest: form.priceOnRequest,
+      priceStartingFrom: form.priceStartingFrom,
+      status: (form.status === "sold" || form.status === "rented" ? form.status : undefined) as
+        | "sold"
+        | "rented"
+        | undefined,
       rentPrice: form.rentPrice.trim() || undefined,
       featured: form.featured === "Yes",
       exclusive: form.exclusive === "Yes",
@@ -356,6 +365,22 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
               />
               Price upon request (hide the price)
             </label>
+            <label className="mt-1.5 flex cursor-pointer items-center gap-2 text-[12.5px] text-[#5d7268]">
+              <input
+                type="checkbox"
+                checked={form.priceStartingFrom}
+                onChange={(e) => setForm((prev) => ({ ...prev, priceStartingFrom: e.target.checked }))}
+                className="h-4 w-4 accent-[#163126]"
+              />
+              Starting from (project with varying prices → shows &ldquo;Starting from $X&rdquo;)
+            </label>
+          </Field>
+          <Field label="Status Tag" hint="Optional — shows a wine-colored Sold / Rented badge on the card.">
+            <select name="status" value={form.status} onChange={handleChange} className={inputCls}>
+              <option value="">Available (no tag)</option>
+              <option value="sold">Sold</option>
+              <option value="rented">Rented</option>
+            </select>
           </Field>
           <Field label="Rent Price" hint="Optional — only for rentals.">
             <input name="rentPrice" value={form.rentPrice} onChange={handleChange} className={inputCls} placeholder="$4,500/mo" />

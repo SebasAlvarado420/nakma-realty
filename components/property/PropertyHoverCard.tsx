@@ -36,9 +36,9 @@ export default function PropertyHoverCard({ property }: { property: Property }) 
   const isRent = property.listingType === "rent";
   const priceDisplay = property.priceOnRequest
     ? t("listing.priceOnRequest")
-    : isRent && property.rentPrice
-    ? formatRent(property.rentPrice)
-    : formatPrice(property.price);
+    : `${property.priceStartingFrom ? `${t("listing.startingFrom")} ` : ""}${
+        isRent && property.rentPrice ? formatRent(property.rentPrice) : formatPrice(property.price)
+      }`;
 
   return (
     <Link
@@ -56,10 +56,19 @@ export default function PropertyHoverCard({ property }: { property: Property }) 
           blurDataURL={BLUR_DATA_URL}
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
         />
-        {(property.exclusive || isRent) && (
-          <span className="nakma-body absolute left-4 top-4 rounded-full bg-black/55 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
-            {property.exclusive ? "Exclusive" : "For Rent"}
-          </span>
+        {(property.status || property.exclusive || isRent) && (
+          <div className="absolute left-4 top-4 flex flex-col items-start gap-1.5">
+            {property.status && (
+              <span className="nakma-body rounded-full bg-[#7a2438]/90 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
+                {property.status === "sold" ? t("listing.sold") : t("listing.rented")}
+              </span>
+            )}
+            {(property.exclusive || isRent) && (
+              <span className="nakma-body rounded-full bg-black/55 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
+                {property.exclusive ? "Exclusive" : "For Rent"}
+              </span>
+            )}
+          </div>
         )}
 
         {/* Resting label — title + price, fades out on hover */}

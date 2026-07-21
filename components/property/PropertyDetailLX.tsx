@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -91,6 +91,23 @@ export default function PropertyDetailLX({
   const [contactOpen, setContactOpen] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
 
+  // Touch swipe (mobile) for the main photo + the lightbox.
+  const touchStartX = useRef<number | null>(null);
+  const swipedRef = useRef(false);
+  function onImgTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX;
+    swipedRef.current = false;
+  }
+  function onImgTouchEnd(e: React.TouchEvent) {
+    if (touchStartX.current === null || images.length < 2) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(dx) > 40) {
+      swipedRef.current = true;
+      go(dx < 0 ? 1 : -1);
+    }
+    touchStartX.current = null;
+  }
+
   // Auto-rotate the main photo (pauses on hover / when the lightbox is open).
   useEffect(() => {
     if (images.length < 2 || paused || lightbox) return;
@@ -167,9 +184,11 @@ export default function PropertyDetailLX({
               <span className="font-semibold text-[var(--nakma-dark)]">
                 | {property.priceOnRequest
                   ? t("listing.priceOnRequest")
-                  : property.listingType === "rent" && property.rentPrice
-                  ? property.rentPrice
-                  : property.price}
+                  : `${property.priceStartingFrom ? `${t("listing.startingFrom")} ` : ""}${
+                      property.listingType === "rent" && property.rentPrice
+                        ? property.rentPrice
+                        : property.price
+                    }`}
               </span>
             </h1>
             <p className="nakma-body mt-1 text-[14px] text-[var(--nakma-dark)]/55">
@@ -203,7 +222,9 @@ export default function PropertyDetailLX({
             className="group relative aspect-[16/10] cursor-zoom-in overflow-hidden rounded-[8px] bg-[var(--nakma-sand)]/20"
             onMouseEnter={() => setPaused(true)}
             onMouseLeave={() => setPaused(false)}
-            onClick={() => setLightbox(true)}
+            onClick={() => { if (swipedRef.current) { swipedRef.current = false; return; } setLightbox(true); }}
+            onTouchStart={onImgTouchStart}
+            onTouchEnd={onImgTouchEnd}
           >
             <Image
               src={images[active]}
@@ -254,10 +275,19 @@ export default function PropertyDetailLX({
             <span className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/45 text-white opacity-0 backdrop-blur-sm transition group-hover:opacity-100">
               <ZoomIn className="h-4 w-4" />
             </span>
-            {property.exclusive && (
-              <span className="nakma-body absolute left-4 top-4 z-10 rounded-full bg-black/55 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
-                {t("listing.exclusive")}
-              </span>
+            {(property.status || property.exclusive) && (
+              <div className="absolute left-4 top-4 z-10 flex flex-col items-start gap-1.5">
+                {property.status && (
+                  <span className="nakma-body rounded-full bg-[#7a2438]/90 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
+                    {property.status === "sold" ? t("listing.sold") : t("listing.rented")}
+                  </span>
+                )}
+                {property.exclusive && (
+                  <span className="nakma-body rounded-full bg-black/55 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
+                    {t("listing.exclusive")}
+                  </span>
+                )}
+              </div>
             )}
           </div>
 
@@ -560,14 +590,14 @@ export default function PropertyDetailLX({
       {/* ── Fullscreen lightbox ───────────────────────────────── */}
       {lightbox && (
         <div
-          className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/92 p-4"
+          className="fixed inset-0 z-[100001] flex items-center justify-center bg-black/92 p-4"
           onClick={() => setLightbox(false)}
         >
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); setLightbox(false); }}
             aria-label="Close"
-            className="absolute right-4 top-4 z-[10002] flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-black/75 text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-sm transition hover:bg-black/95 sm:right-6 sm:top-6"
+            className="absolute right-4 top-4 z-[100002] flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-black/75 text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-sm transition hover:bg-black/95 sm:right-6 sm:top-6"
           >
             <X className="h-6 w-6" />
           </button>
@@ -596,6 +626,8 @@ export default function PropertyDetailLX({
           <div
             className="relative mx-auto h-[82vh] w-full max-w-6xl"
             onClick={(e) => e.stopPropagation()}
+            onTouchStart={onImgTouchStart}
+            onTouchEnd={onImgTouchEnd}
           >
             {/* Render the active image plus its neighbours (hidden) so the
                 prev/next photos are already fetched — arrows feel instant. */}
@@ -626,7 +658,7 @@ export default function PropertyDetailLX({
 
       {/* ── All-photos gallery panel (opens from "+N") ─────────── */}
       {galleryOpen && (
-        <div className="fixed inset-0 z-[10000] flex flex-col bg-[var(--nakma-bg)]">
+        <div className="fixed inset-0 z-[100001] flex flex-col bg-[var(--nakma-bg)]">
           <div className="flex items-center justify-between border-b border-[var(--nakma-dark)]/10 px-6 py-5 lg:px-12">
             <div>
               <p className="nakma-body text-[10px] uppercase tracking-[0.4em] text-[var(--nakma-olive)]">

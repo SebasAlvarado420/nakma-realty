@@ -40,6 +40,12 @@ const PROVINCES = [
   "Puntarenas",
 ];
 
+// Multi-province regions reachable via ?region= (e.g. the home "Central Valley"
+// card → the whole GAM, not just San José).
+const REGION_PROVINCES: Record<string, string[]> = {
+  "central-valley": ["San José", "Heredia", "Alajuela", "Cartago"],
+};
+
 type Interest = "all" | "sale" | "rent";
 type View = "list" | "map";
 
@@ -95,6 +101,9 @@ export default function ListingsExplorer() {
   const { t } = useLang();
   const sp = useSearchParams();
 
+  // Optional multi-province region filter from ?region= (stable module ref).
+  const regionProvinces = REGION_PROVINCES[sp.get("region") ?? ""] ?? null;
+
   const [query, setQuery] = useState(sp.get("q") ?? "");
   const [province, setProvince] = useState(sp.get("province") ?? ""); // "" = all locations
   const [propertyType, setPropertyType] = useState(sp.get("propertyType") ?? "");
@@ -138,6 +147,7 @@ export default function ListingsExplorer() {
         if (!haystack.includes(q)) return false;
       }
       if (province && p.province !== province) return false;
+      if (!province && regionProvinces && !regionProvinces.includes(p.province)) return false;
       if (propertyType && p.propertyType !== propertyType) return false;
       if (!p.priceOnRequest) {
         const pn = parseNum(p.price);
@@ -152,6 +162,7 @@ export default function ListingsExplorer() {
     properties,
     query,
     province,
+    regionProvinces,
     propertyType,
     interest,
     range[0],

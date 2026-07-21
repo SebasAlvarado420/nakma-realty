@@ -71,7 +71,7 @@ export default function BrokerContactModal({
 
   return (
     <div
-      className="fixed inset-0 z-[10000] flex items-start justify-center overflow-y-auto bg-[var(--nakma-dark)]/55 p-4 backdrop-blur-sm sm:items-center"
+      className="fixed inset-0 z-[100001] flex items-start justify-center overflow-y-auto bg-[var(--nakma-dark)]/55 p-4 backdrop-blur-sm sm:items-center"
       onClick={onClose}
     >
       <div
