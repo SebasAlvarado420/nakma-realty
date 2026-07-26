@@ -5,7 +5,7 @@ import Image from "next/image";
 import { X, Mail, Phone, MapPin, Send } from "lucide-react";
 import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 import { useLang } from "@/lib/i18n";
-import type { TeamMember } from "@/data/team";
+import { localizedRole, type TeamMember } from "@/data/team";
 import type { Property } from "@/types/property";
 
 function digits(s?: string) {
@@ -100,7 +100,7 @@ export default function BrokerContactModal({
             <div>
               <h3 className="nakma-display text-[22px] leading-tight">{agent.name}</h3>
               <p className="nakma-body mt-0.5 text-[11px] uppercase tracking-[0.18em] text-[var(--nakma-sand)]">
-                {agent.role}
+                {localizedRole(agent, lang)}
               </p>
             </div>
           </div>

@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Mail, Phone, MapPin } from "lucide-react";
-import { getAgentBySlug, localizedBio } from "@/data/team";
+import { getAgentBySlug, localizedBio, localizedRole } from "@/data/team";
 import { useProperties } from "@/lib/propertiescontext";
 import { useLang } from "@/lib/i18n";
 import { BLUR_DATA_URL } from "@/lib/constants";
@@ -100,7 +100,7 @@ export default function AgentPageClient() {
 
           <div>
             <p className="nakma-body text-[11px] uppercase tracking-[0.4em] text-[var(--nakma-olive)]">
-              {agent.role}
+              {localizedRole(agent, lang)}
             </p>
             <h1 className="nakma-display mt-3 text-[42px] leading-[1.02] tracking-[-0.03em] text-[var(--nakma-dark)] md:text-[56px]">
               {agent.name}

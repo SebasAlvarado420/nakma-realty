@@ -89,9 +89,9 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         />
         {property.status ? (
           <>
-            {/* Sold / Rented: dim the cover + a single prominent tag. */}
-            <div className="pointer-events-none absolute inset-0 z-[6] bg-[var(--nakma-dark)]/50" />
-            <span className="nakma-body pointer-events-none absolute left-1/2 top-1/2 z-[7] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/25 bg-[#7a2438] px-6 py-2.5 text-[12px] font-semibold uppercase tracking-[0.3em] text-white shadow-[0_8px_24px_rgba(0,0,0,0.4)]">
+            {/* Sold / Rented: dim the cover + a corner tag (same format, wine). */}
+            <div className="pointer-events-none absolute inset-0 z-[6] bg-[var(--nakma-dark)]/60" />
+            <span className="nakma-body absolute left-4 top-4 z-[7] rounded-full bg-[#7a2438] px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
               {property.status === "sold" ? t("listing.sold") : t("listing.rented")}
             </span>
           </>

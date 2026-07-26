@@ -23,7 +23,7 @@ import {
   X,
 } from "lucide-react";
 import type { Property } from "@/types/property";
-import type { TeamMember } from "@/data/team";
+import { localizedRole, type TeamMember } from "@/data/team";
 import { BLUR_DATA_URL } from "@/lib/constants";
 import { useLang } from "@/lib/i18n";
 import PropertyCard from "@/components/property/PropertyCard";
@@ -74,7 +74,7 @@ export default function PropertyDetailLX({
   agent: TeamMember;
   related: Property[];
 }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const images = useMemo(
     () =>
       property.gallery && property.gallery.length > 0
@@ -280,7 +280,7 @@ export default function PropertyDetailLX({
               <ZoomIn className="h-4 w-4" />
             </span>
             {property.status ? (
-              <span className="nakma-body absolute left-4 top-4 z-10 rounded-full border border-white/25 bg-[#7a2438] px-5 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-white shadow-[0_6px_20px_rgba(0,0,0,0.35)]">
+              <span className="nakma-body absolute left-4 top-4 z-10 rounded-full bg-[#7a2438] px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
                 {property.status === "sold" ? t("listing.sold") : t("listing.rented")}
               </span>
             ) : property.exclusive ? (
@@ -516,7 +516,7 @@ export default function PropertyDetailLX({
             <div>
               <h3 className="nakma-display text-[22px] text-[var(--nakma-dark)]">{agent.name}</h3>
               <p className="nakma-body mt-0.5 text-[12px] uppercase tracking-[0.2em] text-[var(--nakma-olive)]">
-                {agent.role}
+                {localizedRole(agent, lang)}
               </p>
               <div className="mt-4 flex flex-col gap-2.5">
                 {agent.email && (

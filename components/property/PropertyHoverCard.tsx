@@ -61,8 +61,8 @@ export default function PropertyHoverCard({ property }: { property: Property }) 
         />
         {property.status ? (
           <>
-            <div className="pointer-events-none absolute inset-0 z-[1] bg-[var(--nakma-dark)]/50" />
-            <span className="nakma-body pointer-events-none absolute left-1/2 top-1/2 z-[2] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/25 bg-[#7a2438] px-5 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-white shadow-[0_6px_20px_rgba(0,0,0,0.4)]">
+            <div className="pointer-events-none absolute inset-0 z-[1] bg-[var(--nakma-dark)]/60" />
+            <span className="nakma-body absolute left-4 top-4 z-[2] rounded-full bg-[#7a2438] px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
               {property.status === "sold" ? t("listing.sold") : t("listing.rented")}
             </span>
           </>
