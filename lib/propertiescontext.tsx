@@ -35,7 +35,7 @@ type CreatePropertyInput = {
   featured: boolean;
   description?: string;
   video?: string;
-  listingType?: "sale" | "rent";
+  listingType?: "sale" | "rent" | "both";
   rentPrice?: string;
   exclusive?: boolean;
   gallery?: string[];
