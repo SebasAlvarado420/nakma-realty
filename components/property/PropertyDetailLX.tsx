@@ -184,6 +184,10 @@ export default function PropertyDetailLX({
               <span className="font-semibold text-[var(--nakma-dark)]">
                 | {property.priceOnRequest
                   ? t("listing.priceOnRequest")
+                  : property.listingType === "both"
+                  ? `${property.priceStartingFrom ? `${t("listing.startingFrom")} ` : ""}${property.price}${
+                      property.rentPrice ? ` · ${property.rentPrice}` : ""
+                    }`
                   : `${property.priceStartingFrom ? `${t("listing.startingFrom")} ` : ""}${
                       property.listingType === "rent" && property.rentPrice
                         ? property.rentPrice
@@ -275,20 +279,15 @@ export default function PropertyDetailLX({
             <span className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/45 text-white opacity-0 backdrop-blur-sm transition group-hover:opacity-100">
               <ZoomIn className="h-4 w-4" />
             </span>
-            {(property.status || property.exclusive) && (
-              <div className="absolute left-4 top-4 z-10 flex flex-col items-start gap-1.5">
-                {property.status && (
-                  <span className="nakma-body rounded-full bg-[#7a2438]/90 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
-                    {property.status === "sold" ? t("listing.sold") : t("listing.rented")}
-                  </span>
-                )}
-                {property.exclusive && (
-                  <span className="nakma-body rounded-full bg-black/55 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
-                    {t("listing.exclusive")}
-                  </span>
-                )}
-              </div>
-            )}
+            {property.status ? (
+              <span className="nakma-body absolute left-4 top-4 z-10 rounded-full border border-white/25 bg-[#7a2438] px-5 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-white shadow-[0_6px_20px_rgba(0,0,0,0.35)]">
+                {property.status === "sold" ? t("listing.sold") : t("listing.rented")}
+              </span>
+            ) : property.exclusive ? (
+              <span className="nakma-body absolute left-4 top-4 z-10 rounded-full bg-black/55 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
+                {t("listing.exclusive")}
+              </span>
+            ) : null}
           </div>
 
           {/* Thumbnail column */}

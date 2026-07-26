@@ -140,7 +140,7 @@ export default function ListingsExplorer() {
     const q = query.trim().toLowerCase();
     return properties.filter((p) => {
       const type = p.listingType ?? "sale";
-      if (interest !== "all" && type !== interest) return false;
+      if (interest !== "all" && type !== "both" && type !== interest) return false;
       if (q) {
         const haystack =
           `${p.title} ${p.location} ${p.province} ${p.code}`.toLowerCase();

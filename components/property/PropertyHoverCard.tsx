@@ -34,11 +34,14 @@ function formatRent(rent: string) {
 export default function PropertyHoverCard({ property }: { property: Property }) {
   const { t } = useLang();
   const isRent = property.listingType === "rent";
+  const sp = property.priceStartingFrom ? `${t("listing.startingFrom")} ` : "";
   const priceDisplay = property.priceOnRequest
     ? t("listing.priceOnRequest")
-    : `${property.priceStartingFrom ? `${t("listing.startingFrom")} ` : ""}${
-        isRent && property.rentPrice ? formatRent(property.rentPrice) : formatPrice(property.price)
-      }`;
+    : property.listingType === "both"
+    ? `${sp}${formatPrice(property.price)}${
+        property.rentPrice ? ` · ${formatRent(property.rentPrice)}` : ""
+      }`
+    : `${sp}${isRent && property.rentPrice ? formatRent(property.rentPrice) : formatPrice(property.price)}`;
 
   return (
     <Link
@@ -56,20 +59,18 @@ export default function PropertyHoverCard({ property }: { property: Property }) 
           blurDataURL={BLUR_DATA_URL}
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
         />
-        {(property.status || property.exclusive || isRent) && (
-          <div className="absolute left-4 top-4 flex flex-col items-start gap-1.5">
-            {property.status && (
-              <span className="nakma-body rounded-full bg-[#7a2438]/90 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
-                {property.status === "sold" ? t("listing.sold") : t("listing.rented")}
-              </span>
-            )}
-            {(property.exclusive || isRent) && (
-              <span className="nakma-body rounded-full bg-black/55 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
-                {property.exclusive ? "Exclusive" : "For Rent"}
-              </span>
-            )}
-          </div>
-        )}
+        {property.status ? (
+          <>
+            <div className="pointer-events-none absolute inset-0 z-[1] bg-[var(--nakma-dark)]/50" />
+            <span className="nakma-body pointer-events-none absolute left-1/2 top-1/2 z-[2] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/25 bg-[#7a2438] px-5 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-white shadow-[0_6px_20px_rgba(0,0,0,0.4)]">
+              {property.status === "sold" ? t("listing.sold") : t("listing.rented")}
+            </span>
+          </>
+        ) : (property.exclusive || isRent) ? (
+          <span className="nakma-body absolute left-4 top-4 rounded-full bg-black/55 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
+            {property.exclusive ? "Exclusive" : "For Rent"}
+          </span>
+        ) : null}
 
         {/* Resting label — title + price, fades out on hover */}
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-5 transition-opacity duration-300 group-hover:opacity-0">

@@ -87,20 +87,19 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           alt={property.title}
           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
         />
-        {(property.status || property.exclusive || isRent) && (
-          <div className="absolute left-4 top-4 z-10 flex flex-col items-start gap-1.5">
-            {property.status && (
-              <span className="nakma-body rounded-full bg-[#7a2438]/90 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
-                {property.status === "sold" ? t("listing.sold") : t("listing.rented")}
-              </span>
-            )}
-            {(property.exclusive || isRent) && (
-              <span className="nakma-body rounded-full bg-black/55 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
-                {property.exclusive ? "Exclusive" : "For Rent"}
-              </span>
-            )}
-          </div>
-        )}
+        {property.status ? (
+          <>
+            {/* Sold / Rented: dim the cover + a single prominent tag. */}
+            <div className="pointer-events-none absolute inset-0 z-[6] bg-[var(--nakma-dark)]/50" />
+            <span className="nakma-body pointer-events-none absolute left-1/2 top-1/2 z-[7] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/25 bg-[#7a2438] px-6 py-2.5 text-[12px] font-semibold uppercase tracking-[0.3em] text-white shadow-[0_8px_24px_rgba(0,0,0,0.4)]">
+              {property.status === "sold" ? t("listing.sold") : t("listing.rented")}
+            </span>
+          </>
+        ) : (property.exclusive || isRent) ? (
+          <span className="nakma-body absolute left-4 top-4 z-10 rounded-full bg-black/55 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-white backdrop-blur-sm">
+            {property.exclusive ? "Exclusive" : "For Rent"}
+          </span>
+        ) : null}
       </div>
 
       {/* Minimal info block */}
@@ -165,11 +164,24 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         </div>
 
         <p className="nakma-display mt-3.5 text-[19px] font-semibold tracking-[-0.01em] text-[var(--nakma-dark)]">
-          {property.priceOnRequest
-            ? t("listing.priceOnRequest")
-            : isRent && property.rentPrice
-            ? `${property.priceStartingFrom ? `${t("listing.startingFrom")} ` : ""}${formatRent(property.rentPrice)}`
-            : `${property.priceStartingFrom ? `${t("listing.startingFrom")} ` : ""}${formatPrice(property.price)}`}
+          {property.priceOnRequest ? (
+            t("listing.priceOnRequest")
+          ) : property.listingType === "both" ? (
+            <>
+              {property.priceStartingFrom ? `${t("listing.startingFrom")} ` : ""}
+              {formatPrice(property.price)}
+              {property.rentPrice && (
+                <span className="text-[14px] font-normal text-[var(--nakma-dark)]/55">
+                  {" · "}
+                  {formatRent(property.rentPrice)}
+                </span>
+              )}
+            </>
+          ) : isRent && property.rentPrice ? (
+            `${property.priceStartingFrom ? `${t("listing.startingFrom")} ` : ""}${formatRent(property.rentPrice)}`
+          ) : (
+            `${property.priceStartingFrom ? `${t("listing.startingFrom")} ` : ""}${formatPrice(property.price)}`
+          )}
         </p>
       </div>
     </Link>

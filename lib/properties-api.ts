@@ -29,7 +29,8 @@ export function rowToProperty(r: any): Property {
     featured: !!r.featured,
     description: r.description ?? "",
     video: r.video ?? "",
-    listingType: r.listing_type === "rent" ? "rent" : "sale",
+    listingType:
+      r.listing_type === "rent" ? "rent" : r.listing_type === "both" ? "both" : "sale",
     rentPrice: r.rent_price ?? undefined,
     exclusive: !!r.exclusive,
     gallery: Array.isArray(r.gallery) ? r.gallery : [],

@@ -17,7 +17,7 @@ export default function HeroVideo() {
       bgMediaSrc={HERO_BG_VIDEO}
       eyebrow="NAKMA REALTY · COSTA RICA"
       title={t("hero.title")}
-      scrollToExpand={t("hero.scroll")}
+      scrollToExpand=""
       textBlend={false}
     />
   );

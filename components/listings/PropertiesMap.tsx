@@ -66,11 +66,14 @@ export default function PropertiesMap({
             : p.listingType === "rent" && p.rentPrice
             ? p.rentPrice
             : p.price;
-          // Popup shows a "Starting from" prefix when the project has varying prices.
-          const popupPrice =
-            !p.priceOnRequest && p.priceStartingFrom
-              ? `${t("listing.startingFrom")} ${priceLabel}`
-              : priceLabel;
+          // Popup: "Starting from" prefix for varying prices, and both
+          // sale + rent prices when the property is available for both.
+          const prefix = !p.priceOnRequest && p.priceStartingFrom ? `${t("listing.startingFrom")} ` : "";
+          const popupPrice = p.priceOnRequest
+            ? priceLabel
+            : p.listingType === "both"
+            ? `${prefix}${p.price}${p.rentPrice ? ` · ${p.rentPrice}` : ""}`
+            : `${prefix}${priceLabel}`;
 
           // Swipeable cover-photo strip (Airbnb-style, pure CSS scroll-snap).
           const images = (p.gallery && p.gallery.length > 0 ? p.gallery : [p.image])

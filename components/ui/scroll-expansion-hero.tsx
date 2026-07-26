@@ -322,12 +322,14 @@ export default function ScrollExpandMedia({
           </h1>
 
           {/* Scroll prompt */}
-          <p
-            className="nakma-body mt-9 text-[10px] uppercase tracking-[0.38em] text-white/58"
-            style={{ opacity: clamp(1 - progress * 4, 0, 1) }}
-          >
-            {scrollToExpand}
-          </p>
+          {scrollToExpand && (
+            <p
+              className="nakma-body mt-9 text-[10px] uppercase tracking-[0.38em] text-white/58"
+              style={{ opacity: clamp(1 - progress * 4, 0, 1) }}
+            >
+              {scrollToExpand}
+            </p>
+          )}
         </div>
 
         {/* ─── End-of-animation brand lockup — fades in and stays large ─── */}

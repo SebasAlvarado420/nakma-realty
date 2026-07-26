@@ -53,9 +53,10 @@ export type Property = {
   video?: string;
 
   // ── Sales / status ────────────────────────────────
-  /** "sale" (default) or "rent" — drives the Buy/Rent filter. */
-  listingType?: "sale" | "rent";
-  /** Optional monthly rate, shown alongside price for rentals. */
+  /** "sale" (default), "rent", or "both" — drives the Buy/Rent filter.
+   *  "both" = available for sale AND rent (shows both prices). */
+  listingType?: "sale" | "rent" | "both";
+  /** Optional monthly rate, shown alongside price for rentals / "both". */
   rentPrice?: string;
   /** Exclusive / off-market listings — drives the Exclusive filter. */
   exclusive?: boolean;

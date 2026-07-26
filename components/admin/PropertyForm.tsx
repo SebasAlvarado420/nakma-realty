@@ -242,7 +242,11 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
       province: form.province,
       agentId: form.agentId || undefined,
       propertyType: form.propertyType || undefined,
-      listingType: (form.listingType === "rent" ? "rent" : "sale") as "sale" | "rent",
+      listingType: (form.listingType === "rent"
+        ? "rent"
+        : form.listingType === "both"
+        ? "both"
+        : "sale") as "sale" | "rent" | "both",
       price: form.priceOnRequest ? "" : price ? `$${price}` : "",
       priceOnRequest: form.priceOnRequest,
       priceStartingFrom: form.priceStartingFrom,
@@ -341,6 +345,7 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
             <select name="listingType" value={form.listingType} onChange={handleChange} className={inputCls}>
               <option value="sale">For Sale</option>
               <option value="rent">For Rent</option>
+              <option value="both">For Sale &amp; Rent</option>
             </select>
           </Field>
           <Field label="Price (USD)">
