@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useProperties } from "@/lib/propertiescontext";
 import { uploadMedia } from "@/lib/properties-api";
+import { downscaleImage } from "@/lib/image";
 import { teamMembers } from "@/data/team";
 import { PROPERTY_TYPES } from "@/types/property";
 import type { Property } from "@/types/property";
@@ -183,7 +184,7 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
     setUploading(true);
     setError("");
     try {
-      const url = await uploadMedia(file);
+      const url = await uploadMedia(await downscaleImage(file));
       setForm((prev) => ({ ...prev, image: url, gallery: [url, ...lines(prev.gallery)].join("\n") }));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
@@ -199,7 +200,7 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
     setUploading(true);
     setError("");
     try {
-      const urls = await Promise.all(files.map((f) => uploadMedia(f)));
+      const urls = await Promise.all(files.map(async (f) => uploadMedia(await downscaleImage(f))));
       setForm((prev) => ({
         ...prev,
         image: prev.image || urls[0],

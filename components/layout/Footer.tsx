@@ -31,7 +31,7 @@ export default function Footer() {
           {/* Brand column */}
           <div>
             <Link href="/" aria-label="NAKMA — Home">
-              <BrandName className="nakma-brand text-[26px] tracking-[0.26em] text-[var(--nakma-bg)]" />
+              <BrandName showMark={false} className="nakma-brand text-[26px] tracking-[0.26em] text-[var(--nakma-bg)]" />
             </Link>
             <p className="nakma-body mt-5 max-w-xs text-[13px] leading-[1.85] text-white/45">
               {t("footer.tagline")}

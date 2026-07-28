@@ -83,6 +83,10 @@ export default function PropertyDetailLX({
     [property]
   );
 
+  // Stable single-element array so the mini-map doesn't re-initialize (and drop
+  // its open popup) on every gallery auto-rotate re-render.
+  const miniMapProps = useMemo(() => [property], [property]);
+
   const [active, setActive] = useState(0);
   const [saved, setSaved] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
@@ -481,7 +485,7 @@ export default function PropertyDetailLX({
           </p>
           {property.geo ? (
             <div className="mt-5">
-              <PropertyMiniMap properties={[property]} heightClass="h-[340px]" />
+              <PropertyMiniMap properties={miniMapProps} heightClass="h-[340px]" />
             </div>
           ) : (
             <div className="mt-5 flex h-[200px] items-center justify-center rounded-[12px] border border-[var(--nakma-dark)]/10 bg-[var(--nakma-bg)]">
