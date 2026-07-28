@@ -5,9 +5,56 @@ import { useState } from "react";
 import { useProperties } from "@/lib/propertiescontext";
 
 export default function PropertiesTable() {
-  const { properties, archivedProperties, loading, deleteProperty, archiveProperty } =
+  const { properties, archivedProperties, loading, deleteProperty, archiveProperty, updateProperty } =
     useProperties();
   const [busy, setBusy] = useState<string | null>(null);
+  const [translating, setTranslating] = useState(false);
+  const [progress, setProgress] = useState("");
+
+  const untranslated = properties.filter((p) => !p.translations);
+
+  async function translateAll() {
+    if (untranslated.length === 0) {
+      window.alert("All properties are already translated.");
+      return;
+    }
+    if (
+      !window.confirm(
+        `Auto-translate ${untranslated.length} properties to English & Spanish with DeepL? This runs once and may take a minute.`
+      )
+    )
+      return;
+    setTranslating(true);
+    let done = 0;
+    for (const p of untranslated) {
+      setProgress(`Translating ${done + 1}/${untranslated.length}: ${p.title}`);
+      try {
+        const res = await fetch("/api/translate-property", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: p.title,
+            description: p.description,
+            location: p.location,
+            highlights: p.highlights,
+            features: p.features,
+            communityName: p.communityInfo?.name,
+            communityDescription: p.communityInfo?.description,
+          }),
+        });
+        const json = await res.json();
+        if (json && (json.en || json.es)) {
+          await updateProperty(p.id, { ...p, translations: json });
+        }
+      } catch {
+        /* skip this one, keep going */
+      }
+      done++;
+    }
+    setTranslating(false);
+    setProgress("");
+    window.alert(`Done — translated ${done} properties to EN/ES.`);
+  }
 
   async function onDelete(id: string, title: string) {
     if (!window.confirm(`Permanently delete "${title}"? This cannot be undone.\n\nTip: use Archive instead to hide it but keep its NK code and restore it later.`)) return;
@@ -34,17 +81,29 @@ export default function PropertiesTable() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-[13px] text-[#5d7268]">
           {properties.length} active {properties.length === 1 ? "property" : "properties"}
         </p>
-        <Link
-          href="/admin/archived"
-          className="text-[13px] font-medium text-[#8b6d3b] hover:underline"
-        >
-          Archived ({archivedProperties.length}) →
-        </Link>
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={translateAll}
+            disabled={translating || untranslated.length === 0}
+            className="rounded-full bg-[#163126] px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-white transition hover:opacity-90 disabled:opacity-40"
+            title="Auto-translate every property to English & Spanish (DeepL)"
+          >
+            {translating ? "Translating…" : `Translate all → EN/ES (${untranslated.length})`}
+          </button>
+          <Link
+            href="/admin/archived"
+            className="text-[13px] font-medium text-[#8b6d3b] hover:underline"
+          >
+            Archived ({archivedProperties.length}) →
+          </Link>
+        </div>
       </div>
+      {progress && <p className="text-[12px] text-[#8b6d3b]">{progress}</p>}
 
       <div className="overflow-hidden rounded-[28px] bg-white shadow-xl">
         <div className="overflow-x-auto">
