@@ -25,6 +25,17 @@ export type PropertyCommunity = {
   image?: string;
 };
 
+// Auto-translated (DeepL) versions of the admin-entered free text, per language.
+export type PropertyTranslation = {
+  title?: string;
+  description?: string;
+  location?: string;
+  highlights?: string[];
+  features?: PropertyFeatures;
+  communityName?: string;
+  communityDescription?: string;
+};
+
 export type Property = {
   id: string;
   code: string;
@@ -82,4 +93,6 @@ export type Property = {
   /** Archived listings keep their NK code but are hidden from the public site
    *  and can be re-published at any time from the admin "Archived" section. */
   archived?: boolean;
+  /** DeepL auto-translations of the free-text fields, keyed by language. */
+  translations?: { en?: PropertyTranslation; es?: PropertyTranslation };
 };

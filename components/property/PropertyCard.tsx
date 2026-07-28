@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Bed, Bath, Ruler, Home, Share2, Bookmark } from "lucide-react";
 import type { Property } from "@/types/property";
 import { useLang } from "@/lib/i18n";
+import { ptField } from "@/lib/property-i18n";
 import CardImageCarousel from "@/components/property/CardImageCarousel";
 
 type PropertyCardProps = {
@@ -38,7 +39,7 @@ function formatRent(rent: string) {
 }
 
 export default function PropertyCard({ property }: PropertyCardProps) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
@@ -106,7 +107,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       <div className="px-0.5 pt-4">
         <div className="flex items-start justify-between gap-3">
           <h3 className="nakma-display text-[19px] leading-[1.25] text-[var(--nakma-dark)] transition-colors group-hover:text-[var(--nakma-earth)]">
-            {property.title}
+            {ptField(property, "title", lang)}
           </h3>
           <div className="mt-0.5 flex shrink-0 items-center gap-1.5">
             <span
@@ -133,7 +134,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         </div>
 
         <p className="nakma-body mt-1.5 text-[13px] text-[var(--nakma-dark)]/55">
-          {property.location}
+          {ptField(property, "location", lang)}
         </p>
 
         <div className="nakma-body mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[12.5px] text-[var(--nakma-dark)]/70">

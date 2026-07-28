@@ -279,11 +279,33 @@ export default function PropertyForm({ existing }: { existing?: Property }) {
     };
 
     setSubmitting(true);
+
+    // Auto-translate the free text (EN/ES) via DeepL — best effort. A failure
+    // never blocks saving (the original text still shows everywhere).
+    let translations: Property["translations"] | undefined;
+    try {
+      const res = await fetch("/api/translate-property", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: data.title,
+          description: data.description,
+          location: data.location,
+          highlights: data.highlights,
+          features: data.features,
+        }),
+      });
+      const json = await res.json();
+      if (json && (json.en || json.es)) translations = json;
+    } catch {
+      /* keep the original text only */
+    }
+
     try {
       if (existing) {
-        await updateProperty(existing.id, { ...existing, ...data });
+        await updateProperty(existing.id, { ...existing, ...data, translations });
       } else {
-        await addProperty({ code, slug: form.slug, ...data });
+        await addProperty({ code, slug: form.slug, ...data, translations });
       }
       router.push("/admin/properties");
     } catch (err) {

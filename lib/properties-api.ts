@@ -42,6 +42,7 @@ export function rowToProperty(r: any): Property {
     agentId: r.agent_id ?? undefined,
     propertyType: r.property_type ?? undefined,
     archived: !!r.archived,
+    translations: r.translations ?? undefined,
   };
 }
 
@@ -79,6 +80,7 @@ export function propertyToRow(p: Partial<Property>) {
     agent_id: p.agentId ?? null,
     property_type: p.propertyType ?? null,
     archived: p.archived ?? false,
+    translations: p.translations ?? null,
   };
 }
 

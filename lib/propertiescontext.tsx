@@ -44,6 +44,9 @@ type CreatePropertyInput = {
   agentId?: string;
   propertyType?: string;
   geo?: PropertyLocation;
+  priceStartingFrom?: boolean;
+  status?: "sold" | "rented";
+  translations?: Property["translations"];
 };
 
 type PropertiesContextType = {
@@ -132,6 +135,9 @@ export function PropertiesProvider({ children }: { children: React.ReactNode }) 
         agentId: input.agentId || undefined,
         propertyType: input.propertyType || undefined,
         geo: input.geo,
+        priceStartingFrom: input.priceStartingFrom ?? false,
+        status: input.status,
+        translations: input.translations,
       });
       await refresh();
     },

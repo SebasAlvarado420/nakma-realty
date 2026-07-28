@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ArrowUpRight, Bed, Bath, Ruler, Home } from "lucide-react";
 import type { Property } from "@/types/property";
 import { useLang } from "@/lib/i18n";
+import { ptField } from "@/lib/property-i18n";
 import { BLUR_DATA_URL } from "@/lib/constants";
 
 function formatPrice(price: string) {
@@ -32,7 +33,9 @@ function formatRent(rent: string) {
 }
 
 export default function PropertyHoverCard({ property }: { property: Property }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
+  const locTitle = ptField(property, "title", lang);
+  const locLocation = ptField(property, "location", lang);
   const isRent = property.listingType === "rent";
   const sp = property.priceStartingFrom ? `${t("listing.startingFrom")} ` : "";
   const priceDisplay = property.priceOnRequest
@@ -52,7 +55,7 @@ export default function PropertyHoverCard({ property }: { property: Property }) 
       <div className="relative h-full w-full overflow-hidden transition-[height] duration-500 ease-out group-hover:h-[56%]">
         <Image
           src={property.image}
-          alt={property.title}
+          alt={locTitle}
           fill
           sizes="(max-width: 640px) 80vw, 380px"
           placeholder="blur"
@@ -75,10 +78,10 @@ export default function PropertyHoverCard({ property }: { property: Property }) 
         {/* Resting label — title + price, fades out on hover */}
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-5 transition-opacity duration-300 group-hover:opacity-0">
           <h3 className="nakma-display text-[20px] leading-tight text-white">
-            {property.title}
+            {locTitle}
           </h3>
           <div className="mt-1.5 flex items-center justify-between gap-3">
-            <p className="nakma-body text-[12px] text-white/75">{property.location}</p>
+            <p className="nakma-body text-[12px] text-white/75">{locLocation}</p>
             <p className="nakma-display text-[16px] font-semibold text-white">
               {priceDisplay}
             </p>
@@ -89,10 +92,10 @@ export default function PropertyHoverCard({ property }: { property: Property }) 
       {/* Reveal panel — slides up on hover with the full detail + CTA */}
       <div className="absolute inset-x-0 bottom-0 flex h-[44%] translate-y-3 flex-col justify-center bg-white px-5 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
         <h3 className="nakma-display text-[19px] leading-tight text-[var(--nakma-dark)]">
-          {property.title}
+          {locTitle}
         </h3>
         <p className="nakma-body mt-1 text-[12.5px] text-[var(--nakma-dark)]/55">
-          {property.location}
+          {locLocation}
         </p>
 
         <div className="nakma-body mt-3 flex flex-wrap items-center gap-x-3.5 gap-y-1 text-[12px] text-[var(--nakma-dark)]/70">

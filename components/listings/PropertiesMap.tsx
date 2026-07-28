@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import type { Property } from "@/types/property";
 import { useLang } from "@/lib/i18n";
+import { ptField } from "@/lib/property-i18n";
 
 const OLIVE = "#6f673d";
 
@@ -17,7 +18,7 @@ export default function PropertiesMap({
   const containerRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mapRef = useRef<any>(null);
-  const { t } = useLang();
+  const { t, lang } = useLang();
 
   useEffect(() => {
     let cancelled = false;
@@ -93,8 +94,8 @@ export default function PropertiesMap({
             `<div style="font-family:system-ui,sans-serif;width:240px;">
                <div class="nakma-popup-strip" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;">${strip}</div>
                <div style="padding:10px 12px 12px;">
-                 <div style="font-weight:600;color:#16110d;font-size:14px;line-height:1.25;">${p.title}</div>
-                 <div style="color:#6b6b6b;font-size:12px;margin-top:2px;">${p.location}</div>
+                 <div style="font-weight:600;color:#16110d;font-size:14px;line-height:1.25;">${ptField(p, "title", lang)}</div>
+                 <div style="color:#6b6b6b;font-size:12px;margin-top:2px;">${ptField(p, "location", lang)}</div>
                  <div style="color:#16110d;font-weight:700;margin-top:6px;font-size:14px;">${popupPrice}</div>
                  <a href="/listings/${p.slug}" style="color:${OLIVE};font-size:11px;text-transform:uppercase;letter-spacing:0.08em;display:inline-block;margin-top:8px;font-weight:600;">View property →</a>
                </div>
@@ -120,7 +121,7 @@ export default function PropertiesMap({
         mapRef.current = null;
       }
     };
-  }, [properties, t]);
+  }, [properties, t, lang]);
 
   return (
     <div

@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import type { Property } from "@/types/property";
 import { localizedRole, type TeamMember } from "@/data/team";
+import { ptField, ptHighlights, ptFeatures, ptCommunity } from "@/lib/property-i18n";
 import { BLUR_DATA_URL } from "@/lib/constants";
 import { useLang } from "@/lib/i18n";
 import PropertyCard from "@/components/property/PropertyCard";
@@ -165,13 +166,19 @@ export default function PropertyDetailLX({
 
   // Features are fully optional and admin-driven — only show the categories
   // that actually have entries, and centre whatever's left.
+  const localTitle = ptField(property, "title", lang);
+  const localLocation = ptField(property, "location", lang);
+  const localDesc = ptField(property, "description", lang);
+  const localHighlights = ptHighlights(property, lang);
+  const localCommunity = ptCommunity(property, lang);
+  const locFeatures = ptFeatures(property, lang);
   const featureGroups = [
-    { key: "listing.internal", items: property.features?.internal ?? [] },
-    { key: "listing.external", items: property.features?.external ?? [] },
-    { key: "listing.community", items: property.features?.community ?? [] },
+    { key: "listing.internal", items: locFeatures?.internal ?? [] },
+    { key: "listing.external", items: locFeatures?.external ?? [] },
+    { key: "listing.community", items: locFeatures?.community ?? [] },
   ].filter((g) => g.items.length > 0);
-  const hasDescription = Boolean(property.description && property.description.trim());
-  const descIsLong = (property.description ?? "").length > 320;
+  const hasDescription = Boolean(localDesc && localDesc.trim());
+  const descIsLong = localDesc.length > 320;
   const mapsUrl = property.geo
     ? `https://www.google.com/maps?q=${property.geo.lat},${property.geo.lng}`
     : `https://www.google.com/maps?q=${encodeURIComponent(property.location)}`;
@@ -184,7 +191,7 @@ export default function PropertyDetailLX({
         <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="nakma-display text-[26px] leading-tight text-[var(--nakma-dark)]/55 md:text-[32px]">
-              {property.title}{" "}
+              {localTitle}{" "}
               <span className="font-semibold text-[var(--nakma-dark)]">
                 | {property.priceOnRequest
                   ? t("listing.priceOnRequest")
@@ -200,7 +207,7 @@ export default function PropertyDetailLX({
               </span>
             </h1>
             <p className="nakma-body mt-1 text-[14px] text-[var(--nakma-dark)]/55">
-              {property.location}
+              {localLocation}
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -395,11 +402,11 @@ export default function PropertyDetailLX({
       {/* ── Body ──────────────────────────────────────────────── */}
       <div className="mx-auto max-w-3xl px-6 lg:px-0">
         {/* Highlights */}
-        {property.highlights && property.highlights.length > 0 && (
+        {localHighlights.length > 0 && (
           <section className="pt-14">
             <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">{t("listing.highlights")}</h2>
             <ul className="mt-5 space-y-3">
-              {property.highlights.map((h) => (
+              {localHighlights.map((h) => (
                 <li
                   key={h}
                   className="nakma-body flex items-start gap-3 text-[15px] leading-relaxed text-[var(--nakma-dark)]/75"
@@ -421,7 +428,7 @@ export default function PropertyDetailLX({
                 showFullDesc || !descIsLong ? "" : "line-clamp-[7]"
               }`}
             >
-              {property.description}
+              {localDesc}
             </div>
             {descIsLong && (
               <button
@@ -450,18 +457,18 @@ export default function PropertyDetailLX({
         )}
 
         {/* Community */}
-        {property.communityInfo && (
+        {localCommunity && (
           <section className="mt-14 border-t border-[var(--nakma-dark)]/8 pt-10">
             <h2 className="nakma-display text-[24px] text-[var(--nakma-dark)]">
               {t("listing.community")}:{" "}
-              <span className="text-[var(--nakma-earth)]">{property.communityInfo.name}</span>
+              <span className="text-[var(--nakma-earth)]">{localCommunity.name}</span>
             </h2>
             <div className="mt-6 grid gap-6 sm:grid-cols-[200px_1fr] sm:items-start">
-              {property.communityInfo.image && (
+              {localCommunity.image && (
                 <div className="relative aspect-[4/3] overflow-hidden rounded-[10px]">
                   <Image
-                    src={property.communityInfo.image}
-                    alt={property.communityInfo.name}
+                    src={localCommunity.image}
+                    alt={localCommunity.name}
                     fill
                     sizes="200px"
                     placeholder="blur"
@@ -471,7 +478,7 @@ export default function PropertyDetailLX({
                 </div>
               )}
               <p className="nakma-body text-[14.5px] leading-[1.85] text-[var(--nakma-dark)]/72">
-                {property.communityInfo.description}
+                {localCommunity.description}
               </p>
             </div>
           </section>
