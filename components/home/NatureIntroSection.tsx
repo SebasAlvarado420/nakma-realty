@@ -28,20 +28,14 @@ const NATURE_IMAGES = [
 export default function NatureIntroSection() {
   const { t } = useLang();
   const [current, setCurrent] = useState(0);
-  const [fading, setFading] = useState(false);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setFading(true);
-      setTimeout(() => {
-        setCurrent((prev) => (prev + 1) % NATURE_IMAGES.length);
-        setFading(false);
-      }, 600);
-    }, 4500);
+    const timer = setInterval(
+      () => setCurrent((prev) => (prev + 1) % NATURE_IMAGES.length),
+      6500
+    );
     return () => clearInterval(timer);
   }, []);
-
-  const img = NATURE_IMAGES[current];
 
   return (
     <section className="relative bg-[var(--nakma-bg)] px-4 py-20 lg:py-32 lg:px-10">
@@ -51,29 +45,19 @@ export default function NatureIntroSection() {
           {/* ── Left: Image carousel ───────────────────── */}
           <div className="relative">
             <div className="relative h-[480px] overflow-hidden rounded-[32px] shadow-[0_40px_100px_rgba(22,17,13,0.18)] lg:h-[600px]">
-              <Image
-                key={img.src}
-                src={img.src}
-                alt={img.label}
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                placeholder="blur"
-                blurDataURL={BLUR_DATA_URL}
-                className="object-cover"
-                style={{
-                  opacity: fading ? 0 : 1,
-                  transition: "opacity 0.6s ease",
-                }}
-              />
-              {/* Bottom label */}
-              <div className="absolute inset-x-0 bottom-0 rounded-b-[32px] bg-gradient-to-t from-black/50 to-transparent px-7 pb-7 pt-16">
-                <p
-                  className="nakma-body text-[10px] uppercase tracking-[0.40em] text-white/75"
-                  style={{ opacity: fading ? 0 : 1, transition: "opacity 0.5s ease" }}
-                >
-                  {img.label}
-                </p>
-              </div>
+              {NATURE_IMAGES.map((im, i) => (
+                <Image
+                  key={im.src}
+                  src={im.src}
+                  alt="Costa Rica landscape"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  placeholder="blur"
+                  blurDataURL={BLUR_DATA_URL}
+                  className="object-cover transition-opacity duration-[1400ms] ease-in-out"
+                  style={{ opacity: i === current ? 1 : 0 }}
+                />
+              ))}
             </div>
 
             {/* Dot navigation */}
@@ -81,10 +65,7 @@ export default function NatureIntroSection() {
               {NATURE_IMAGES.map((_, i) => (
                 <button
                   key={i}
-                  onClick={() => {
-                    setFading(true);
-                    setTimeout(() => { setCurrent(i); setFading(false); }, 400);
-                  }}
+                  onClick={() => setCurrent(i)}
                   className="transition-all duration-300"
                   style={{
                     width: i === current ? "24px" : "6px",

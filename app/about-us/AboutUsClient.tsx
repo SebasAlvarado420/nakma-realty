@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { BLUR_DATA_URL } from "@/lib/constants";
 import { useLang } from "@/lib/i18n";
 import Reveal from "@/components/ui/Reveal";
+import CTASection from "@/components/home/CTASection";
 
 const PHILOSOPHY_ITEMS = [
   { number: "01", prefix: "about.phil1" },
@@ -14,11 +14,13 @@ const PHILOSOPHY_ITEMS = [
 
 const ALTERNATING = [
   {
-    img: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80",
+    // "A country worth knowing" → the $3.2B foreign-investment image from home.
+    img: "https://images.pexels.com/photos/36827348/pexels-photo-36827348.jpeg?auto=compress&cs=tinysrgb&w=1400",
     prefix: "about.alt1",
   },
   {
-    img: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80",
+    // "Intentional at every step" → cover photo of Unit 204 · Tamarindo 360.
+    img: "https://hiqmowapbdaspcxgoduv.supabase.co/storage/v1/object/public/property-media/1784749854607-3426534-FOTO_1.jpg.jpg",
     prefix: "about.alt2",
   },
 ];
@@ -30,7 +32,7 @@ export default function AboutUsClient() {
       <section className="relative overflow-hidden pt-[72px]">
         <div className="relative h-[70vh] min-h-[480px]">
           <Image
-            src="https://images.unsplash.com/photo-1573790387438-4da905039392?auto=format&fit=crop&w=1800&q=80"
+            src="https://images.pexels.com/photos/17302366/pexels-photo-17302366.jpeg?auto=compress&cs=tinysrgb&w=1800"
             alt="Costa Rica landscape"
             fill
             priority
@@ -133,30 +135,7 @@ export default function AboutUsClient() {
         </section>
       ))}
 
-      <section className="border-t border-[var(--nakma-dark)]/8 px-6 py-20 text-center lg:px-16">
-        <div className="mx-auto max-w-2xl">
-          <h2 className="nakma-display text-[30px] leading-tight tracking-[-0.03em] text-[var(--nakma-dark)] md:text-[38px]">
-            {t("about.ctaTitle")}
-          </h2>
-          <p className="nakma-body mt-5 text-[15px] leading-relaxed text-[var(--nakma-dark)]/58">
-            {t("about.ctaBody")}
-          </p>
-          <div className="mt-9 flex flex-wrap justify-center gap-4">
-            <Link
-              href="/listings"
-              className="nakma-body inline-flex h-[54px] items-center rounded-full bg-[var(--nakma-dark)] px-8 text-[12px] uppercase tracking-[0.28em] text-white transition hover:opacity-88"
-            >
-              {t("hero.cta")}
-            </Link>
-            <Link
-              href="/contact-us"
-              className="nakma-body inline-flex h-[54px] items-center rounded-full border border-[var(--nakma-dark)]/28 px-8 text-[12px] uppercase tracking-[0.28em] text-[var(--nakma-dark)] transition hover:bg-[var(--nakma-dark)] hover:text-white"
-            >
-              {t("nav.contact")}
-            </Link>
-          </div>
-        </div>
-      </section>
+      <CTASection />
     </div>
   );
 }
