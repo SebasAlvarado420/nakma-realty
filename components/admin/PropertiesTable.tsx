@@ -11,7 +11,8 @@ export default function PropertiesTable() {
   const [translating, setTranslating] = useState(false);
   const [progress, setProgress] = useState("");
 
-  const untranslated = properties.filter((p) => !p.translations);
+  // Re-translate ALL active properties (overwrites) so fixes always take effect.
+  const untranslated = properties;
 
   async function translateAll() {
     if (untranslated.length === 0) {

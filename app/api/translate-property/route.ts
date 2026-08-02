@@ -82,13 +82,18 @@ export async function POST(req: Request) {
 
   try {
     const [en, es] = await Promise.all([translate("EN"), translate("ES")]);
-    const source = (en[0]?.detected_source_language || "").toUpperCase();
 
-    const build = (target: "EN" | "ES", results: { text: string }[]) => {
-      const useOriginal = source === target;
+    // Per-text: keep the admin's original wording only for the fields DeepL
+    // detected as ALREADY being in the target language; translate the rest.
+    const build = (
+      target: "EN" | "ES",
+      results: { detected_source_language: string; text: string }[]
+    ) => {
       const obj: any = {};
       order.forEach((path, i) => {
-        setPath(obj, path, useOriginal ? texts[i] : results[i]?.text ?? texts[i]);
+        const detected = (results[i]?.detected_source_language || "").toUpperCase();
+        const val = detected === target ? texts[i] : results[i]?.text ?? texts[i];
+        setPath(obj, path, val);
       });
       return obj;
     };
