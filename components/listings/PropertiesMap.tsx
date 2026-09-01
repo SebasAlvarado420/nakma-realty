@@ -34,14 +34,14 @@ export default function PropertiesMap({
       }).setView([9.7489, -83.7534], 7);
       mapRef.current = map;
 
-      // Minimal light basemap (free, no API key)
+      // Minimal light basemap — Esri World Light Gray (free, no API key).
+      // (CARTO's free tiles now require an API key, hence the swap.)
       L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+        "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
         {
           attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-          subdomains: "abcd",
-          maxZoom: 19,
+            'Tiles &copy; <a href="https://www.esri.com/">Esri</a> &mdash; Esri, DeLorme, NAVTEQ',
+          maxZoom: 16,
         }
       ).addTo(map);
 
