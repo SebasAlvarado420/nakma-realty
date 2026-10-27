@@ -12,16 +12,23 @@ const nextConfig: NextConfig = {
     "*.loca.lt",
   ],
   images: {
-    // Hand every photo to its own origin CDN already resized (see
-    // lib/image-loader.ts) — property photos via Supabase's Pro transform CDN,
-    // stock via Unsplash/Pexels. This removes Vercel's optimizer from the path
-    // (no ~1.2s cache-MISS on first view) and serves small files from a global,
-    // persistent edge cache.
-    loader: "custom",
-    loaderFile: "./lib/image-loader.ts",
-    // Fewer responsive breakpoints → fewer distinct transforms → more CDN hits.
+    // Vercel image optimization: modern formats + a long (31-day) cache so
+    // images stay warm. Fewer responsive breakpoints = fewer variants to
+    // optimize = more cache hits. (The real speed win is shrinking the stored
+    // source files — see the admin/service-role image-shrink pass.)
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 2678400,
     deviceSizes: [640, 828, 1200, 1920],
     imageSizes: [128, 256, 384],
+    remotePatterns: [
+      { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "me7aitdbxq.ufs.sh" },
+      { protocol: "https", hostname: "images.pexels.com" },
+      { protocol: "https", hostname: "plus.unsplash.com" },
+      { protocol: "https", hostname: "lh3.googleusercontent.com" },
+      // Supabase Storage (uploaded property photos)
+      { protocol: "https", hostname: "hiqmowapbdaspcxgoduv.supabase.co" },
+    ],
   },
 };
 
