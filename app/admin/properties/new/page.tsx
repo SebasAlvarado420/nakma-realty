@@ -2,7 +2,7 @@ import PropertyForm from "@/components/admin/PropertyForm";
 
 export default function NewPropertyPage() {
   return (
-    <section className="min-h-screen bg-[#f7f2e8] px-6 pt-32 pb-20 md:px-10">
+    <section className="min-h-screen bg-[#f7f2e8] px-6 pt-10 pb-20 md:px-10">
       <div className="mx-auto max-w-5xl">
         <p className="text-sm uppercase tracking-[0.28em] text-[#8b6d3b]">
           Admin / New Property

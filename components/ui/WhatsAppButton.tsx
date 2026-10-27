@@ -1,12 +1,19 @@
 "use client";
 
-import { SITE } from "@/lib/site";
+import { usePathname } from "next/navigation";
+import { useSiteSettings } from "@/lib/site-settings-context";
 
 const MESSAGE =
   "Hi NAKMA Realty, I'm interested in learning more about properties in Costa Rica.";
 
 export default function WhatsAppButton() {
-  const href = `${SITE.whatsappUrl}?text=${encodeURIComponent(MESSAGE)}`;
+  const pathname = usePathname();
+  const { settings } = useSiteSettings();
+  // The floating button belongs to the public site only — never inside the
+  // admin dashboard.
+  if (pathname?.startsWith("/admin")) return null;
+
+  const href = `${settings.whatsappUrl}?text=${encodeURIComponent(MESSAGE)}`;
 
   return (
     <a

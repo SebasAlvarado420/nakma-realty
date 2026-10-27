@@ -1,11 +1,12 @@
 "use client";
 
 import ContactForm from "@/components/contact/ContactForm";
-import { SITE } from "@/lib/site";
+import { useSiteSettings } from "@/lib/site-settings-context";
 import { useLang } from "@/lib/i18n";
 
 export default function ContactUsClient() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
+  const { settings } = useSiteSettings();
   return (
     <div className="bg-[var(--nakma-bg)]">
 
@@ -42,23 +43,29 @@ export default function ContactUsClient() {
                 <div className="mt-6 space-y-5">
                   <div>
                     <p className="nakma-body text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-dark)]/48">{t("form.email")}</p>
-                    <a href={`mailto:${SITE.email}`} className="nakma-body mt-1.5 block text-[15px] text-[var(--nakma-dark)] hover:text-[var(--nakma-olive)]">
-                      {SITE.email}
+                    <a href={`mailto:${settings.email}`} className="nakma-body mt-1.5 block text-[15px] text-[var(--nakma-dark)] hover:text-[var(--nakma-olive)]">
+                      {settings.email}
                     </a>
                   </div>
                   <div>
                     <p className="nakma-body text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-dark)]/48">WhatsApp</p>
-                    <a href={SITE.whatsappUrl} target="_blank" rel="noreferrer" className="nakma-body mt-1.5 block text-[15px] text-[var(--nakma-dark)] hover:text-[var(--nakma-olive)]">
-                      {SITE.whatsappDisplay}
+                    <a href={settings.whatsappUrl} target="_blank" rel="noreferrer" className="nakma-body mt-1.5 block text-[15px] text-[var(--nakma-dark)] hover:text-[var(--nakma-olive)]">
+                      {settings.whatsappDisplay}
                     </a>
                   </div>
                   <div>
                     <p className="nakma-body text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-dark)]/48">{t("contactpage.social")}</p>
                     <div className="mt-1.5 flex gap-3 text-[14px]">
-                      <a href={SITE.instagram} target="_blank" rel="noreferrer" className="nakma-body text-[var(--nakma-dark)] hover:text-[var(--nakma-olive)]">Instagram</a>
-                      <a href={SITE.facebook} target="_blank" rel="noreferrer" className="nakma-body text-[var(--nakma-dark)] hover:text-[var(--nakma-olive)]">Facebook</a>
+                      <a href={settings.instagram} target="_blank" rel="noreferrer" className="nakma-body text-[var(--nakma-dark)] hover:text-[var(--nakma-olive)]">Instagram</a>
+                      <a href={settings.facebook} target="_blank" rel="noreferrer" className="nakma-body text-[var(--nakma-dark)] hover:text-[var(--nakma-olive)]">Facebook</a>
                     </div>
                   </div>
+                  {settings.hours && (
+                    <div>
+                      <p className="nakma-body text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-dark)]/48">{lang === "es" ? "Horario" : "Hours"}</p>
+                      <p className="nakma-body mt-1.5 text-[15px] text-[var(--nakma-dark)]">{settings.hours}</p>
+                    </div>
+                  )}
                   <div>
                     <p className="nakma-body text-[11px] uppercase tracking-[0.28em] text-[var(--nakma-dark)]/48">{t("contactpage.location")}</p>
                     <p className="nakma-body mt-1.5 text-[15px] text-[var(--nakma-dark)]">Costa Rica</p>
@@ -88,7 +95,7 @@ export default function ContactUsClient() {
                   {t("contactpage.ownersBody")}
                 </p>
                 <a
-                  href={`mailto:${SITE.email}`}
+                  href={`mailto:${settings.email}`}
                   className="nakma-body mt-5 inline-flex h-[44px] items-center rounded-full border border-[var(--nakma-dark)]/22 px-5 text-[11px] uppercase tracking-[0.26em] text-[var(--nakma-dark)] transition hover:bg-[var(--nakma-dark)] hover:text-white"
                 >
                   {t("contactpage.contactListing")}

@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useLang } from "@/lib/i18n";
-import { SITE } from "@/lib/site";
+import { useSiteSettings } from "@/lib/site-settings-context";
 import { zones } from "@/data/zones";
 import BrandName from "@/components/ui/BrandName";
 
@@ -14,14 +15,18 @@ const NAV = [
   { href: "/contact-us", key: "nav.contact" },
 ];
 
-const SOCIAL = [
-  { href: SITE.instagram, label: "Instagram" },
-  { href: SITE.facebook, label: "Facebook" },
-  { href: SITE.whatsappUrl, label: "WhatsApp" },
-];
-
 export default function Footer() {
   const { t, lang } = useLang();
+  const { settings } = useSiteSettings();
+  const pathname = usePathname();
+  // The public footer never appears inside the admin dashboard.
+  if (pathname?.startsWith("/admin")) return null;
+
+  const SOCIAL = [
+    { href: settings.instagram, label: "Instagram" },
+    { href: settings.facebook, label: "Facebook" },
+    { href: settings.whatsappUrl, label: "WhatsApp" },
+  ];
   return (
     <footer className="bg-[var(--nakma-dark)] text-[var(--nakma-white)]">
       <div className="h-px bg-[var(--nakma-sand)]/20" />
@@ -85,12 +90,15 @@ export default function Footer() {
               {t("footer.contact")}
             </h3>
             <div className="mt-5 space-y-3">
-              <a href={`mailto:${SITE.email}`} className="nakma-body block text-[14px] text-white/55 transition-colors hover:text-white">
-                {SITE.email}
+              <a href={`mailto:${settings.email}`} className="nakma-body block text-[14px] text-white/55 transition-colors hover:text-white">
+                {settings.email}
               </a>
-              <a href={SITE.whatsappUrl} target="_blank" rel="noreferrer" className="nakma-body block text-[14px] text-white/55 transition-colors hover:text-white">
-                {SITE.whatsappDisplay}
+              <a href={settings.whatsappUrl} target="_blank" rel="noreferrer" className="nakma-body block text-[14px] text-white/55 transition-colors hover:text-white">
+                {settings.whatsappDisplay}
               </a>
+              {settings.hours && (
+                <p className="nakma-body text-[14px] text-white/38">{settings.hours}</p>
+              )}
               <p className="nakma-body text-[14px] text-white/38">Costa Rica</p>
             </div>
           </div>

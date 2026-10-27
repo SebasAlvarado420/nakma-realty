@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useMemo, useState } from "react";
 import { Pencil, Trash2, Archive, Plus, Search, Languages, Star, Tag } from "lucide-react";
 import { useProperties } from "@/lib/propertiescontext";
+import { logActivity } from "@/lib/activity-api";
 import { BLUR_DATA_URL } from "@/lib/constants";
 import type { Property } from "@/types/property";
 
@@ -118,7 +119,7 @@ export default function PropertiesTable() {
         });
         const json = await res.json();
         if (json && (json.en || json.es)) {
-          await updateProperty(p.id, { ...p, translations: json });
+          await updateProperty(p.id, { ...p, translations: json }, { silent: true });
         }
       } catch {
         /* keep going */
@@ -127,6 +128,11 @@ export default function PropertiesTable() {
     }
     setTranslating(false);
     setProgress("");
+    void logActivity({
+      action: "translated",
+      entity: "catalog",
+      entityLabel: `${done} properties → EN/ES`,
+    });
     window.alert(`Done — translated ${done} properties to EN/ES.`);
   }
 

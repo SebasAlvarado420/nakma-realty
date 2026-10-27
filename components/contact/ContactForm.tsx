@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SITE } from "@/lib/site";
+import { useSiteSettings } from "@/lib/site-settings-context";
 import { useLang } from "@/lib/i18n";
 
 const INTERESTS = ["Home", "Condo", "Land", "Commercial"];
@@ -29,6 +29,7 @@ const EMPTY: FormState = {
 
 export default function ContactForm() {
   const { t } = useLang();
+  const { settings } = useSiteSettings();
   const [form, setForm] = useState<FormState>(EMPTY);
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
@@ -68,7 +69,7 @@ export default function ContactForm() {
       .filter(Boolean)
       .join("\n");
 
-    const mailto = `mailto:${SITE.email}?subject=${encodeURIComponent(
+    const mailto = `mailto:${settings.email}?subject=${encodeURIComponent(
       `Property inquiry — ${form.name}`
     )}&body=${encodeURIComponent(body)}`;
 

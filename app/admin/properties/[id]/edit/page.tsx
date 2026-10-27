@@ -14,7 +14,7 @@ export default function EditPropertyPage() {
     archivedProperties.find((p) => p.id === id);
 
   return (
-    <section className="min-h-screen bg-[#f7f2e8] px-6 pt-32 pb-20 md:px-10">
+    <section className="min-h-screen bg-[#f7f2e8] px-6 pt-10 pb-20 md:px-10">
       <div className="mx-auto max-w-4xl">
         <Link href="/admin/properties" className="text-sm font-medium text-[#8b6d3b] hover:underline">
           ← Back to properties

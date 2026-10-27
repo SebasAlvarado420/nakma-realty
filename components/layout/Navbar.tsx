@@ -57,6 +57,10 @@ export default function Navbar() {
   const linkActiveColor = solid ? "var(--nakma-dark)" : "var(--nakma-bg)";
   const burgerColor = solid ? "var(--nakma-dark)" : "var(--nakma-bg)";
 
+  // The public navbar never appears inside the admin dashboard (it has its own
+  // sidebar chrome). Placed after all hooks so hook order stays stable.
+  if (pathname?.startsWith("/admin")) return null;
+
   return (
     <>
       <header

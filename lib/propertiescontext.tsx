@@ -16,6 +16,7 @@ import {
   setArchived,
   deletePropertyApi,
 } from "@/lib/properties-api";
+import { logActivity } from "@/lib/activity-api";
 import type { Property, PropertyLocation, PropertyFeatures } from "@/types/property";
 
 type CreatePropertyInput = {
@@ -58,7 +59,11 @@ type PropertiesContextType = {
   archivedProperties: Property[];
   loading: boolean;
   addProperty: (input: CreatePropertyInput) => Promise<void>;
-  updateProperty: (id: string, patch: Partial<Property>) => Promise<void>;
+  updateProperty: (
+    id: string,
+    patch: Partial<Property>,
+    opts?: { silent?: boolean }
+  ) => Promise<void>;
   deleteProperty: (id: string) => Promise<void>;
   archiveProperty: (id: string) => Promise<void>;
   restoreProperty: (id: string) => Promise<void>;
@@ -104,6 +109,16 @@ export function PropertiesProvider({ children }: { children: React.ReactNode }) 
     refresh();
   }, [refresh]);
 
+  // Human-readable label for the activity log (NK code + title). Resolved from
+  // current state so delete/archive entries still name the listing.
+  const labelOf = useCallback(
+    (id: string) => {
+      const p = properties.find((x) => x.id === id);
+      return p ? `${p.code || "—"} · ${p.title}` : id;
+    },
+    [properties]
+  );
+
   const addProperty = useCallback(
     async (input: CreatePropertyInput) => {
       const slug = input.slug?.trim() ? slugify(input.slug) : slugify(input.title);
@@ -139,17 +154,33 @@ export function PropertiesProvider({ children }: { children: React.ReactNode }) 
         status: input.status,
         translations: input.translations,
       });
+      void logActivity({
+        action: "created",
+        entity: "property",
+        entityLabel: `${input.code} · ${input.title}`,
+      });
       await refresh();
     },
     [refresh]
   );
 
   const updateProperty = useCallback(
-    async (id: string, patch: Partial<Property>) => {
+    async (id: string, patch: Partial<Property>, opts?: { silent?: boolean }) => {
       await updatePropertyApi(id, patch);
+      // `silent` is used by bulk operations (e.g. Translate-all) so they can log
+      // a single summary entry instead of flooding the history.
+      if (!opts?.silent) {
+        void logActivity({
+          action: "updated",
+          entity: "property",
+          entityLabel: patch.title
+            ? `${patch.code ?? ""} · ${patch.title}`.replace(/^ · /, "")
+            : labelOf(id),
+        });
+      }
       await refresh();
     },
-    [refresh]
+    [refresh, labelOf]
   );
 
   // The NK code is a unique, permanent identifier for each property: it never
@@ -157,26 +188,32 @@ export function PropertiesProvider({ children }: { children: React.ReactNode }) 
   // takes the lowest free NK slot (see PropertyForm).
   const deleteProperty = useCallback(
     async (id: string) => {
+      const label = labelOf(id);
       await deletePropertyApi(id);
+      void logActivity({ action: "deleted", entity: "property", entityLabel: label });
       await refresh();
     },
-    [refresh]
+    [refresh, labelOf]
   );
 
   const archiveProperty = useCallback(
     async (id: string) => {
+      const label = labelOf(id);
       await setArchived(id, true);
+      void logActivity({ action: "archived", entity: "property", entityLabel: label });
       await refresh();
     },
-    [refresh]
+    [refresh, labelOf]
   );
 
   const restoreProperty = useCallback(
     async (id: string) => {
+      const label = labelOf(id);
       await setArchived(id, false);
+      void logActivity({ action: "restored", entity: "property", entityLabel: label });
       await refresh();
     },
-    [refresh]
+    [refresh, labelOf]
   );
 
   const activeProperties = useMemo(

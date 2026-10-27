@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
+import AdminShell from "@/components/admin/AdminShell";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null | undefined>(undefined);
@@ -106,17 +107,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  // Authenticated
-  return (
-    <div className="relative">
-      <button
-        type="button"
-        onClick={logout}
-        className="nakma-body fixed right-5 top-[84px] z-[120] rounded-full border border-[#163126]/20 bg-white/90 px-5 py-2 text-[11px] uppercase tracking-[0.2em] text-[#163126] shadow-md backdrop-blur-sm transition hover:bg-[#163126] hover:text-white"
-      >
-        Sign out
-      </button>
-      {children}
-    </div>
-  );
+  // Authenticated — full dashboard chrome (sidebar + content).
+  return <AdminShell onLogout={logout}>{children}</AdminShell>;
 }
