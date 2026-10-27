@@ -99,6 +99,11 @@ export default function PropertyDetailLX({
   // Touch swipe (mobile) for the main photo + the lightbox.
   const touchStartX = useRef<number | null>(null);
   const swipedRef = useRef(false);
+  // Keep the active thumbnail centred in the lightbox strip.
+  const activeThumbRef = useRef<HTMLButtonElement | null>(null);
+  useEffect(() => {
+    if (lightbox) activeThumbRef.current?.scrollIntoView({ inline: "center", block: "nearest" });
+  }, [active, lightbox]);
   function onImgTouchStart(e: React.TouchEvent) {
     touchStartX.current = e.touches[0].clientX;
     swipedRef.current = false;
@@ -634,7 +639,7 @@ export default function PropertyDetailLX({
           )}
 
           <div
-            className="relative mx-auto h-[82vh] w-full max-w-6xl"
+            className={`relative mx-auto w-full max-w-6xl ${images.length > 1 ? "h-[68vh]" : "h-[80vh]"}`}
             onClick={(e) => e.stopPropagation()}
             onTouchStart={onImgTouchStart}
             onTouchEnd={onImgTouchEnd}
@@ -660,9 +665,35 @@ export default function PropertyDetailLX({
             ))}
           </div>
 
-          <p className="absolute bottom-5 left-1/2 -translate-x-1/2 text-[12px] tracking-[0.2em] text-white/60">
-            {active + 1} / {images.length}
-          </p>
+          {/* Thumbnail strip — jump straight to any photo */}
+          {images.length > 1 && (
+            <div
+              className="absolute inset-x-0 bottom-0 z-[100002]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <p className="mb-2 text-center text-[11px] tracking-[0.2em] text-white/55">
+                {active + 1} / {images.length}
+              </p>
+              <div className="flex gap-2 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:justify-center">
+                {images.map((src, i) => (
+                  <button
+                    key={src + i}
+                    ref={i === active ? activeThumbRef : undefined}
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); setActive(i); }}
+                    aria-label={`Photo ${i + 1}`}
+                    className={`relative h-12 w-16 shrink-0 overflow-hidden rounded-md ring-2 transition sm:h-14 sm:w-20 ${
+                      i === active
+                        ? "opacity-100 ring-white"
+                        : "opacity-50 ring-transparent hover:opacity-90"
+                    }`}
+                  >
+                    <Image src={src} alt="" fill sizes="80px" className="object-cover" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

@@ -58,7 +58,7 @@ export default function CTASection() {
           {t("cta.eyebrow")}
         </p>
 
-        <h2 className="nakma-display mx-auto mt-6 max-w-2xl text-[38px] leading-[1.06] tracking-[-0.04em] text-[var(--nakma-dark)] md:text-[54px] lg:text-[64px]">
+        <h2 className="nakma-display mx-auto mt-6 max-w-4xl px-2 text-[30px] leading-[1.08] tracking-[-0.03em] text-[var(--nakma-dark)] md:text-[44px] lg:text-[52px]">
           <span className="block">
             {lang === "es"
               ? "Encuentra una propiedad que se sienta"
